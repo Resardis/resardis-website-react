@@ -1,0 +1,9 @@
+.search-input {
+  border: 0;
+  border-bottom: 1px solid #8E9091;
+  background-color: #32373A;
+  color: inherit;
+  outline: none;
+  padding-left: 28px;
+  width: 80%;
+}

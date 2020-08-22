@@ -1,0 +1,40 @@
+.cancel-button {
+  color: #454849;
+  background: #8E9091;
+  border-radius: 4px;
+  border: 0;
+  outline: none;
+  padding: 2px 10px;
+  font-size: 10px;
+}
+
+.cancel-all-button {
+  background: #2A2E31;
+  color: #8E9091;
+  border-radius: 4px;
+  border: 0;
+  outline: none;
+  padding: 2px 10px;
+  font-size: 10px;
+}
+
+.user-data-table {
+  table-layout: fixed;
+}
+
+.user-data-table th {
+  font-size: 12px;
+  padding: 4px;
+}
+
+.user-data-table td {
+  font-size: 13px;
+  white-space: nowrap;
+  padding: 4px;
+}
+
+.date-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

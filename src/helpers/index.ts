@@ -1,0 +1,1 @@
+export const number4DP = (number:number) => Number(number).toFixed(4)

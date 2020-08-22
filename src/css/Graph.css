@@ -1,0 +1,46 @@
+.graph-menu-left {
+    display: flex;
+    flex-direction: column;
+    margin-left: 3px;
+}
+
+.graph-legend-top {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px;
+  color: #A8ACAC;
+  padding-left: 60px;
+  padding-right: 16px;
+}
+
+.graph-menu-left button {
+  border: 1px solid white;
+  margin-right: 6px;
+  margin-bottom: 6px;
+  border-radius: 20px;
+  background-color: #5D6162;
+  color: #C2C3C3;
+  height: 36px;
+  width: 36px;
+  font-size: 16px;
+}
+
+.graph-container {
+  background-color: #292E31;
+  border: 1px solid #EDEEED;
+  border-radius: 0 12px 12px 0;
+  flex: 1;
+  height: 100%;
+}
+
+.graph-legend-top h4 {
+  font-size: 24px;
+  font-weight: 300;
+  margin: 0;
+
+}
+
+.graph-legend-top div {
+  font-size: 14px;
+  text-align: center;
+}

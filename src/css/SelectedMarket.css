@@ -1,0 +1,29 @@
+.market-orders-history th {
+  font-size: 12px;
+  font-weight: 300;
+  padding: 4px;
+  color: #C2C3C3;
+}
+
+.market-orders-header th {
+  font-size: 16px;
+  font-weight: 300;
+  padding: 10px;
+  color: #C2C3C3;
+  background-color: #2A2E31;
+}
+.market-orders-content td {
+  font-size: 13px;
+  font-weight: 300;
+  padding: 4px;
+}
+
+.orders-price-change-indicator{
+  font-size: 15px;
+  font-weight: 300;
+  padding: 6px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

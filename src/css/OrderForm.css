@@ -1,0 +1,95 @@
+.order-form-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
+  align-items: center;
+  font-size: 20px;
+  font-weight: 300;
+}
+
+.order-form-header {
+  border-bottom: 1px solid #8E9091;
+  display: flex;
+  justify-content: left;
+}
+
+.order-type-button {
+  border: 0;
+  background-color: inherit;
+  font-size: 20px;
+  color: #A8ACAC;
+  padding: 8px;
+  margin: 2px 24px;
+  outline: none;
+}
+
+.order-type-button-selected {
+  border-bottom: 1px solid #FAAD47;
+  color: #FAAD47;
+}
+
+.order-form-box {
+  background-color: #2A2E31;
+  color: #C2C3C3;
+  flex: 1;
+  padding: 6px 6px 6px 10px;
+}
+
+.order-form-boxes {
+  display: flex;
+  font-size: 16px;
+}
+
+.order-form-boxes input {
+  display: flex;
+  background: #A8ACAC;
+  border: 1px solid #76797B;
+  outline: none;
+  padding: 6px;
+  color: #2A2E31;
+  width: 130px;
+}
+
+.order-form-boxes > :first-child {
+  margin: 10px 4px 6px 0;
+  border-radius: 0 0 0 12px;
+}
+
+.order-form-boxes > :last-child {
+  margin: 10px 0 6px 4px;
+  border-radius: 0 0 12px 0;
+}
+
+.order-price {
+  display: flex;
+  align-items: stretch;
+  background: black;
+  font-size: 16px;
+}
+
+.order-price > :first-child {
+  padding-left: 10px;
+  padding-right: 6px;
+  border: 0;
+  border: 1px solid #76797B;
+  border-right: 0;
+  background: black;
+  padding-top: 4px;
+}
+
+.order-balance {
+  color: #FAAD47;
+  font-size: 14px;
+  margin-left: 6px;
+}
+
+.order-button {
+  padding: 8px 18px;
+  border-radius: 16px;
+  outline: none;
+  font-size: 18px;
+  border: 0;
+  color: #C2C3C3;
+  margin: 4px 0;
+  font-weight: 300;
+}

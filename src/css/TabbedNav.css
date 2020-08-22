@@ -1,0 +1,27 @@
+.tabbed-nav {
+  border-radius: 12px 12px 0 0;
+  display: flex;
+  align-content: stretch;
+  margin: 10px 6px 0 6px;
+}
+
+.tabbed-nav-item {
+  border-radius: 12px 12px 0 0;
+  text-align: center;
+  margin: 0 3px;
+  flex: 1;
+  line-height: 1.8;
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: 300;
+}
+
+.tabbed-nav-item-active {
+  color: #444849;
+  background-color: #A7ACAC;
+}
+
+.tabbed-nav-item-inactive {
+  color: #A7ACAC;
+  background-color: #444849;
+}
