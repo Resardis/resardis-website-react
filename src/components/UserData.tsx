@@ -4,7 +4,7 @@ import {
   TAB_MENU_USERDATA,
   TAB_MENU_USERDATA_NAME,
 } from '../constants/tabData'
-import UserDataTabContent from './UserDataContent'
+import UserDataTabContent from './userData'
 import '../css/UserData.css'
 
 const UserData = () => (

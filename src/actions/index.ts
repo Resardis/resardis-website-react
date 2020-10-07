@@ -1,14 +1,27 @@
-import { ACTIVATE_TAB, ActivationPayload, ActivateTabAction, SelectCurrencyPairAction } from '../constants/actionTypes'
 import {
+  ACTIVATE_TAB,
+  ActivateTabAction,
+  ActivationPayload,
+  SelectCurrencyPairAction,
   SORT_BY,
   SORT_DIRECTION,
   TEXT_FILTER,
   SELECT_CURRENCY_PAIR,
+  UPDATE_CURRENCY_PAIR_DATA,
+  OPEN_FUNDS_WINDOW,
+  CLOSE_FUNDS_WINDOW,
+  SELECT_SCREEN,
   SortByAction,
   SortDirectionAction,
   sortingTypes,
   TextFilterAction,
+  OpenFundsWindowAction,
+  CloseFundsWindowAction,
+  SelectScreenAction,
+  UpdateCurrencyPairDataAction,
+
 } from '../constants/actionTypes'
+import { PairData } from '../reducers/markets'
 
 export const activateTab = (payload: ActivationPayload):ActivateTabAction => ({
   type: ACTIVATE_TAB,
@@ -37,6 +50,26 @@ export const selectCurrencyPair = (pair: string):SelectCurrencyPairAction => ({
   payload: pair,
 })
 
+export const updateCurrencyPairData = (pairData:PairData):UpdateCurrencyPairDataAction => ({
+  type: UPDATE_CURRENCY_PAIR_DATA,
+  payload: pairData,
+})
+
+export const openFundsWindow = ():OpenFundsWindowAction => ({
+  type: OPEN_FUNDS_WINDOW,
+})
+
+export const closeFundsWindow = ():FundsWindowActions => ({
+  type: CLOSE_FUNDS_WINDOW,
+})
+
+export const selectScreen = (screen: string):SelectScreenAction => ({
+  type: SELECT_SCREEN,
+  payload: screen,
+})
+
 export type ActiveTabActions = ActivateTabAction
 
-export type TableActions = SortByAction | SortDirectionAction | TextFilterAction | SelectCurrencyPairAction
+export type TableActions = SortByAction | SortDirectionAction | TextFilterAction | SelectCurrencyPairAction | UpdateCurrencyPairDataAction
+
+export type FundsWindowActions = OpenFundsWindowAction | CloseFundsWindowAction

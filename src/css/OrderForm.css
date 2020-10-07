@@ -48,6 +48,7 @@
   padding: 6px;
   color: #2A2E31;
   width: 130px;
+  text-align: left;
 }
 
 .order-form-boxes > :first-child {
@@ -67,6 +68,11 @@
   font-size: 16px;
 }
 
+.order-price-disabled input {
+  background: #292E31;
+  color: #C2C3C3;
+}
+
 .order-price > :first-child {
   padding-left: 10px;
   padding-right: 6px;
@@ -75,6 +81,10 @@
   border-right: 0;
   background: black;
   padding-top: 4px;
+}
+
+.order-price-disabled > :first-child {
+  background: #292E31;
 }
 
 .order-balance {
@@ -92,4 +102,13 @@
   color: #C2C3C3;
   margin: 4px 0;
   font-weight: 300;
+  cursor: pointer;
+}
+
+.order-form-error {
+  text-align: right;
+  color: red;
+  font-size: 10px;
+  margin-left: auto;
+  margin-right: 8px;
 }

@@ -1,55 +1,62 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { connect, ConnectedProps } from 'react-redux'
 import { RootState } from '../reducers'
-import {
-  TAB_MENU_MARKETS_NAME,
-  TAB_MARKETS_USDT,
-} from '../constants/tabData'
 import '../css/OrderForm.css'
+import { BigNumber } from 'bignumber.js'
+import { wei2ether } from '../helpers'
+import { createOrder } from '../contracts'
+import { Network } from '../constants/networks'
 
 interface OrderForm {
   coinName: string,
   isBuy: boolean,
 }
-// TODO: update when real data is pulled
+
 const getSelectedCurrencyPrice = (state: RootState) => {
-  let currentMarket
-  if (!state.markets.selectedCurrencyPair) return 0
+  const { selectedCurrencyPair, data } = state.markets
 
-  if (state.activeTabs[TAB_MENU_MARKETS_NAME] === TAB_MARKETS_USDT)
-    currentMarket = state.markets.dataUSDT
-  else
-    currentMarket = state.markets.dataETH
+  if (!selectedCurrencyPair) return new BigNumber(0)
 
-  const currencyData = currentMarket.find(currency => currency[0] === state.markets.selectedCurrencyPair)
+  if (!(selectedCurrencyPair in data)) return new BigNumber(0)
 
-  if (currencyData) return currencyData[3]
-
-  return 0
+  return data[selectedCurrencyPair][3]
 }
 
 interface StateProps {
   baseCurrency: string,
   quoteCurrency: string,
-  price: number,
-
+  price: BigNumber,
+  baseCurrencyBalance: BigNumber,
+  quoteCurrencyBalance: BigNumber,
+  network: Network,
+  api: any,
 }
 
 interface OwnProps {
+  orderType: string,
   isBuy: boolean,
 }
 
 const mapStateToProps = (state: RootState):StateProps => {
   if (!state.markets.selectedCurrencyPair) return {
-    price: 0,
+    price: new BigNumber(0),
     baseCurrency: '',
     quoteCurrency: '',
+    baseCurrencyBalance: new BigNumber(0),
+    quoteCurrencyBalance: new BigNumber(0),
+    network: state.contract.network,
+    api: state.contract.contractAPI,
   }
   const [ baseCurrency, quoteCurrency ] = state.markets.selectedCurrencyPair.split('/')
+
   return {
     price: getSelectedCurrencyPrice(state),
     baseCurrency,
     quoteCurrency,
+    baseCurrencyBalance: state.funds.balances[baseCurrency].resardis,
+    quoteCurrencyBalance: state.funds.balances[quoteCurrency].resardis,
+    network: state.contract.network,
+    api: state.contract.contractAPI,
   }
 }
 
@@ -61,33 +68,111 @@ type PropsFromRedux = ConnectedProps<typeof connector>
 
 type Props = PropsFromRedux & OwnProps
 
-const OrderFormConnected = ({ baseCurrency, quoteCurrency, price, isBuy }:Props) => (
+const OrderFormConnected = ({
+  baseCurrency,
+  quoteCurrency,
+  baseCurrencyBalance,
+  quoteCurrencyBalance,
+  price,
+  orderType,
+  isBuy,
+  network,
+  api,
+}:Props) => {
+
+  useEffect(() => {
+    const baseToken = Object.keys(network.tokens).find(address => network.tokens[address] === baseCurrency)
+    const quoteToken = Object.keys(network.tokens).find(address => network.tokens[address] === quoteCurrency)
+
+    setOrderData(orderData => ({
+      ...orderData,
+      price: price.toFixed(12),
+      baseToken: baseToken || '',
+      quoteToken: quoteToken || '',
+      offerType: (orderType === 'limit') ? 0 : 1,
+    }))
+  }, [price, baseCurrency, orderType, quoteCurrency, network.tokens])
+
+  const [ orderData, setOrderData ] = useState({
+    price: price.toFixed(12),
+    amount: new BigNumber(0).toFixed(12),
+    total: new BigNumber(0).toFixed(12),
+    offerType: (orderType === 'limit') ? 0 : 1,
+    isBuy,
+    baseToken: '',
+    quoteToken: '',
+    selectionStart: 0,
+})
+  const updateOrderData = (e:any) => {
+    // disallow non-BigNumber values
+    if (new BigNumber(e.target.value).toString() === 'NaN') return
+    let newOrderData = { ...orderData, [e.target.name]: e.target.value}
+    const { amount, price } = newOrderData
+    newOrderData.total = new BigNumber(amount).multipliedBy(new BigNumber(price)).toFixed(12)
+    setOrderData(newOrderData)
+  }
+
+  const isLimit = orderType === 'limit'
+  const total = new BigNumber(orderData.total).multipliedBy(1e+18)
+  const buyError = isBuy && quoteCurrencyBalance.lt(total)
+  const sellError = !isBuy && baseCurrencyBalance.lt(new BigNumber(orderData.amount))
+
+  return (
   <div className="order-form-box">
     <div className="order-form-row">
       <div>Price</div>
-      <div className="order-price">
+      <div className={"order-price" + (isLimit ? '' : ' order-price-disabled')}>
         <div>
           1 {baseCurrency} =
         </div>
-        <input type="text" value={price} />
+        {orderType === 'limit' ? (
+          <input name="price" type="text" value={orderData.price} onChange={e => updateOrderData(e)} />
+        ) : (
+          <input name="price" type="text" value={orderData.price} disabled />
+        )}
       </div>
     </div>
     <div className="order-form-row">
       <div>Amount</div>
-      <input type="text" />
+      {buyError && (
+        <div className="order-form-error">
+          Not enough ETH for this buy order
+        </div>
+      )}
+      {sellError && (
+        <div className="order-form-error">
+          Not enough {baseCurrency} for this sell order
+        </div>
+      )}
+      <input
+        style={ (buyError || sellError) ? { borderColor: 'red' } : {}}
+        name="amount"
+        type="text"
+        value={orderData.amount}
+        onChange={e => updateOrderData(e)}
+       />
     </div>
+
     <div className="order-form-row">
       <div>Total</div>
-      <input type="text" />
+      <input name="total" type="text" disabled value={`${orderData.total} ${quoteCurrency}`} />
     </div>
     <div className="order-form-row">
-      <div className="order-balance">Balance {isBuy ? quoteCurrency : baseCurrency }: 0.00000000</div>
-      <button className={'order-button ' + (isBuy ? 'greenBG' : 'redBG')}>
-        {isBuy ? 'Buy' : 'Sell'} {baseCurrency}
-      </button>
+    <div className="order-balance">
+      Balance {isBuy ?
+        `${quoteCurrency} ${wei2ether(quoteCurrencyBalance, 10)}`
+        :
+        `${baseCurrency} ${wei2ether(baseCurrencyBalance, 10)}`
+      }
+    </div>
+    <button className={'order-button ' + (isBuy ? 'greenBG' : 'redBG')}
+      onClick={() => createOrder(api, orderData)}
+    >
+      {isBuy ? 'Buy' : 'Sell'} {baseCurrency}
+    </button>
     </div>
   </div>
-)
+)}
 const OrderForm = connector(OrderFormConnected)
 
 const NewOrder = () => {
@@ -109,8 +194,8 @@ const NewOrder = () => {
     </div>
 
     <div className="order-form-boxes">
-      <OrderForm isBuy={true} />
-      <OrderForm isBuy={false} />
+      <OrderForm isBuy={true} orderType={orderType} />
+      <OrderForm isBuy={false} orderType={orderType} />
     </div>
   </div>
 )}

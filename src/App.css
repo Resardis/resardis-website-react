@@ -2,31 +2,7 @@
   display: grid;
   /* grid-template-columns: 1fr [start] minmax(450px, 460px) [middle] minmax(400px, 800px) minmax(450px, 460px) [end] 1fr; */
   grid-template-columns: 1fr [start] minmax(350px, 360px) [middle] minmax(800px, 1200px) minmax(350px, 360px) [end] 1fr;
-  grid-template-rows: 90px [top] 300px 224px 300px [bottom] 1fr;
-}
-
-.header {
-  grid-row: 1;
-  grid-column: span start / end;
-  background-color: #0B1013;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 6px;
-}
-.header ul {
-  display: inline-block;
-  list-style: none;
-}
-.header ul li {
-  color: #DFE0DF;
-  display: inline-block;
-  margin: 0 32px;
-  line-height: 32px;
-  font-size: 20px;
-}
-.header ul li:hover {
-  color: #FFB33C;
+  grid-template-rows: 90px [top] 300px 236px 300px [bottom] 1fr;
 }
 
 .selected-market {
@@ -55,6 +31,10 @@
   grid-row: span top / bottom;
   grid-column: 4;
 }
+.funds {
+  grid-row: span top / bottom;
+  grid-column: span start / end;
+}
 
 .main-tab {
   background-color: #0B1013;
@@ -62,6 +42,9 @@
   margin: 3px;
   display: flex;
   flex-direction: column;
+}
+.main-tab-funds {
+  margin: 13px;
 }
 
 .logo {
@@ -121,9 +104,7 @@
   text-align: center;
   width: 25%;
 }
-.container tr {
-  cursor: pointer;
-}
+
 .container tr:nth-child(even) {
   background-color: #32373A;
 }

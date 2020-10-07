@@ -11,7 +11,7 @@ const SearchBox = ({value, updateTextFilter, target}:SearchBox) => (
     <input className="search-input" placeholder="Search" type="text" value={value} onChange={
       e => updateTextFilter(target, e.target.value)
     }/>
-    <SearchIcon fill="#8E9091" width="16px" style={{ position: 'absolute', top: '-9px', left: '4px', zIndex: 1 }} />
+    <SearchIcon className="search-icon" />
   </div>
 )
 

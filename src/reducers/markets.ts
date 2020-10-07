@@ -1,8 +1,22 @@
-import { SORT_BY, SORT_DIRECTION, TEXT_FILTER, sortingTypes, sortingDirections, SELECT_CURRENCY_PAIR } from '../constants/actionTypes'
+import {
+  SORT_BY,
+  SORT_DIRECTION,
+  TEXT_FILTER,
+  sortingTypes,
+  sortingDirections,
+  UPDATE_CURRENCY_PAIR_DATA,
+  SELECT_CURRENCY_PAIR,
+} from '../constants/actionTypes'
 import { TableActions } from '../actions'
 import { TAB_MARKETS } from '../constants/tabData'
+import { BigNumber } from 'bignumber.js'
 
-export type MarketData = Array<[string, number, number, number]>
+export type PairData = [string, number, number, BigNumber]
+export type MarketData = Array<PairData>
+
+export type AllPairsData = {
+  [key:string]:PairData,
+}
 export type OrdersData = Array<[number, number, number]>
 
 export interface Markets {
@@ -10,8 +24,7 @@ export interface Markets {
   sortDirection: sortingDirections,
   textFilter: string,
   selectedCurrencyPair: string,
-  dataETH: MarketData,
-  dataUSDT: MarketData,
+  data: AllPairsData,
   ordersData: OrdersData,
 }
 
@@ -19,92 +32,12 @@ const initialState: Markets = {
   sortBy: sortingTypes.NO_SORT,
   sortDirection: sortingDirections.SORT_ASC,
   textFilter: '',
-  selectedCurrencyPair: 'USDT/ETH',
-  dataETH: [
-    ['USDT/ETH', 1.0, 0.3300, 0.0000],
-    ['LEND/ETH', 0.1, 0.0000, 0.0000],
-    ['RSD/ETH', -2.0, 0.0000, 0.0550],
-    ['LINK/ETH', 0.0, 0.0550, 0.0000],
-    ['MKR/ETH', 0.0, 0.0000, 0.0000],
-    ['BAT/ETH', 0.3, 0.0000, 0.0000],
-    ['LEND/ETH', 0.0, 0.0000, 0.0000],
-    ['USDT/ETH', 5.0, 0.0000, 0.0000],
-    ['LEND/ETH', 0.0, 0.0000, 0.0000],
-    ['RSD/ETH', 0.0, 0.0000, 0.0000],
-    ['LINK/ETH', 0.0, 0.0000, 0.0000],
-    ['MKR/ETH', 3.0, 0.0000, 0.3000],
-    ['BAT/ETH', 3.3, 0.0000, 0.0000],
-    ['LEND/ETH', -0.0, 0.0000, 0.5550],
-    ['USDT/ETH', 0.0, 0.0000, 7.0000],
-    ['LEND/ETH', 0.0, 0.7000, 0.0000],
-    ['RSD/ETH', 0.0, 0.0000, 0.0000],
-    ['LINK/ETH', 0.0, 8.0000, 0.0000],
-    ['MKR/ETH', 0.0, 0.0000, 0.0000],
-    ['BAT/ETH', 0.0, 0.0000, 0.0000],
-    ['LEND/ETH', -10.0, 0.0000, 0.0000],
-    ['USDT/ETH', 0.0, 0.0000, 0.0000],
-    ['LEND/ETH', 0.0, 0.0000, 0.0000],
-    ['RSD/ETH', 0.0, 0.0000, 0.0000],
-    ['LINK/ETH', 0.0, 0.0000, 0.0000],
-    ['MKR/ETH', 0.0, 0.0000, 0.0000],
-    ['BAT/ETH', 0.0, 0.0000, 0.0000],
-    ['LEND/ETH', 0.0, 0.0000, 0.0000],
-    ['USDT/ETH', 0.0, 0.0000, 0.0000],
-    ['LEND/ETH', 0.0, 0.0000, 0.0000],
-    ['RSD/ETH', 0.0, 0.0000, 0.0000],
-    ['LINK/ETH', 0.0, 0.0000, 0.0000],
-    ['MKR/ETH', 0.0, 0.0000, 0.0000],
-  ],
-  dataUSDT: [
-    ['ETH/USDT', 1.2, 0.3300, 0.0000],
-    ['LEND/USDT', 2.1, 0.0000, 0.0000],
-    ['RSD/USDT', 2.0, 0.0000, 0.0550],
-    ['LINK/USDT', 0.0, 0.0550, 0.0000],
-    ['MKR/USDT', 0.4, 0.0040, 0.0000],
-    ['BAT/USDT', 0.3, 0.0000, 0.0000],
-    ['LEND/USDT', 0.0, 4.0000, 0.0000],
-    ['USDT/USDT', 5.0, 0.0000, 0.0000],
-    ['LEND/USDT', 0.0, 0.0000, 0.0000],
-    ['RSD/USDT', 0.0, 0.0000, 0.0000],
-    ['LINK/USDT', 0.0, 5.0000, 0.0000],
-    ['MKR/USDT', 3.0, 0.0000, 0.3000],
-    ['BAT/USDT', 3.3, 0.0000, 0.0000],
-    ['LEND/USDT', 0.0, 0.0000, 0.5550],
-    ['USDT/USDT', 0.0, 0.0000, 7.0000],
-    ['LEND/USDT', 0.0, 0.7000, 0.0000],
-    ['RSD/USDT', 0.0, 0.0000, 0.0000],
-    ['LINK/USDT', 0.0, 8.0000, 0.0000],
-    ['MKR/USDT', 0.0, 0.0000, 0.0000],
-    ['BAT/USDT', 0.0, 0.0000, 0.0000],
-    ['LEND/USDT', 0.0, 0.0000, 0.0000],
-    ['USDT/USDT', 0.0, 0.0000, 0.0000],
-    ['LEND/USDT', 0.0, 0.0000, 0.0000],
-    ['RSD/USDT', 0.0, 0.0000, 0.0000],
-    ['LINK/USDT', 0.0, 0.0000, 0.0000],
-    ['MKR/USDT', 0.0, 0.0000, 0.0000],
-    ['BAT/USDT', 0.0, 0.0000, 0.0000],
-    ['LEND/USDT', 0.0, 0.0000, 0.0000],
-    ['USDT/USDT', 0.0, 0.0000, 0.0000],
-    ['LEND/USDT', 0.0, 0.0000, 0.0000],
-    ['RSD/USDT', 0.0, 0.0000, 0.0000],
-    ['LINK/USDT', 0.0, 0.0000, 0.0000],
-    ['MKR/USDT', 0.0, 0.0000, 0.0000],
-  ],
+  selectedCurrencyPair: '',
+  data: {
+    'MKR/ETH': [ 'MKR/ETH', 0.0, 0.0000, new BigNumber(0.0010) ],
+    'ETH/DAI': [ 'ETH/DAI', 1.2, 0.3300, new BigNumber(2.0000) ],
+  },
   ordersData: [
-    [0.0000, 0.0000, 0.0000],
-    [0.0000, 0.0000, 0.0000],
-    [0.0000, 0.0000, 0.0000],
-    [0.0000, 0.0000, 0.0000],
-    [0.0000, 0.0000, 0.0000],
-    [0.0000, 0.0000, 0.0000],
-    [0.0000, 0.0000, 0.0000],
-    [0.0000, 0.0000, 0.0000],
-    [0.0000, 0.0000, 0.0000],
-    [0.0000, 0.0000, 0.0000],
-    [0.0000, 0.0000, 0.0000],
-    [0.0000, 0.0000, 0.0000],
-    [0.0000, 0.0000, 0.0000],
-    [0.0000, 0.0000, 0.0000],
     [0.0000, 0.0000, 0.0000],
     [0.0000, 0.0000, 0.0000],
     [0.0000, 0.0000, 0.0000],
@@ -123,22 +56,35 @@ const marketsReducer = (state:Markets = initialState, action:TableActions):Marke
   switch(action.type) {
     case SORT_BY:
       return { ...state, sortBy: action.payload }
-    case SORT_DIRECTION:
 
+    case SORT_DIRECTION:
       return {
         ...state,
         sortDirection: state.sortDirection === sortingDirections.SORT_ASC
         ? sortingDirections.SORT_DESC
         : sortingDirections.SORT_ASC
       }
+
     case TEXT_FILTER:
       if (action.payload.target === TAB_MARKETS)
         return { ...state, textFilter: action.payload.textFilter }
       else
         return state
+
     case SELECT_CURRENCY_PAIR:
       console.log(action)
       return { ...state, selectedCurrencyPair: action.payload }
+
+    case UPDATE_CURRENCY_PAIR_DATA:
+//console.log('UPDATE_CURRENCY_PAIR_DATA', action.payload)
+      const newState = { ...state }
+      newState.data[action.payload[0]] = action.payload
+      // Market gets data for all pairs. in case no pair is selected,
+      // just pick the first one. For now. And (TODO) establish what should
+      // be selected by default
+      if (!newState.selectedCurrencyPair) newState.selectedCurrencyPair = action.payload[0]
+      return newState
+
     default:
       return state
   }

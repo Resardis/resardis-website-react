@@ -6,7 +6,10 @@ import {
   TAB_SELECTEDMARKET_ORDERS,
   TAB_MENU_SELECTEDMARKET_NAME,
   TAB_USERDATA_OPEN_ORDERS,
-  TAB_MENU_USERDATA_NAME
+  TAB_MENU_USERDATA_NAME,
+  TAB_MENU_FUNDS_NAME,
+  TAB_FUNDS_ASSETS,
+  TAB_FUNDS_TRANSFER,
 } from '../constants/tabData'
 
 export interface ActiveTabs {
@@ -17,6 +20,8 @@ const initialActiveTabs: ActiveTabs = {
   [TAB_MENU_MARKETS_NAME]: TAB_MARKETS_ETH,
   [TAB_MENU_SELECTEDMARKET_NAME]: TAB_SELECTEDMARKET_ORDERS,
   [TAB_MENU_USERDATA_NAME]: TAB_USERDATA_OPEN_ORDERS,
+  //[TAB_MENU_FUNDS_NAME]: TAB_FUNDS_ASSETS,
+  [TAB_MENU_FUNDS_NAME]: TAB_FUNDS_TRANSFER,
 }
 
 const activeTabsReducer = (state:ActiveTabs = initialActiveTabs, action:ActiveTabActions):ActiveTabs => {

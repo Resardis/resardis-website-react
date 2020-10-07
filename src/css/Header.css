@@ -1,0 +1,39 @@
+.header {
+  grid-row: 1;
+  grid-column: span start / end;
+  background-color: #0B1013;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 6px;
+}
+
+.header ul {
+  display: inline-block;
+  list-style: none;
+}
+
+.header ul li {
+  display: inline-block;
+  margin: 0 32px;
+  line-height: 32px;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.header ul li:hover {
+  color: #FFB33C;
+}
+
+.header-item {
+  color: #DFE0DF;
+}
+
+.header-item-active {
+  color: #FFB33C;
+}
+
+.header-item-disabled {
+  color: #C2C3C3;
+  pointer-events: none;
+}

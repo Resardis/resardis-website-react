@@ -1,56 +1,43 @@
-import { TEXT_FILTER } from '../constants/actionTypes'
-import { TableActions } from '../actions'
-import {
-  TAB_USERDATA,
-  TAB_USERDATA_OPEN_ORDERS,
-  TAB_USERDATA_ORDER_HISTORY,
-  TAB_USERDATA_FUNDS,
-  TAB_USERDATA_TRADE_HISTORY,
-} from '../constants/tabData'
+import { TEXT_FILTER, ADD_MY_ORDER, MyOrdersListType } from '../constants/actionTypes'
+import { TAB_USERDATA } from '../constants/tabData'
+import { UserDataActions } from '../actions/userDataActions'
 
-export type UserDataType = Array<number | string>
+// export type MyOrderType = {
+//   offerID: number,
+//   timestamp: number,
+//   pair: string,
+//   type: number,
+//   side: string,
+//   price: BigNumber,
+//   amount: BigNumber,
+//   filled: BigNumber,
+//   average: BigNumber,
+//   total: BigNumber,
+// }
 
 export interface UserData {
   textFilter: string,
-  data: {
-    [key:string]: Array<UserDataType>
-  }
+  orders: MyOrdersListType,
 }
 
 const initialState: UserData = {
   textFilter: '',
-  data: {
-    [TAB_USERDATA_OPEN_ORDERS]: [
-      ['27/10/19 12:00', 'SDJ/ETH','Market','Sell',0.0000,0.0000,1,0.0000],
-      ['27/11/19 12:01', 'ASD/ETH','Limit','Buy',0.0000,0.0000,2,0.1000],
-      ['27/11/19 12:02', 'SJ/ETH','Market','Sell',0.0000,0.0000,3,0.0020],
-      ['27/11/19 12:03', 'SDJ/ETH','Market','Sell',0.0000,0.0000,4,0.0000],
-      ['27/11/13 12:00', 'SDJ/ETH','Market','Sell',0.0000,0.0000,1,20.0000],
-      ['27/11/14 12:00', 'SDJ/ETH','Market','Sell',0.0000,0.0000,1,0.0000],
-      ['27/11/15 12:00', 'SDJ/ETH','Market','Sell',0.0000,0.0000,1,0.0000],
-      ['26/11/19 12:00', 'SDJ/ETH','Market','Sell',0.0000,0.0000,1,0.0000],
-      ['21/11/19 12:00', 'SDJ/ETH','Market','Sell',0.0000,0.0000,1,0.0000],
-    ],
-    [TAB_USERDATA_ORDER_HISTORY]: [
-      ['27/11/19 12:00', 'SDJ/ETH','Market','Sell',0.0000,0.0000,0.0000,0.0000,'Filled'],
-    ],
-    [TAB_USERDATA_FUNDS]: [
-      ['BAT - Basic Attention Token',0.0000,0.0000,0.0000],
-    ],
-    [TAB_USERDATA_TRADE_HISTORY]: [
-      ['27/11/19 12:00', 'SDJ/ETH','Maker','Sell',0.0000,0.0000,0.0000,0.0000],
-    ],
-  }
+  orders: {},
 }
 
-const userDataReducer = (state:UserData = initialState, action:TableActions):UserData => {
+const userDataReducer = (state:UserData = initialState, action:UserDataActions):UserData => {
   switch(action.type) {
     case TEXT_FILTER:
       if (action.payload.target === TAB_USERDATA)
         return { ...state, textFilter: action.payload.textFilter }
       else
         return state
-    }
+
+    case ADD_MY_ORDER:
+      const newState = { ...state, orders: { ...state.orders, [action.payload.offerID.toString()]: action.payload }}
+      return newState
+  }
+
   return state
 }
 

@@ -1,0 +1,80 @@
+.funds .container {
+  margin: 0 12px 12px 12px;
+}
+
+.funds .tabbed-nav {
+  margin: 12px 12px 0 30px;
+}
+
+.assets-top-header {
+  display: flex;
+  align-items: center;
+  background-color: #B3B3B3;
+  color: #4D4D4D;
+  padding: 10px;
+}
+
+.assets-top-header .search-input {
+  background-color: #B3B3B3;
+  margin: 0 32px;
+  font-size: 18px;
+  padding-left: 36px;
+  width: 70px;
+  color: #4D4D4D;
+}
+
+.assets-top-header .search-input::placeholder {
+  color: #4D4D4D;
+}
+
+.assets-top-header .search-icon {
+  fill: #4D4D4D;
+  top: -5px;
+  left: 40px;
+}
+
+.funds .tabbed-nav-item {
+  flex: 0 0 180px;
+  background-color: #4D4D4D;
+}
+
+.funds .tabbed-nav-item-active {
+  background-color: #B3B3B3;
+  border-bottom: 1px solid #9A9A9A;
+}
+
+.assets-total {
+  font-size: 20px;
+  font-weight: 300;
+  margin-right: 12px;
+}
+
+.assets-hide-zero {
+  font-size: 18px;
+  margin-right: auto;
+}
+
+/* .assets-table {
+  table-layout: fixed;
+} */
+
+.assets-table th {
+  background-color: #808080;
+  font-size: 14px;
+  width: 8%;
+  cursor: pointer;
+}
+
+.assets-table td {
+  width: 8%;
+}
+
+.trade-button {
+  color: #454849;
+  background: #8E9091;
+  border-radius: 4px;
+  border: 0;
+  outline: none;
+  padding: 2px 10px;
+  font-size: 10px;
+}

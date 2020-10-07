@@ -38,3 +38,22 @@
   align-items: center;
   justify-content: center;
 }
+
+.no-wallet-info {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 18px;
+  height: 80%;
+  flex-direction: column;
+}
+
+.enable-wallet-button {
+  border: none;
+  border-radius: 18px;
+  background-color: #FBB03B;
+  color: #333;
+  padding: 6px 28px;
+  font-size: 16px;
+  outline: none;
+}

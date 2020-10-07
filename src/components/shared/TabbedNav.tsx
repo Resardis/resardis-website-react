@@ -9,7 +9,13 @@ interface TabbedNavProps {
 
 const TabbedNav = ({ items, tabbedNavigationName }: TabbedNavProps) => (
   <div className="tabbed-nav">
-    {items.map(item => <TabItem key={item.title} item={item} tabbedNavigationName={tabbedNavigationName} />)}
+    {items.map(item => (
+      <TabItem
+        key={item.title}
+        item={item}
+        tabbedNavigationName={tabbedNavigationName}
+      />
+    ))}
   </div>
 )
 

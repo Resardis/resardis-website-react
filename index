@@ -1,0 +1,71 @@
+// import abiResardis from '../abi/Resardis.json'
+// import { allTokensAddresses } from '../constants/networks'
+// import { tokenABIs } from '../constants/currencyPairs'
+// import { ethers } from 'ethers'
+// import { BigNumber } from 'bignumber.js'
+
+// const generalTokenABI = [
+//   'function balanceOf(address owner) view returns (uint256)',
+//   'function decimals() view returns (uint8)',
+//   'function symbol() view returns (string)',
+// ]
+
+// const getTokenDetailsFromChain = (contractAddress:string, myAddress:string) => {
+//   const signer = (new ethers.providers.Web3Provider(window.ethereum)).getSigner()
+//   const contract = new ethers.Contract(contractAddress, generalTokenABI, signer)
+
+//   const balance = contract.balanceOf(myAddress)
+//   .then((balance:BigNumber) => {
+//     console.log('balance of ND', new BigNumber(balance.toString()).toFixed(10))
+//     return new BigNumber(balance.toString()).toFixed(10)
+//   })
+//   .catch((err:any) => console.log('Error getting balance of', contractAddress, myAddress, err))
+
+//   const decimals = contract.decimals()
+//   .then((decimals:number) => {
+//     console.log('decs', decimals)
+//     return decimals
+//   })
+//   .catch((err:any) => console.log('Error getting decimals of', contractAddress, err))
+
+//   const symbol = contract.symbol()
+//   .then((symbol:string) => {
+//     console.log('symbol of ND', symbol)
+//     return symbol
+//   })
+//   .catch((err:any) => console.log('Error getting symbol of', contractAddress, err))
+
+//   Promise.all([balance, decimals, symbol]).then((values) => {
+//     console.log(values)
+//     return values
+//   })
+// }
+
+// const getTokenBalanceFromChain = (contractAddress:string, myAddress:string) => {
+//     // if (!(contractAddress in allTokensAddresses)) return
+//     // const symbol = allTokensAddresses[contractAddress]
+//     // const abi = symbol in tokenABIs ? tokenABIs[symbol] : generalTokenABI
+//     // const signer = (new ethers.providers.Web3Provider(window.ethereum)).getSigner()
+
+//     // let tokenContract = new ethers.Contract(contractAddress, abi, signer)
+
+//     // tokenContract.balanceOf(myAddress)
+//     // .then((balance:BigNumber) => {
+//     //   console.log('balance of TEST', new BigNumber(balance.toString()).toFixed(10))
+//     //   return new BigNumber(balance.toString()).toFixed(10)
+//     // })
+//     // .catch((err:any) => console.log('Error getting balance from', contractAddress, err))
+//   }
+
+
+// const getTokenBalanceFromDEX = (tokenAddress:string, myAddress:string) => {
+//   // function balanceOf(address token, address user) external view returns (uint256) {
+
+//   const signer = (new ethers.providers.Web3Provider(window.ethereum)).getSigner()
+//   let contract = new ethers.Contract(contractAddress, abiResardis, signer)
+
+//   contract.functions.balanceOf(tokenAddress, myAddress)
+//   .then((x:any) => console.log(x))
+// }
+
+// const getAllBalances = network

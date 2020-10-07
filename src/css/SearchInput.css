@@ -7,3 +7,12 @@
   padding-left: 28px;
   width: 80%;
 }
+
+.search-icon {
+  position: absolute;
+  top: -9px;
+  left: 4px;
+  z-index: 1;
+  width: 16px;
+  fill: #8E9091;
+}
