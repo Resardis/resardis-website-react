@@ -161,8 +161,8 @@ export const createOrder = (contractAPI:any, offerData:OfferData, DOMID:string) 
   const payGem:string = isBuy ? quoteToken : baseToken
   const buyGem:string = isBuy ? baseToken : quoteToken
   // to wei, basically
-  const payAmt:BN = amount.multipliedBy(1e+18)
-  const buyAmt:BN = price.multipliedBy(amount).multipliedBy(1e+18)
+  const payAmt:BN = isBuy ? price.multipliedBy(amount).multipliedBy(1e+18) : amount.multipliedBy(1e+18)
+  const buyAmt:BN = isBuy ? amount.multipliedBy(1e+18) : price.multipliedBy(amount).multipliedBy(1e+18)
 
   console.log(`--params', payAmt: ${payAmt.toFixed()}, payGem: ${payGem}, buyGem: ${buyGem}, buyAmt: ${buyAmt.toFixed()}, offerType: ${offerType}`)
 
