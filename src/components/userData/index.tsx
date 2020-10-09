@@ -221,8 +221,8 @@ const NoWallet = () => {
 }
 
 const Table = ({ headers, activeTab, isWalletEnabled }:PropsFromRedux) => {
-  const [ sortBy, setSortby ] = useState(sortingTypes.SORT_BY_NAME)
-  const [ sortDirection, setSortDirection ] = useState(sortingDirections.SORT_ASC)
+  const [ sortBy, setSortby ] = useState(sortingTypes.SORT_BY_DATE)
+  const [ sortDirection, setSortDirection ] = useState(sortingDirections.SORT_DESC)
 
   const flipSortDirection = () => {
     setSortDirection(sortDirection === sortingDirections.SORT_DESC ?

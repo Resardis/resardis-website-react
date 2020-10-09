@@ -34,7 +34,8 @@ const userDataReducer = (state:UserData = initialState, action:UserDataActions):
         return state
 
     case ADD_MY_ORDER:
-      const newState = { ...state, orders: { ...state.orders, [action.payload.offerID.toString()]: action.payload }}
+      const newState = { ...state }
+      newState.orders = { ...state.orders, [action.payload.offerID.toString()]: action.payload }
       return newState
   }
 

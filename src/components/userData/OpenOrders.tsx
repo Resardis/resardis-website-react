@@ -36,18 +36,19 @@ type PropsFromRedux = ConnectedProps<typeof connector>
 
 type Props = PropsFromRedux & OwnProps
 
-const OpenOrders = (props:Props) => {
+const OpenOrders = ({ orders, textFilter, activeOffers, sortBy, sortDirection, api }:Props) => {
+  if (Object.keys(activeOffers).length > 155) console.log('OpenOrders', activeOffers, sortBy, sortDirection)
   return <>
   {sortAndFilter(
-    props.orders,
-    props.textFilter,
-    props.sortBy,
-    props.sortDirection,
-    props.activeOffers,
+    orders,
+    textFilter,
+    sortBy,
+    sortDirection,
+    activeOffers,
     'active'
   )
   .map((id:string) => {
-    const { offerID, timestamp, pair, type, side, price, amount, filled, total } = props.orders[id]
+    const { offerID, timestamp, pair, type, side, price, amount, filled, total } = orders[id]
     const DOMID = shortid()
 
     return (
@@ -67,7 +68,7 @@ const OpenOrders = (props:Props) => {
             onClick={() => {
               const buttonElement = document.getElementById(DOMID)
               if (buttonElement) buttonElement.innerHTML = 'cancelling...'
-              cancelOrder(props.api, offerID, DOMID)
+              cancelOrder(api, offerID, DOMID)
             }}
           >
             Cancel

@@ -110,9 +110,10 @@ const TheGraphProvider = ({
   if (!accountAddress) return null
 
   const observableQuery = client.watchQuery({ query: getMyOrders(accountAddress), pollInterval: 1000 })
-
+  observableQuery.startPolling(1000)
   observableQuery.subscribe({ next: ({ data }: {data:any}) => {
     // TODO: batched updates, data.makes.map at a time, isActive&addMyOrder
+
     data.makes.map(async (order:MakeOrder) => {
       let side:string, pair:string, amount:BigNumber
 
@@ -138,6 +139,8 @@ const TheGraphProvider = ({
 
       // fire isActive check, which is going to update state in contract reducer
       isActive(api, order.offerID)
+
+      //if (order.offerID > 152) console.log(`my new order: ${order.offerID} ${order.timestamp} buyAmt: ${buyAmt.toString()}, payAmt: ${payAmt.toString()}, amount: ${amount}`)
 
       addMyOrder({
         offerID: order.offerID,

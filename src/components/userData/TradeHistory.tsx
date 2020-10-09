@@ -66,8 +66,8 @@ const processTradeItem = (order:any):MyOrderType => {
     payAmt = new BigNumber(order.payAmt)
   } else {
     type = 'Taker'
-    buyAmt = new BigNumber(order.takeAmt)
-    payAmt = new BigNumber(order.giveAmt)
+    buyAmt = new BigNumber(order.giveAmt)
+    payAmt = new BigNumber(order.takeAmt)
   }
   const price:BigNumber = buyAmt.div(payAmt)
 

@@ -122,20 +122,20 @@ const MarketsData = (props: PropsFromRedux) => {
   //   volume <- += takeAmt
   // }
 
-  let last24Start = Date.now() / 1000 - 86400
+  let last24Start = (Math.floor(Date.now() / 2000)) * 2 - 86400
   let prev24End = last24Start
   let prev24Start = last24Start - 86400 * 2
 
   // temp!
 
-  last24Start = 1598948029
-  prev24End = 1498948029
-  prev24Start = 129898165
+  //last24Start = 1598948029
+//  prev24End = 1498948029
+//  prev24Start = 129898165
 
   const { loading, error, data } = useQuery(getPairs(last24Start, prev24Start, prev24End), { pollInterval: 1000 })
 
   if (loading) return <span>Loading...</span>
-  if (error) return <span>Error! {error.message}</span>
+  if (error) return <span>Error! {error}</span>
 
   const dataPoints = ['last24takes', 'previous24takes']
 
@@ -151,7 +151,7 @@ const MarketsData = (props: PropsFromRedux) => {
 
       const takeAmt = new BigNumber(order.takeAmt)
       const giveAmt = new BigNumber(order.giveAmt)
-
+//console.log('dataPoints.forEach', set, takeAmt.toString(), giveAmt.toString())
       if (order.pair in pairs[set]) {
         // query sorts orders, so the first seen is the one to take price from
         if (!('price' in pairs[set])) {

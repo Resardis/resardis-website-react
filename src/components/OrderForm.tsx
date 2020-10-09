@@ -105,7 +105,7 @@ const OrderFormConnected = ({
 })
   const updateOrderData = (e:any) => {
     // disallow non-BigNumber values
-    if (new BigNumber(e.target.value).toString() === 'NaN') return
+    if (e.target.value !== '' && new BigNumber(e.target.value).toString() === 'NaN') return
     let newOrderData = { ...orderData, [e.target.name]: e.target.value}
     const { amount, price } = newOrderData
     newOrderData.total = new BigNumber(amount).multipliedBy(new BigNumber(price)).toFixed(12)
@@ -116,6 +116,7 @@ const OrderFormConnected = ({
   const total = new BigNumber(orderData.total).multipliedBy(1e+18)
   const buyError = isBuy && quoteCurrencyBalance.lt(total)
   const sellError = !isBuy && baseCurrencyBalance.lt(new BigNumber(orderData.amount))
+  const DOMID = isBuy ? 'buyButtonOrderID' : 'sellButtonOrderID'
 
   return (
   <div className="order-form-box">
@@ -166,7 +167,11 @@ const OrderFormConnected = ({
       }
     </div>
     <button className={'order-button ' + (isBuy ? 'greenBG' : 'redBG')}
-      onClick={() => createOrder(api, orderData)}
+      id={isBuy ? 'buyButtonOrderID' : 'sellButtonOrderID'}
+      onClick={() => {
+        console.log(`_==_=++', quoteCurrency: ${quoteCurrency}, baseCurrency: ${baseCurrency}, baseToken: ${orderData.baseToken}, quoteToken: ${orderData.quoteToken}`)
+        createOrder(api, orderData, DOMID)
+      }}
     >
       {isBuy ? 'Buy' : 'Sell'} {baseCurrency}
     </button>

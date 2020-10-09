@@ -110,9 +110,48 @@ type OfferData = {
   offerType:number,
 }
 
-export const createOrder = (contractAPI:any, offerData:OfferData) => {
+export const createOrder = (contractAPI:any, offerData:OfferData, DOMID:string) => {
   console.log('creating new offer:', offerData)
+//   event LogMake(
+//     uint256 indexed id,
+//     bytes32 indexed pair,
+//     address indexed maker,
+//     address payGem,
+//     address buyGem,
+//     uint128 payAmt,
+//     uint128 buyAmt,
+//     uint64 timestamp,
+//     uint8 offerType
+// );
 
+// event LogTake(
+//     uint256 id,
+//     bytes32 indexed pair,
+//     address indexed maker,
+//     address payGem,
+//     address buyGem,
+//     address indexed taker,
+//     uint128 takeAmt,
+//     uint128 giveAmt,
+//     uint64 timestamp,
+//     uint8 offerType
+// );
+
+  contractAPI.on('LogMake', async (id:any, pair:string, maker:string) => {
+    console.log('LogMake res', id.toString(), maker)
+    if (await contractAPI.signer.getAddress() === maker) {
+      updateButton(DOMID, 'Done!')
+      store.dispatch(addActiveOfferID(id.toNumber()))
+
+    }
+  })
+  contractAPI.on('LogTake', async (id:any, pair:string, maker:string, payGem:string, buyGem:string, taker:string) => {
+    console.log('LogTake res', id.toString(), taker, DOMID)
+    if (await contractAPI.signer.getAddress() === taker) {
+      updateButton(DOMID, 'Done!')
+      store.dispatch(addActiveOfferID(id.toNumber()))
+    }
+  })
 
   const { quoteToken, baseToken, isBuy, offerType } = offerData
 
@@ -120,18 +159,33 @@ export const createOrder = (contractAPI:any, offerData:OfferData) => {
   const amount = new BN(offerData.amount)
 
   const payGem:string = isBuy ? quoteToken : baseToken
-  const buyGem:string = isBuy ? baseToken: quoteToken
+  const buyGem:string = isBuy ? baseToken : quoteToken
   // to wei, basically
-  const payAmt:BN = price.multipliedBy(amount).multipliedBy(1e+18)
-  const buyAmt:BN = amount.multipliedBy(1e+18)
+  const payAmt:BN = amount.multipliedBy(1e+18)
+  const buyAmt:BN = price.multipliedBy(amount).multipliedBy(1e+18)
 
-  console.log('--params', payAmt.toFixed(), payGem, buyAmt.toFixed(), buyGem, offerType)
+  console.log(`--params', payAmt: ${payAmt.toFixed()}, payGem: ${payGem}, buyGem: ${buyGem}, buyAmt: ${buyAmt.toFixed()}, offerType: ${offerType}`)
+
+//   function offer(
+//     uint256 payAmt, //maker (ask) sell how much
+//     address payGem, //maker (ask) sell which token
+//     uint256 buyAmt, //maker (ask) buy how much
+//     address buyGem, //maker (ask) buy which token
+//     uint256 pos, //position to insert offer, 0 should be used if unknown
+//     bool rounding, //match "close enough" orders?
+//     uint8 offerType
+// ) public returns (uint256) {
+  updateButton(DOMID, 'signing TX...')
 
   contractAPI.offer(payAmt.toFixed(), payGem, buyAmt.toFixed(), buyGem, 0, true, offerType)
   .then(async (res:any) => {
     console.log('offer res:', res)
+    updateButton(DOMID, 'waiting for TX...')
   })
-  .catch((e:any) => console.log('offer caught', e))
+  .catch((e:any) => {
+    updateButton(DOMID, 'Error!')
+    console.log('offer caught', e.code, e.message)
+  })
 }
 
 const updateButton = (DOMID:string, text:string) => {
