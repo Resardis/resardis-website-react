@@ -6,6 +6,8 @@ import {
   sortingDirections,
   UPDATE_CURRENCY_PAIR_DATA,
   SELECT_CURRENCY_PAIR,
+  SELECT_ORDER,
+  MyOrderType,
 } from '../constants/actionTypes'
 import { TableActions } from '../actions'
 import { TAB_MARKETS } from '../constants/tabData'
@@ -24,6 +26,7 @@ export interface Markets {
   sortDirection: sortingDirections,
   textFilter: string,
   selectedCurrencyPair: string,
+  selectedOrder: MyOrderType | null,
   data: AllPairsData,
   ordersData: OrdersData,
 }
@@ -33,23 +36,9 @@ const initialState: Markets = {
   sortDirection: sortingDirections.SORT_ASC,
   textFilter: '',
   selectedCurrencyPair: '',
-  data: {
-    'MKR/ETH': [ 'MKR/ETH', 0.0, 0.0000, new BigNumber(0.0010) ],
-    'ETH/DAI': [ 'ETH/DAI', 1.2, 0.3300, new BigNumber(2.0000) ],
-  },
-  ordersData: [
-    [0.0000, 0.0000, 0.0000],
-    [0.0000, 0.0000, 0.0000],
-    [0.0000, 0.0000, 0.0000],
-    [0.0000, 0.0000, 0.0000],
-    [0.0000, 0.0000, 0.0000],
-    [0.0000, 0.0000, 0.0000],
-    [0.0000, 0.0000, 0.0000],
-    [0.0000, 0.0000, 0.0000],
-    [0.0000, 0.0000, 0.0000],
-    [0.0000, 0.0000, 0.0000],
-    [0.0000, 0.0000, 0.0000],
-  ],
+  selectedOrder: null,
+  data: {},
+  ordersData: [],
 }
 
 const marketsReducer = (state:Markets = initialState, action:TableActions):Markets => {
@@ -72,8 +61,11 @@ const marketsReducer = (state:Markets = initialState, action:TableActions):Marke
         return state
 
     case SELECT_CURRENCY_PAIR:
+      return { ...state, selectedCurrencyPair: action.payload, selectedOrder: null }
+
+    case SELECT_ORDER:
       console.log(action)
-      return { ...state, selectedCurrencyPair: action.payload }
+      return { ...state, selectedOrder: action.payload }
 
     case UPDATE_CURRENCY_PAIR_DATA:
 //console.log('UPDATE_CURRENCY_PAIR_DATA', action.payload)

@@ -5,7 +5,9 @@ import { useQuery } from '@apollo/client'
 import { tokenPairs } from '../constants/networks'
 import { BigNumber } from 'bignumber.js'
 import { wei2ether } from '../helpers'
-import { getPairMakes } from '../gqlQueries/SelectedMarket'
+import { getPairMakes, getTrades } from '../gqlQueries/SelectedMarket'
+import { ethers } from 'ethers'
+import { Network } from '../constants/networks'
 
 interface OrdersHeaderProps {
   baseCurrency: string,
@@ -14,9 +16,10 @@ interface OrdersHeaderProps {
 
 interface OrdersProps {
   selectedCurrencyPair: string,
-  baseCurrency: string,
-  quoteCurrency: string,
+  network: Network,
 }
+
+type OrderType = Array<BigNumber>
 
 const OrdersHeader = ({ baseCurrency, quoteCurrency }:OrdersHeaderProps) => (
   <table className="market-orders-header">
@@ -42,41 +45,72 @@ const colorThemes:ColorTheme = {
 ],
 }
 
-const orderRowBackgroudColor = (order:Array<BigNumber>, total: BigNumber, rowIndex:number, theme:string) => {
+const orderRowBackgroudColor = (order:OrderType, total: BigNumber, totalSoFar:BigNumber, rowIndex:number, theme:string) => {
   const colors = colorThemes[theme][rowIndex%2]
   // [total / order[0]]  [total / order[1]]
+  const part = order[2].div(total).multipliedBy(100).toNumber()
+  const sum = totalSoFar.div(total).multipliedBy(100).toNumber()
+  //console.log(part, sum, order[2].toString(), totalSoFar.toString(), total)
 
   return {
-    background: `linear-gradient(90deg, ${colors[0]} 21%, ${colors[1]} 21%, ${colors[1]} 48%, ${colors[2]} 48%`
+    background: `linear-gradient(90deg, ${colors[0]} ${part}%, ${colors[1]} ${part}%, ${colors[1]} ${sum}%, ${colors[2]} ${sum}%`
   }
 }
 
-type OrdersData = { [key:string]: Array<BigNumber> }
+type OrdersData = { [key:string]: OrderType }
+
+interface OrderRowProps {
+  order: OrderType,
+  color: string,
+  total: BigNumber,
+  totalSoFar: BigNumber,
+  rowIndex: number,
+}
+const OrderRow = ({ order, total, totalSoFar, rowIndex, color }:OrderRowProps) => (
+  <tr style={orderRowBackgroudColor(order, total, totalSoFar, rowIndex, color)}>
+    <td style={{ textAlign: 'left' }}>{wei2ether(order[0], 18)}</td>
+    <td>{wei2ether(order[1])}</td>
+    <td>{wei2ether(totalSoFar)} ({order[3]})</td>
+  </tr>
+)
 
 interface OrdersTableProps {
   orders: OrdersData,
-  color: string,
   total: BigNumber,
 }
-const OrdersTable = ({orders, color, total}:OrdersTableProps) => (
+const SellOrdersTable = ({ orders, total }:OrdersTableProps) => {
+  let totalSoFar:BigNumber = total
+
+  return (
   <table className="market-orders-content">
     <tbody>
       {Object.keys(orders)
       .sort((a, b) => orders[a][0].gt(orders[b][0]) ? 1 : -1)
-      .map((priceIndex, i) => {
+      .map((priceIndex, rowIndex) => {
         const order = orders[priceIndex]
-
-        return (
-          <tr key={priceIndex} style={orderRowBackgroudColor(order, total, i, color)}>
-            <td style={{ textAlign: 'left' }}>{wei2ether(order[0])}</td>
-            <td>{wei2ether(order[1])}</td>
-            <td>{wei2ether(order[2])}</td>
-          </tr>
-        )
+        totalSoFar = totalSoFar.minus(order[2])
+        return <OrderRow key={priceIndex} order={order} total={total} totalSoFar={totalSoFar} rowIndex={rowIndex} color="red" />
       })}
     </tbody>
   </table>
-)
+)}
+
+const BuyOrdersTable = ({ orders, total }:OrdersTableProps) => {
+  let totalSoFar:BigNumber = new BigNumber(0)
+
+  return (
+  <table className="market-orders-content">
+    <tbody>
+      {Object.keys(orders)
+      .sort((a, b) => orders[a][0].gt(orders[b][0]) ? -1 : 1)
+      .map((priceIndex, rowIndex) => {
+        const order = orders[priceIndex]
+        totalSoFar = totalSoFar.plus(order[2])
+        return <OrderRow key={priceIndex} order={order} total={total} totalSoFar={totalSoFar} rowIndex={rowIndex} color="green" />
+      })}
+    </tbody>
+  </table>
+)}
 
 const NoOrdersTable = () => (
   <table className="market-orders-content">
@@ -88,82 +122,147 @@ const NoOrdersTable = () => (
   </table>
 )
 
-const Orders = ({
-  selectedCurrencyPair,
-  baseCurrency,
-  quoteCurrency,
-}:OrdersProps) => {
+const getPrice = (trade:Trade) => {
+  const buyAmt = new BigNumber(trade.buyAmt)
+  const payAmt = new BigNumber(trade.payAmt)
 
-  const pair = tokenPairs[selectedCurrencyPair ? selectedCurrencyPair : 'NO/PAIR']
+  if (trade.buyGem === ethers.constants.AddressZero) return buyAmt.div(payAmt)
+  return payAmt.div(buyAmt)
+}
 
-  const { loading, error, data } = useQuery(getPairMakes(pair), { pollInterval: 1000 })
+interface LastTradePriceProps {
+  network: Network,
+  baseCurrency: string,
+  quoteCurrency: string,
+}
+type Trade = {
+  payGem:string,
+  buyGem:string,
+  payAmt:BigNumber,
+  buyAmt:BigNumber,
+}
+const LastTradePrice = ({ network, baseCurrency, quoteCurrency }:LastTradePriceProps) => {
+  let lastPrice:BigNumber = new BigNumber(0)
+  let nextToLastPrice:BigNumber = new BigNumber(0)
+
+  const tokenAddress1 = Object.keys(network.tokens).find(address => network.tokens[address] === baseCurrency)
+  const tokenAddress2 = Object.keys(network.tokens).find(address => network.tokens[address] === quoteCurrency)
+
+  let { loading, error, data } = useQuery(getTrades(), { pollInterval: 1000 })
 
   if (loading) return <span>Loading...</span>
-  if (error) return <span>Error! {error.message}</span>
+  if (error) {
+    console.log(error.message)
+    return <span>Error!</span>
+  }
 
-  const redOrders:OrdersData = {}
-  const greenOrders:OrdersData = {}
-  let totalRed:BigNumber = new BigNumber(0)
-  let totalGreen:BigNumber = new BigNumber(0)
-  let orders:OrdersData
-
-  data.makes.forEach((order:any) => {
-    const buyAmt = new BigNumber(order.buyAmt)
-    const payAmt = new BigNumber(order.payAmt)
-
-    const price = buyAmt.div(payAmt)
-    const priceIndex:string = price.toString()
-
-    if (order.payGem === baseCurrency) {
-      orders = redOrders
-      totalRed = totalRed.plus(price)
-    } else {
-      orders = greenOrders
-      totalGreen = totalGreen.plus(price)
-    }
-
-    if (priceIndex in orders) {
-      orders[priceIndex][1] = orders[priceIndex][1].plus(payAmt)
-      orders[priceIndex][2] = orders[priceIndex][2].plus(buyAmt)
-    } else {
-      orders[priceIndex] = [price, payAmt, buyAmt]
+  data.trades.forEach((trade:Trade) => {
+    // TODO: move this to TheGraphProvider and make it sane
+    if (nextToLastPrice.gt(0)) return
+    if (
+      (trade.buyGem === tokenAddress1 && trade.payGem === tokenAddress2) ||
+      (trade.buyGem === tokenAddress2 && trade.payGem === tokenAddress1)
+    ) {
+      if (lastPrice.eq(0)) {
+        lastPrice = getPrice(trade)
+      } else {
+        if (nextToLastPrice.eq(0)) {
+          nextToLastPrice = getPrice(trade)
+        }
+      }
     }
   })
+
+  if (nextToLastPrice.eq(0) || lastPrice.eq(nextToLastPrice)) return (
+    <div className="orders-price-change-indicator">
+      0.0000000
+    </div>
+  )
+
+  if (lastPrice.gt(nextToLastPrice)) return (
+    <div className="orders-price-change-indicator green">
+      {wei2ether(lastPrice.minus(nextToLastPrice), 18)} <ArrowUp fill="#169A51" />
+    </div>
+  )
+
+  return (
+    <div className="orders-price-change-indicator red">
+      {wei2ether(nextToLastPrice.minus(lastPrice), 18)} <ArrowDown fill="#C22D38" />
+    </div>
+  )
+}
+
+const processOrders = (data:any) => {
+  const orders:OrdersData = {}
+  let total:BigNumber = new BigNumber(0)
+  let price:BigNumber
+  let priceIndex:string
+  let amtX:BigNumber
+  let amtY:BigNumber
+
+  data.makes.forEach((order:any) => {
+    if (order.buyGem === ethers.constants.AddressZero) {
+      amtX = new BigNumber(order.buyAmt)
+      amtY = new BigNumber(order.payAmt)
+    } else {
+      amtY = new BigNumber(order.buyAmt)
+      amtX = new BigNumber(order.payAmt)
+    }
+
+    // [ price, amount, part of total sum ]
+    price = amtX.div(amtY)
+    total = total.plus(amtX)
+    priceIndex = price.toString()
+
+    if (priceIndex in orders) {
+      orders[priceIndex][1] = orders[priceIndex][1].plus(amtY)
+      orders[priceIndex][2] = orders[priceIndex][2].plus(amtX)
+    } else {
+      orders[priceIndex] = [price, amtY, amtX, order.offerID]
+    }
+  })
+
+  return { orders, total }
+}
+
+const Orders = ({
+  selectedCurrencyPair,
+  network,
+}:OrdersProps) => {
+  const [ baseCurrency, quoteCurrency ] = selectedCurrencyPair.split('/')
+
+  const [sellPair, buyPair] = tokenPairs[selectedCurrencyPair ? selectedCurrencyPair : 'NO/PAIR']
+
+  let { loading:l1, error:e1, data:d1 } = useQuery(getPairMakes(sellPair), { pollInterval: 1000 })
+  let { loading:l2, error:e2, data:d2 } = useQuery(getPairMakes(buyPair), { pollInterval: 1000 })
+
+  if (l1 || l2) return <span>Loading...</span>
+  if (e1 || e2) {
+    console.log(e1 ? e1.message : e2 ? e2.message : '')
+    return <span>Error!</span>
+  }
+
+  const { orders:sellOrders, total:totalSell } = processOrders(d1)
+  const { orders:buyOrders, total:totalBuy } = processOrders(d2)
 
   return <>
     <div className="container" style={{ padding: '0 12px 12px 12px' }}>
       <OrdersHeader baseCurrency={baseCurrency} quoteCurrency={quoteCurrency} />
       <div className="container-scroll" style={{ margin: 0 }}>
-        {Object.keys(redOrders).length ? (
-          <OrdersTable orders={redOrders} color="red" total={totalRed} />
+        {Object.keys(sellOrders).length ? (
+          <SellOrdersTable orders={sellOrders} total={totalSell} />
         ) : (
           <NoOrdersTable />
         )}
       </div>
     </div>
 
-    {(totalGreen.gt(totalRed)) && (
-      <div className="orders-price-change-indicator green">
-        {wei2ether(totalGreen.minus(totalRed))} <ArrowUp fill="#169A51" />
-      </div>
-    )}
-
-    {(totalGreen.lt(totalRed)) && (
-      <div className="orders-price-change-indicator red">
-        {wei2ether(totalRed.minus(totalGreen))} <ArrowDown fill="#C22D38" />
-      </div>
-    )}
-
-    {(totalGreen.eq(totalRed)) && (
-      <div className="orders-price-change-indicator">
-        {wei2ether(totalGreen)}
-      </div>
-    )}
+    <LastTradePrice network={network} baseCurrency={baseCurrency} quoteCurrency={quoteCurrency} />
 
     <div className="container" style={{ borderRadius: '12px', padding: '12px 12px 0 12px' }}>
       <div className="container-scroll">
-        {Object.keys(greenOrders).length ? (
-          <OrdersTable orders={greenOrders} color="green" total={totalGreen} />
+        {Object.keys(buyOrders).length ? (
+          <BuyOrdersTable orders={buyOrders} total={totalBuy} />
         ) : (
           <NoOrdersTable />
         )}

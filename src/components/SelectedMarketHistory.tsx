@@ -14,7 +14,7 @@ const History = ({ selectedCurrencyPair }:OrdersProps) => {
   const pair = selectedCurrencyPair in tokenPairs ?
     tokenPairs[selectedCurrencyPair] : tokenPairs['TEST/ETH']
 
-  const { loading, error, data } = useQuery(getPairTakes(pair))
+  const { loading, error, data } = useQuery(getPairTakes(pair[0]))
 
   if (loading) return <span>Loading...</span>
   if (error) return <span>Error! {error.message}</span>

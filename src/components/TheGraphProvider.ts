@@ -59,13 +59,6 @@ const getAmountTaken = (data:any, amount:BigNumber, price:BigNumber):BigNumber =
     const takeAmt = new BigNumber(order.takeAmt)
     const giveAmt = new BigNumber(order.giveAmt)
 
-    if (giveAmt.div(takeAmt).eq(price)) {
-      //console.log('price matches', price)
-    } else {
-      console.error('price DOES NOT MATCH', giveAmt.div(takeAmt), price)
-      return null
-    }
-
     if (order.buyGem === ethers.constants.AddressZero) {
       return paid.plus(takeAmt)
     } else {
@@ -115,22 +108,23 @@ const TheGraphProvider = ({
     // TODO: batched updates, data.makes.map at a time, isActive&addMyOrder
 
     data.makes.map(async (order:MakeOrder) => {
-      let side:string, pair:string, amount:BigNumber
+      let side:string, pair:string, amount:BigNumber, price:BigNumber
 
       const tokenBuy = getTokenNameFromAddress(order.buyGem)
       const tokenSell = getTokenNameFromAddress(order.payGem)
       const buyAmt = new BigNumber(order.buyAmt)
       const payAmt = new BigNumber(order.payAmt)
-      const price:BigNumber = buyAmt.div(payAmt)
 
       if (order.buyGem === ethers.constants.AddressZero) {
         side = 'Sell'
         pair = `${tokenSell}/${tokenBuy}`
         amount = payAmt
+        price = buyAmt.div(payAmt)
       } else {
         side = 'Buy'
         pair = `${tokenBuy}/${tokenSell}`
         amount = buyAmt
+        price = payAmt.div(buyAmt)
       }
 
       const type = order.offerType ? 'Market' : 'Limit'
@@ -140,7 +134,7 @@ const TheGraphProvider = ({
       // fire isActive check, which is going to update state in contract reducer
       isActive(api, order.offerID)
 
-      //if (order.offerID > 152) console.log(`my new order: ${order.offerID} ${order.timestamp} buyAmt: ${buyAmt.toString()}, payAmt: ${payAmt.toString()}, amount: ${amount}`)
+      //if (order.offerID > 162) console.log(`my new order: ${order.offerID} ${order.timestamp} buyAmt: ${buyAmt.toString()}, payAmt: ${payAmt.toString()}, amount: ${amount}`)
 
       addMyOrder({
         offerID: order.offerID,

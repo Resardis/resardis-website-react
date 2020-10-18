@@ -13,13 +13,13 @@ import { Markets, OrdersData } from '../reducers/markets'
 import Orders from './SelectedMarketOrders'
 import History from './SelectedMarketHistory'
 import '../css/SelectedMarket.css'
+import { Network } from '../constants/networks'
 
 interface StateProps {
   activeTab: string,
   orders: OrdersData,
-  baseCurrency: string,
-  quoteCurrency: string,
   selectedCurrencyPair: string,
+  network: Network,
 }
 
 const getSelectedMarketData = (markets:Markets):OrdersData => {
@@ -33,18 +33,14 @@ const mapStateToProps = (state: RootState):StateProps => {
     activeTab,
     orders: [],
     selectedCurrencyPair: '',
-    baseCurrency: '',
-    quoteCurrency: ''
+    network: state.contract.network,
   }
-
-  const [ baseCurrency, quoteCurrency ] = state.markets.selectedCurrencyPair.split('/')
 
   return {
     activeTab,
     orders: getSelectedMarketData(state.markets),
     selectedCurrencyPair: state.markets.selectedCurrencyPair,
-    baseCurrency,
-    quoteCurrency,
+    network: state.contract.network,
   }
 }
 
@@ -64,13 +60,12 @@ const Depth = ({ orders }:DepthProps) => (
   </div>
 )
 
-const ContentConnected = ({ activeTab, orders, baseCurrency, selectedCurrencyPair, quoteCurrency }:PropsFromRedux) => {
+const ContentConnected = ({ activeTab, orders, selectedCurrencyPair, network }:PropsFromRedux) => {
   switch (activeTab) {
     case TAB_SELECTEDMARKET_ORDERS:
       return <Orders
         selectedCurrencyPair={selectedCurrencyPair}
-        baseCurrency={baseCurrency}
-        quoteCurrency={quoteCurrency}
+        network={network}
       />
     case TAB_SELECTEDMARKET_DEPTH:
       return <Depth orders={orders} />

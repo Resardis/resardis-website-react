@@ -1,7 +1,7 @@
 import abiTestToken from '../abi/TESTERC20.json'
 
 export type Tokens = { [key:string]: string }
-type Pairs = { [key:string]: string }
+type Pairs = { [key:string]: Array<string> }
 type TokensABIs = { [key:string]: any }
 
 export type Network = {
@@ -49,11 +49,10 @@ Object.keys(networks).forEach((chainID:string) => {
 })
 
 export const tokenPairs:Pairs = {
-  'TEST/ETH': '0xd4fe48d9fa465541ce0869ba1f4b17ee76b48f34ede9a5d33ad7932e688fb9ed',
-  'NO/PAIR':  '0x0000000000000000000000000000000000000000000000000000000000000000',
-  'NDT/ETH': '0x3d3f62901ae395a357584efd0caa61f7d3c97ed910c59b6d714c63caf152a791',
-  'MKR/ETH': '0x4f64ca841cde6e7e04527ed3d8c9d3ccea2be31dff20776edbe091fa00c8dfb8',
-  'LEND/ETH': '0xd4fe48d9fa465541ce0869ba1f4b17ee76b48f34ede9a5d33ad7932e688fb9ed',
+  'TEST/ETH': ['0xd4fe48d9fa465541ce0869ba1f4b17ee76b48f34ede9a5d33ad7932e688fb9ed','0xd4fe48d9fa465541ce0869ba1f4b17ee76b48f34ede9a5d33ad7932e688fb9ed'],
+  'NO/PAIR':  ['0x0000000000000000000000000000000000000000000000000000000000000000','0x0000000000000000000000000000000000000000000000000000000000000000'],
+  'NDT/ETH': ['0x3d3f62901ae395a357584efd0caa61f7d3c97ed910c59b6d714c63caf152a791','0xd4fe48d9fa465541ce0869ba1f4b17ee76b48f34ede9a5d33ad7932e688fb9ed'],
+  'LEND/ETH': ['0xd4fe48d9fa465541ce0869ba1f4b17ee76b48f34ede9a5d33ad7932e688fb9ed','0xd4fe48d9fa465541ce0869ba1f4b17ee76b48f34ede9a5d33ad7932e688fb9ed'],
 }
 
 export const quoteCurrencies = [ 'ETH', 'DAI' ]

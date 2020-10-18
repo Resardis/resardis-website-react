@@ -19,7 +19,9 @@ import {
   CloseFundsWindowAction,
   SelectScreenAction,
   UpdateCurrencyPairDataAction,
-
+  SELECT_ORDER,
+  MyOrderType,
+  SelectOrderAction,
 } from '../constants/actionTypes'
 import { PairData } from '../reducers/markets'
 
@@ -68,8 +70,13 @@ export const selectScreen = (screen: string):SelectScreenAction => ({
   payload: screen,
 })
 
+export const selectOrder = (order: MyOrderType):SelectOrderAction => ({
+  type: SELECT_ORDER,
+  payload: order,
+})
+
 export type ActiveTabActions = ActivateTabAction
 
-export type TableActions = SortByAction | SortDirectionAction | TextFilterAction | SelectCurrencyPairAction | UpdateCurrencyPairDataAction
+export type TableActions = SortByAction | SortDirectionAction | TextFilterAction | SelectOrderAction | SelectCurrencyPairAction | UpdateCurrencyPairDataAction
 
 export type FundsWindowActions = OpenFundsWindowAction | CloseFundsWindowAction

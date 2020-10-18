@@ -4,9 +4,10 @@ import { wei2ether } from '../../helpers'
 import { RootState } from '../../reducers'
 import moment from 'moment'
 import { cancelOrder } from '../../contracts'
-import { MyOrdersListType } from '../../constants/actionTypes'
+import { MyOrderType, MyOrdersListType } from '../../constants/actionTypes'
 import { sortingDirections, sortingTypes } from '../../constants/actionTypes'
 import { sortAndFilter, ActiveOffers } from '.'
+import { selectOrder } from '../../actions'
 import shortid from 'shortid'
 
 interface StateProps {
@@ -30,14 +31,18 @@ const mapStateToProps = (state: RootState):StateProps => ({
   textFilter: state.userData.textFilter,
 })
 
-const connector = connect(mapStateToProps)
+const mapDispatchToProps = (dispatch:any) => ({
+  selectOrder: (order:MyOrderType) => dispatch(selectOrder(order)),
+})
+
+const connector = connect(mapStateToProps, mapDispatchToProps)
 
 type PropsFromRedux = ConnectedProps<typeof connector>
 
 type Props = PropsFromRedux & OwnProps
 
-const OpenOrders = ({ orders, textFilter, activeOffers, sortBy, sortDirection, api }:Props) => {
-  if (Object.keys(activeOffers).length > 155) console.log('OpenOrders', activeOffers, sortBy, sortDirection)
+const OpenOrders = ({ orders, textFilter, activeOffers, sortBy, sortDirection, api, selectOrder }:Props) => {
+  //if (Object.keys(activeOffers).length > 155) console.log('OpenOrders', activeOffers, sortBy, sortDirection)
   return <>
   {sortAndFilter(
     orders,
@@ -52,9 +57,9 @@ const OpenOrders = ({ orders, textFilter, activeOffers, sortBy, sortDirection, a
     const DOMID = shortid()
 
     return (
-      <tr key={id}>
+      <tr key={id} onClick={() => selectOrder(orders[id])} style={{ cursor: 'pointer'}}>
         <td style={{ textAlign: 'left' }}>{moment.unix(timestamp).format("YYYY-MM-DD HH:mm")}</td>
-        <td>{pair}</td>
+        <td>{pair} ({offerID})</td>
         <td>{type}</td>
         <td style={{ color: side === 'Buy' ? '#D5002A' : '#00AA55'}}>{side}</td>
         <td>{price.toFixed(8)}</td>

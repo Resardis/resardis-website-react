@@ -164,7 +164,9 @@ export const createOrder = (contractAPI:any, offerData:OfferData, DOMID:string) 
   const payAmt:BN = isBuy ? price.multipliedBy(amount).multipliedBy(1e+18) : amount.multipliedBy(1e+18)
   const buyAmt:BN = isBuy ? amount.multipliedBy(1e+18) : price.multipliedBy(amount).multipliedBy(1e+18)
 
-  console.log(`--params', payAmt: ${payAmt.toFixed()}, payGem: ${payGem}, buyGem: ${buyGem}, buyAmt: ${buyAmt.toFixed()}, offerType: ${offerType}`)
+  console.log(`--params', payAmt:
+    ${payAmt.toFixed()}, payGem: ${payGem},
+    buyGem: ${buyGem}, buyAmt: ${buyAmt.toFixed()}, offerType: ${offerType}`)
 
 //   function offer(
 //     uint256 payAmt, //maker (ask) sell how much

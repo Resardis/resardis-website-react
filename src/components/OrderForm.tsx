@@ -6,11 +6,14 @@ import { BigNumber } from 'bignumber.js'
 import { wei2ether } from '../helpers'
 import { createOrder } from '../contracts'
 import { Network } from '../constants/networks'
+import { MyOrderType } from '../constants/actionTypes'
 
 interface OrderForm {
   coinName: string,
   isBuy: boolean,
 }
+
+const FIXED = 14
 
 const getSelectedCurrencyPrice = (state: RootState) => {
   const { selectedCurrencyPair, data } = state.markets
@@ -26,6 +29,7 @@ interface StateProps {
   baseCurrency: string,
   quoteCurrency: string,
   price: BigNumber,
+  amount: BigNumber,
   baseCurrencyBalance: BigNumber,
   quoteCurrencyBalance: BigNumber,
   network: Network,
@@ -37,26 +41,46 @@ interface OwnProps {
   isBuy: boolean,
 }
 
-const mapStateToProps = (state: RootState):StateProps => {
+const mapStateToProps = (state: RootState, ownProps:OwnProps):StateProps => {
+  const commonProps = {
+    network: state.contract.network,
+    api: state.contract.contractAPI,
+  }
+
+  if (state.markets.selectedOrder && (
+      ownProps.isBuy === (state.markets.selectedOrder.side === 'Buy')
+  )) {
+    const [ baseCurrency, quoteCurrency ] = state.markets.selectedOrder.pair.split('/')
+
+    return {
+    price: new BigNumber(state.markets.selectedOrder.price),
+    amount: new BigNumber(state.markets.selectedOrder.amount).div(1e+18),
+    baseCurrency,
+    quoteCurrency,
+    baseCurrencyBalance: state.funds.balances[baseCurrency].resardis,
+    quoteCurrencyBalance: state.funds.balances[quoteCurrency].resardis,
+    ...commonProps
+  }}
+
   if (!state.markets.selectedCurrencyPair) return {
     price: new BigNumber(0),
+    amount: new BigNumber(0),
     baseCurrency: '',
     quoteCurrency: '',
     baseCurrencyBalance: new BigNumber(0),
     quoteCurrencyBalance: new BigNumber(0),
-    network: state.contract.network,
-    api: state.contract.contractAPI,
+    ...commonProps
   }
   const [ baseCurrency, quoteCurrency ] = state.markets.selectedCurrencyPair.split('/')
 
   return {
     price: getSelectedCurrencyPrice(state),
+    amount: new BigNumber(0),
     baseCurrency,
     quoteCurrency,
     baseCurrencyBalance: state.funds.balances[baseCurrency].resardis,
     quoteCurrencyBalance: state.funds.balances[quoteCurrency].resardis,
-    network: state.contract.network,
-    api: state.contract.contractAPI,
+    ...commonProps
   }
 }
 
@@ -74,30 +98,32 @@ const OrderFormConnected = ({
   baseCurrencyBalance,
   quoteCurrencyBalance,
   price,
+  amount,
   orderType,
   isBuy,
   network,
   api,
 }:Props) => {
-
   useEffect(() => {
     const baseToken = Object.keys(network.tokens).find(address => network.tokens[address] === baseCurrency)
     const quoteToken = Object.keys(network.tokens).find(address => network.tokens[address] === quoteCurrency)
 
     setOrderData(orderData => ({
       ...orderData,
-      price: price.toFixed(12),
+      price: price.toFixed(FIXED),
+      amount: amount.toFixed(FIXED),
+      total: amount.multipliedBy(price).toFixed(FIXED),
       baseToken: baseToken || '',
       quoteToken: quoteToken || '',
-      offerType: (orderType === 'limit') ? 0 : 1,
+      offerType: (orderType === 'Limit') ? 0 : 1,
     }))
-  }, [price, baseCurrency, orderType, quoteCurrency, network.tokens])
+  }, [price, amount, baseCurrency, orderType, quoteCurrency, network.tokens])
 
   const [ orderData, setOrderData ] = useState({
-    price: price.toFixed(12),
-    amount: new BigNumber(0).toFixed(12),
-    total: new BigNumber(0).toFixed(12),
-    offerType: (orderType === 'limit') ? 0 : 1,
+    price: price.toFixed(FIXED),
+    amount: amount.toFixed(FIXED),
+    total: amount.multipliedBy(price).toFixed(FIXED),
+    offerType: (orderType === 'Limit') ? 0 : 1,
     isBuy,
     baseToken: '',
     quoteToken: '',
@@ -108,11 +134,11 @@ const OrderFormConnected = ({
     if (e.target.value !== '' && new BigNumber(e.target.value).toString() === 'NaN') return
     let newOrderData = { ...orderData, [e.target.name]: e.target.value}
     const { amount, price } = newOrderData
-    newOrderData.total = new BigNumber(amount).multipliedBy(new BigNumber(price)).toFixed(12)
+    newOrderData.total = new BigNumber(amount).multipliedBy(new BigNumber(price)).toFixed(FIXED)
     setOrderData(newOrderData)
   }
 
-  const isLimit = orderType === 'limit'
+  const isLimit = orderType === 'Limit'
   const total = new BigNumber(orderData.total).multipliedBy(1e+18)
   const buyError = isBuy && quoteCurrencyBalance.lt(total)
   const sellError = !isBuy && baseCurrencyBalance.lt(new BigNumber(orderData.amount))
@@ -126,7 +152,7 @@ const OrderFormConnected = ({
         <div>
           1 {baseCurrency} =
         </div>
-        {orderType === 'limit' ? (
+        {orderType === 'Limit' ? (
           <input name="price" type="text" value={orderData.price} onChange={e => updateOrderData(e)} />
         ) : (
           <input name="price" type="text" value={orderData.price} disabled />
@@ -169,7 +195,7 @@ const OrderFormConnected = ({
     <button className={'order-button ' + (isBuy ? 'greenBG' : 'redBG')}
       id={isBuy ? 'buyButtonOrderID' : 'sellButtonOrderID'}
       onClick={() => {
-        console.log(`_==_=++', quoteCurrency: ${quoteCurrency}, baseCurrency: ${baseCurrency}, baseToken: ${orderData.baseToken}, quoteToken: ${orderData.quoteToken}`)
+        //console.log(`_==_=++', quoteCurrency: ${quoteCurrency}, baseCurrency: ${baseCurrency}, baseToken: ${orderData.baseToken}, quoteToken: ${orderData.quoteToken}`)
         createOrder(api, orderData, DOMID)
       }}
     >
@@ -180,19 +206,25 @@ const OrderFormConnected = ({
 )}
 const OrderForm = connector(OrderFormConnected)
 
-const NewOrder = () => {
-  const [ orderType, setOrderType ] = useState('limit')
+interface NewOrderProps {
+  selectedOrder: MyOrderType | null,
+}
+
+const NewOrder = ({ selectedOrder }:NewOrderProps) => {
+  const [ orderType, setOrderType ] = useState(selectedOrder ? selectedOrder.type : 'Limit')
+
+  useEffect(() => setOrderType(selectedOrder ? selectedOrder.type : 'Limit'), [selectedOrder])
 
   return (
   <div className="order-form main-tab">
     <div className="order-form-header">
-      <button className={"order-type-button" + (orderType === 'limit' ? ' order-type-button-selected' : '')}
-        onClick={() => setOrderType('limit')}
+      <button className={"order-type-button" + (orderType === 'Limit' ? ' order-type-button-selected' : '')}
+        onClick={() => setOrderType('Limit')}
       >
         Limit
       </button>
-      <button className={"order-type-button" + (orderType === 'market' ? ' order-type-button-selected' : '')}
-        onClick={() => setOrderType('market')}
+      <button className={"order-type-button" + (orderType === 'Market' ? ' order-type-button-selected' : '')}
+        onClick={() => setOrderType('Market')}
       >
         Market
       </button>
@@ -205,4 +237,6 @@ const NewOrder = () => {
   </div>
 )}
 
-export default NewOrder
+export default connect(
+  (state:RootState):NewOrderProps => ({ selectedOrder: state.markets.selectedOrder })
+)(NewOrder)

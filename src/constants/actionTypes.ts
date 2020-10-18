@@ -20,6 +20,7 @@ export const ADD_ACTIVE_OFFER = 'ADD_ACTIVE_OFFER'
 export const REMOVE_ACTIVE_OFFER = 'REMOVE_ACTIVE_OFFER'
 export const CLEAR_ASSETS_BALANCE = 'CLEAR_ASSETS_BALANCE'
 export const ADD_MY_ORDER = 'ADD_MY_ORDER'
+export const SELECT_ORDER = 'SELECT_ORDER'
 
 export interface ActivationPayload {
   [tabbedNavigationName:string]: string,
@@ -170,11 +171,21 @@ export type MyOrderType = {
   fee: BigNumber,
 }
 
+export interface SelectCurrencyPairAction {
+  type: typeof SELECT_CURRENCY_PAIR,
+  payload: string,
+}
+
 export type MyOrdersListType = {
   [key:string]: MyOrderType,
 }
 
 export interface AddMyOrderAction {
   type: typeof ADD_MY_ORDER,
+  payload: MyOrderType,
+}
+
+export interface SelectOrderAction {
+  type: typeof SELECT_ORDER,
   payload: MyOrderType,
 }

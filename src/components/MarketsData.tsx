@@ -117,18 +117,12 @@ const MarketsData = (props: PropsFromRedux) => {
   }
 
   const marketData:MarketData = []
-  // pair: {
-  //   price <- last order
-  //   volume <- += takeAmt
-  // }
 
   let last24Start = (Math.floor(Date.now() / 2000)) * 2 - 86400
   let prev24End = last24Start
   let prev24Start = last24Start - 86400 * 2
 
-  // temp!
-
-  //last24Start = 1598948029
+//  last24Start = 1598948029
 //  prev24End = 1498948029
 //  prev24Start = 129898165
 
@@ -141,27 +135,34 @@ const MarketsData = (props: PropsFromRedux) => {
 
   dataPoints.forEach((set:string) => {
     if (!(set in data)) return
+    let price:BigNumber, pair:string
 
     data[set].forEach((order:Order) => {
       const tokenBuy = getTokenNameFromAddress(order.buyGem)
       const tokenSell = getTokenNameFromAddress(order.payGem)
 
-      const pair = (order.buyGem === ethers.constants.AddressZero) ?
-        `${tokenSell}/${tokenBuy}` : `${tokenBuy}/${tokenSell}`
-
       const takeAmt = new BigNumber(order.takeAmt)
       const giveAmt = new BigNumber(order.giveAmt)
+
+      if (order.buyGem === ethers.constants.AddressZero) {
+        pair = `${tokenSell}/${tokenBuy}`
+        price = giveAmt.div(takeAmt)
+      } else {
+        pair = `${tokenBuy}/${tokenSell}`
+        price = takeAmt.div(giveAmt)
+      }
+
 //console.log('dataPoints.forEach', set, takeAmt.toString(), giveAmt.toString())
       if (order.pair in pairs[set]) {
         // query sorts orders, so the first seen is the one to take price from
         if (!('price' in pairs[set])) {
-          pairs[set][pair]['price'] = giveAmt.div(takeAmt)
+          pairs[set][pair]['price'] = price
           pairs[set][pair].volume = pairs[set][pair].volume.plus(takeAmt)
         }
       } else {
         pairs[set][pair] = {
           volume: takeAmt,
-          price: giveAmt.div(takeAmt)
+          price,
         }
       }
     })
