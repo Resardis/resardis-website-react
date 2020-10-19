@@ -8,6 +8,7 @@ import { wei2ether } from '../helpers'
 import { getPairMakes, getTrades } from '../gqlQueries/SelectedMarket'
 import { ethers } from 'ethers'
 import { Network } from '../constants/networks'
+import { TradeType } from '../constants/marketTypes'
 
 interface OrdersHeaderProps {
   baseCurrency: string,
@@ -122,7 +123,7 @@ const NoOrdersTable = () => (
   </table>
 )
 
-const getPrice = (trade:Trade) => {
+const getPrice = (trade:TradeType) => {
   const buyAmt = new BigNumber(trade.buyAmt)
   const payAmt = new BigNumber(trade.payAmt)
 
@@ -134,12 +135,6 @@ interface LastTradePriceProps {
   network: Network,
   baseCurrency: string,
   quoteCurrency: string,
-}
-type Trade = {
-  payGem:string,
-  buyGem:string,
-  payAmt:BigNumber,
-  buyAmt:BigNumber,
 }
 const LastTradePrice = ({ network, baseCurrency, quoteCurrency }:LastTradePriceProps) => {
   let lastPrice:BigNumber = new BigNumber(0)
@@ -156,7 +151,7 @@ const LastTradePrice = ({ network, baseCurrency, quoteCurrency }:LastTradePriceP
     return <span>Error!</span>
   }
 
-  data.trades.forEach((trade:Trade) => {
+  data.trades.forEach((trade:TradeType) => {
     // TODO: move this to TheGraphProvider and make it sane
     if (nextToLastPrice.gt(0)) return
     if (

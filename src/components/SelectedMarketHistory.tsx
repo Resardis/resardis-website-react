@@ -1,42 +1,64 @@
 import React from 'react'
 import { useQuery } from '@apollo/client'
-import { tokenPairs } from '../constants/networks'
-import { ethers, BigNumber } from 'ethers'
+import { ethers } from 'ethers'
 import moment from 'moment'
 import '../css/SelectedMarket.css'
-import { getPairTakes } from '../gqlQueries/SelectedMarket'
+import { Network } from '../constants/networks'
+import { getTrades } from '../gqlQueries/SelectedMarket'
+import { BigNumber } from 'bignumber.js'
+import { TradeType } from '../constants/marketTypes'
+import { wei2ether } from '../helpers'
 
 interface OrdersProps {
   selectedCurrencyPair: string,
+  network: Network,
 }
 
-const History = ({ selectedCurrencyPair }:OrdersProps) => {
-  const pair = selectedCurrencyPair in tokenPairs ?
-    tokenPairs[selectedCurrencyPair] : tokenPairs['TEST/ETH']
+const History = ({ selectedCurrencyPair, network }:OrdersProps) => {
+  const [ baseCurrency, quoteCurrency ] = selectedCurrencyPair.split('/')
 
-  const { loading, error, data } = useQuery(getPairTakes(pair[0]))
+  const tokenAddress1 = Object.keys(network.tokens).find(address => network.tokens[address] === baseCurrency)
+  const tokenAddress2 = Object.keys(network.tokens).find(address => network.tokens[address] === quoteCurrency)
 
-  if (loading) return <span>Loading...</span>
-  if (error) return <span>Error! {error.message}</span>
+  let { loading, error, data } = useQuery(getTrades(), { pollInterval: 1000 })
 
-  const orders = data.takes.map((order:any) => {
-    const takeAmt = BigNumber.from(order.takeAmt)
-    const giveAmt = BigNumber.from(order.giveAmt)
+    if (loading) return <span>Loading...</span>
+    if (error) {
+      console.log(error.message)
+      return <span>Error!</span>
+    }
 
-    const price = takeAmt.div(giveAmt)
+    const trades = data.trades.map((trade:TradeType) => {
+      if (
+        (trade.buyGem === tokenAddress1 && trade.payGem === tokenAddress2) ||
+        (trade.buyGem === tokenAddress2 && trade.payGem === tokenAddress1)
+      ) {
+        const buyAmt = new BigNumber(trade.buyAmt)
+        const payAmt = new BigNumber(trade.payAmt)
+        let color
+        let price:BigNumber
+        let amount:BigNumber
 
-    const color = (BigNumber.from(order.payGem).eq(BigNumber.from(0))) ? 'green' : 'red'
+        if (trade.buyGem === ethers.constants.AddressZero) {
+          price = buyAmt.div(payAmt)
+          amount = payAmt
+          color = 'red'
+        } else {
+          price = payAmt.div(buyAmt)
+          color = 'green'
+          amount = buyAmt
+        }
+        let ts = moment.unix(trade.timestamp).format("YY-MM-DD HH:mm")
 
-    let ts = moment.unix(order.timestamp).format("YYYY-MM-DD HH:mm")
-
-    return (
-      <tr style={{ color: color }}>
-        <td>{ethers.utils.formatEther(price)}</td>
-        <td>{ethers.utils.formatEther(takeAmt)}</td>
-        <td>{ts}</td>
-      </tr>
-    )
-  })
+        return (
+          <tr style={{ color: color }}>
+            <td>{wei2ether(price)}</td>
+            <td>{wei2ether(amount)}</td>
+            <td>{ts}</td>
+          </tr>
+        )
+      } else return null
+  }).filter((trade:TradeType) => trade)
 
   return <>
     <table className="market-orders-history">
@@ -53,9 +75,9 @@ const History = ({ selectedCurrencyPair }:OrdersProps) => {
         <div className="container-scroll" style={{ margin: 0 }}>
           <table>
             <tbody>
-              {orders.length ? orders : (
+              {trades.length ? trades : (
                 <tr>
-                  <td colSpan={3}>no orders found</td>
+                  <td colSpan={3}>no trades found</td>
                 </tr>
               )}
             </tbody>

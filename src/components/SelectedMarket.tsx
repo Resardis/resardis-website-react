@@ -70,7 +70,10 @@ const ContentConnected = ({ activeTab, orders, selectedCurrencyPair, network }:P
     case TAB_SELECTEDMARKET_DEPTH:
       return <Depth orders={orders} />
     case TAB_SELECTEDMARKET_HISTORY:
-      return <History selectedCurrencyPair={selectedCurrencyPair} />
+      return <History
+        selectedCurrencyPair={selectedCurrencyPair}
+        network={network}
+      />
     default:
       return null
   }
