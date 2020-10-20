@@ -2,10 +2,9 @@ import React from 'react'
 import { ReactComponent as ArrowUp } from '../svg/arrow-up.svg'
 import { ReactComponent as ArrowDown } from '../svg/arrow-down.svg'
 import { useQuery } from '@apollo/client'
-import { tokenPairs } from '../constants/networks'
 import { BigNumber } from 'bignumber.js'
 import { wei2ether } from '../helpers'
-import { getPairMakes, getTrades } from '../gqlQueries/SelectedMarket'
+import { getPairMakesBuys, getPairMakesSells, getTrades } from '../gqlQueries/SelectedMarket'
 import { ethers } from 'ethers'
 import { Network } from '../constants/networks'
 import { TradeType } from '../constants/marketTypes'
@@ -71,7 +70,7 @@ const OrderRow = ({ order, total, totalSoFar, rowIndex, color }:OrderRowProps) =
   <tr style={orderRowBackgroudColor(order, total, totalSoFar, rowIndex, color)}>
     <td style={{ textAlign: 'left' }}>{wei2ether(order[0], 18)}</td>
     <td>{wei2ether(order[1])}</td>
-    <td>{wei2ether(totalSoFar)} ({order[3]})</td>
+    <td>{wei2ether(totalSoFar)}</td>
   </tr>
 )
 
@@ -132,18 +131,14 @@ const getPrice = (trade:TradeType) => {
 }
 
 interface LastTradePriceProps {
+  selectedCurrencyPair: string,
   network: Network,
-  baseCurrency: string,
-  quoteCurrency: string,
 }
-const LastTradePrice = ({ network, baseCurrency, quoteCurrency }:LastTradePriceProps) => {
+const LastTradePrice = ({ network, selectedCurrencyPair }:LastTradePriceProps) => {
   let lastPrice:BigNumber = new BigNumber(0)
   let nextToLastPrice:BigNumber = new BigNumber(0)
 
-  const tokenAddress1 = Object.keys(network.tokens).find(address => network.tokens[address] === baseCurrency)
-  const tokenAddress2 = Object.keys(network.tokens).find(address => network.tokens[address] === quoteCurrency)
-
-  let { loading, error, data } = useQuery(getTrades(), { pollInterval: 1000 })
+  let { loading, error, data } = useQuery(getTrades(selectedCurrencyPair, network), { pollInterval: 1000 })
 
   if (loading) return <span>Loading...</span>
   if (error) {
@@ -154,16 +149,11 @@ const LastTradePrice = ({ network, baseCurrency, quoteCurrency }:LastTradePriceP
   data.trades.forEach((trade:TradeType) => {
     // TODO: move this to TheGraphProvider and make it sane
     if (nextToLastPrice.gt(0)) return
-    if (
-      (trade.buyGem === tokenAddress1 && trade.payGem === tokenAddress2) ||
-      (trade.buyGem === tokenAddress2 && trade.payGem === tokenAddress1)
-    ) {
-      if (lastPrice.eq(0)) {
-        lastPrice = getPrice(trade)
-      } else {
-        if (nextToLastPrice.eq(0)) {
-          nextToLastPrice = getPrice(trade)
-        }
+    if (lastPrice.eq(0)) {
+      lastPrice = getPrice(trade)
+    } else {
+      if (nextToLastPrice.eq(0)) {
+        nextToLastPrice = getPrice(trade)
       }
     }
   })
@@ -226,10 +216,8 @@ const Orders = ({
 }:OrdersProps) => {
   const [ baseCurrency, quoteCurrency ] = selectedCurrencyPair.split('/')
 
-  const [sellPair, buyPair] = tokenPairs[selectedCurrencyPair ? selectedCurrencyPair : 'NO/PAIR']
-
-  let { loading:l1, error:e1, data:d1 } = useQuery(getPairMakes(sellPair), { pollInterval: 1000 })
-  let { loading:l2, error:e2, data:d2 } = useQuery(getPairMakes(buyPair), { pollInterval: 1000 })
+  let { loading:l1, error:e1, data:d1 } = useQuery(getPairMakesSells(selectedCurrencyPair, network), { pollInterval: 1000 })
+  let { loading:l2, error:e2, data:d2 } = useQuery(getPairMakesBuys(selectedCurrencyPair, network), { pollInterval: 1000 })
 
   if (l1 || l2) return <span>Loading...</span>
   if (e1 || e2) {
@@ -252,7 +240,7 @@ const Orders = ({
       </div>
     </div>
 
-    <LastTradePrice network={network} baseCurrency={baseCurrency} quoteCurrency={quoteCurrency} />
+    <LastTradePrice network={network} selectedCurrencyPair={selectedCurrencyPair} />
 
     <div className="container" style={{ borderRadius: '12px', padding: '12px 12px 0 12px' }}>
       <div className="container-scroll">

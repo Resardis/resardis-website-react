@@ -27,3 +27,17 @@
   align-items: center;
   justify-content: center;
 }
+
+.depth-line {
+  height: 1px;
+  background-color: #8C8F8B;
+  flex: 1;
+  margin: 0 10px;
+}
+
+.depth-line-container {
+  height: 1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

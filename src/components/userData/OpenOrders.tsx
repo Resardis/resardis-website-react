@@ -59,7 +59,7 @@ const OpenOrders = ({ orders, textFilter, activeOffers, sortBy, sortDirection, a
     return (
       <tr key={id} onClick={() => selectOrder(orders[id])} style={{ cursor: 'pointer'}}>
         <td style={{ textAlign: 'left' }}>{moment.unix(timestamp).format("YYYY-MM-DD HH:mm")}</td>
-        <td>{pair} ({offerID})</td>
+        <td>{pair}</td>
         <td>{type}</td>
         <td style={{ color: side === 'Buy' ? '#D5002A' : '#00AA55'}}>{side}</td>
         <td>{price.toFixed(8)}</td>

@@ -15,12 +15,7 @@ interface OrdersProps {
 }
 
 const History = ({ selectedCurrencyPair, network }:OrdersProps) => {
-  const [ baseCurrency, quoteCurrency ] = selectedCurrencyPair.split('/')
-
-  const tokenAddress1 = Object.keys(network.tokens).find(address => network.tokens[address] === baseCurrency)
-  const tokenAddress2 = Object.keys(network.tokens).find(address => network.tokens[address] === quoteCurrency)
-
-  let { loading, error, data } = useQuery(getTrades(), { pollInterval: 1000 })
+  let { loading, error, data } = useQuery(getTrades(selectedCurrencyPair, network), { pollInterval: 1000 })
 
     if (loading) return <span>Loading...</span>
     if (error) {
@@ -29,36 +24,31 @@ const History = ({ selectedCurrencyPair, network }:OrdersProps) => {
     }
 
     const trades = data.trades.map((trade:TradeType) => {
-      if (
-        (trade.buyGem === tokenAddress1 && trade.payGem === tokenAddress2) ||
-        (trade.buyGem === tokenAddress2 && trade.payGem === tokenAddress1)
-      ) {
-        const buyAmt = new BigNumber(trade.buyAmt)
-        const payAmt = new BigNumber(trade.payAmt)
-        let color
-        let price:BigNumber
-        let amount:BigNumber
+      const buyAmt = new BigNumber(trade.buyAmt)
+      const payAmt = new BigNumber(trade.payAmt)
+      let color
+      let price:BigNumber
+      let amount:BigNumber
 
-        if (trade.buyGem === ethers.constants.AddressZero) {
-          price = buyAmt.div(payAmt)
-          amount = payAmt
-          color = 'red'
-        } else {
-          price = payAmt.div(buyAmt)
-          color = 'green'
-          amount = buyAmt
-        }
-        let ts = moment.unix(trade.timestamp).format("YY-MM-DD HH:mm")
+      if (trade.buyGem === ethers.constants.AddressZero) {
+        price = buyAmt.div(payAmt)
+        amount = payAmt
+        color = 'red'
+      } else {
+        price = payAmt.div(buyAmt)
+        color = 'green'
+        amount = buyAmt
+      }
+      let ts = moment.unix(trade.timestamp).format("YY-MM-DD HH:mm")
 
-        return (
-          <tr style={{ color: color }}>
-            <td>{wei2ether(price)}</td>
-            <td>{wei2ether(amount)}</td>
-            <td>{ts}</td>
-          </tr>
-        )
-      } else return null
-  }).filter((trade:TradeType) => trade)
+      return (
+        <tr style={{ color: color }}>
+          <td>{wei2ether(price)}</td>
+          <td>{wei2ether(amount)}</td>
+          <td>{ts}</td>
+        </tr>
+      )
+    })
 
   return <>
     <table className="market-orders-history">

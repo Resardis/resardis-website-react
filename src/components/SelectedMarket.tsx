@@ -9,21 +9,16 @@ import {
   TAB_SELECTEDMARKET_DEPTH,
   TAB_SELECTEDMARKET_HISTORY,
 } from '../constants/tabData'
-import { Markets, OrdersData } from '../reducers/markets'
 import Orders from './SelectedMarketOrders'
+import Depth from './SelectedMarketDepth'
 import History from './SelectedMarketHistory'
 import '../css/SelectedMarket.css'
 import { Network } from '../constants/networks'
 
 interface StateProps {
   activeTab: string,
-  orders: OrdersData,
   selectedCurrencyPair: string,
   network: Network,
-}
-
-const getSelectedMarketData = (markets:Markets):OrdersData => {
-  return markets.ordersData
 }
 
 const mapStateToProps = (state: RootState):StateProps => {
@@ -31,14 +26,12 @@ const mapStateToProps = (state: RootState):StateProps => {
 
   if (!state.markets.selectedCurrencyPair) return {
     activeTab,
-    orders: [],
     selectedCurrencyPair: '',
     network: state.contract.network,
   }
 
   return {
     activeTab,
-    orders: getSelectedMarketData(state.markets),
     selectedCurrencyPair: state.markets.selectedCurrencyPair,
     network: state.contract.network,
   }
@@ -50,17 +43,7 @@ const connector = connect(mapStateToProps, mapDispatchToProps)
 
 type PropsFromRedux = ConnectedProps<typeof connector>
 
-interface DepthProps {
-  orders: OrdersData,
-}
-const Depth = ({ orders }:DepthProps) => (
-  <div className="container">
-    <div className="container-inner-box">
-    </div>
-  </div>
-)
-
-const ContentConnected = ({ activeTab, orders, selectedCurrencyPair, network }:PropsFromRedux) => {
+const ContentConnected = ({ activeTab, selectedCurrencyPair, network }:PropsFromRedux) => {
   switch (activeTab) {
     case TAB_SELECTEDMARKET_ORDERS:
       return <Orders
@@ -68,7 +51,10 @@ const ContentConnected = ({ activeTab, orders, selectedCurrencyPair, network }:P
         network={network}
       />
     case TAB_SELECTEDMARKET_DEPTH:
-      return <Depth orders={orders} />
+      return <Depth
+        selectedCurrencyPair={selectedCurrencyPair}
+        network={network}
+      />
     case TAB_SELECTEDMARKET_HISTORY:
       return <History
         selectedCurrencyPair={selectedCurrencyPair}
