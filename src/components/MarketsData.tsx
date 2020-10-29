@@ -191,28 +191,24 @@ const MarketsData = (props: PropsFromRedux) => {
 
   return (
     <>
-    <table>
+    <table className="table table-borderless table-dark table-striped table-hover table-sm">
       <thead>
         <tr>
-          <th>
+          <th scope="col">
             <Search />
           </th>
-          <th onClick={() => updateSorting(sortingTypes.SORT_BY_CHANGE24, props)}>
-            24h change
+          <th scope="col" onClick={() => updateSorting(sortingTypes.SORT_BY_CHANGE24, props)}>
+            24h Change
           </th>
-          <th onClick={() => updateSorting(sortingTypes.SORT_BY_VOLUME, props)}>
-            24h volume
+          <th scope="col" onClick={() => updateSorting(sortingTypes.SORT_BY_VOLUME, props)}>
+            24h Volume
           </th>
-          <th onClick={() => updateSorting(sortingTypes.SORT_BY_PRICE, props)}>
-            price (ETH)
+          <th scope="col" onClick={() => updateSorting(sortingTypes.SORT_BY_PRICE, props)}>
+            Price (ETH)
           </th>
         </tr>
       </thead>
-    </table>
 
-    <div className="container-scroll">
-
-    <table>
       <tbody>
         {sortAndFilter(marketData, props).map(row => (
           <tr key={shortid()}
@@ -230,8 +226,50 @@ const MarketsData = (props: PropsFromRedux) => {
         ))}
       </tbody>
     </table>
-    </div>
     </>
+
+    // <>
+    // <table>
+    //   <thead>
+    //     <tr>
+    //       <th>
+    //         <Search />
+    //       </th>
+    //       <th onClick={() => updateSorting(sortingTypes.SORT_BY_CHANGE24, props)}>
+    //         24h change
+    //       </th>
+    //       <th onClick={() => updateSorting(sortingTypes.SORT_BY_VOLUME, props)}>
+    //         24h volume
+    //       </th>
+    //       <th onClick={() => updateSorting(sortingTypes.SORT_BY_PRICE, props)}>
+    //         price (ETH)
+    //       </th>
+    //     </tr>
+    //   </thead>
+    // </table>
+
+    // <div className="container-scroll">
+
+    // <table>
+    //   <tbody>
+    //     {sortAndFilter(marketData, props).map(row => (
+    //       <tr key={shortid()}
+    //         onClick={() => props.selectCurrencyPair(row[0])}
+    //         style={{
+    //           background: props.selectedCurrencyPair === row[0] ? '#76797B' : '',
+    //           cursor: 'pointer'
+    //         }}
+    //       >
+    //         <td style={{ textAlign: 'left' }}>{row[0]}</td>
+    //         <td style={{ color: row[1] < 0 ? '#D5002A' : '#00AA55'}}>{row[1]}%</td>
+    //         <td>{number4DP(row[2])}</td>
+    //         <td>{row[3].toFixed(8)}</td>
+    //       </tr>
+    //     ))}
+    //   </tbody>
+    // </table>
+    // </div>
+    // </>
   )
 }
 

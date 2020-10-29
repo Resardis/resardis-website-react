@@ -20,12 +20,18 @@ const connector = connect(mapStateToProps)
 type PropsFromRedux = ConnectedProps<typeof connector>
 
 const MarketHistory = ({ activeTab }:PropsFromRedux) => (
-  <div className="container">
-    <div className="container container-inner" style={{ marginTop: '6px' }}>
+  <div>
+    <div>
       <div>{activeTab}</div>
       <div style={{ minHeight: '12px' }}></div>
     </div>
   </div>
+  // <div className="container">
+  //   <div className="container container-inner" style={{ marginTop: '6px' }}>
+  //     <div>{activeTab}</div>
+  //     <div style={{ minHeight: '12px' }}></div>
+  //   </div>
+  // </div>
 )
 
 export default connector(MarketHistory)

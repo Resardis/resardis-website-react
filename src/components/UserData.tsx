@@ -5,17 +5,12 @@ import {
   TAB_MENU_USERDATA_NAME,
 } from '../constants/tabData'
 import UserDataTabContent from './userData'
-import '../css/UserData.css'
+// import '../css/UserData.css'
 
 const UserData = () => (
   <div className="user-data main-tab">
     <TabbedNav items={TAB_MENU_USERDATA} tabbedNavigationName={TAB_MENU_USERDATA_NAME} />
-    <div className="container">
-      <div className="container container-inner" style={{ margin: 0 }}>
-        <UserDataTabContent />
-        <div style={{ minHeight: '12px' }}></div>
-      </div>
-    </div>
+    <UserDataTabContent />
   </div>
 )
 

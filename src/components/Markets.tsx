@@ -6,13 +6,18 @@ import MarketsData from './MarketsData'
 const Markets = () => (
   <div className="markets main-tab">
     <TabbedNav items={TAB_MENU_MARKETS} tabbedNavigationName={TAB_MENU_MARKETS_NAME} />
-    <div className="container">
-      <div className="container container-inner" style={{ marginTop: '6px' }}>
-        <MarketsData />
-        <div style={{ minHeight: '12px' }}></div>
-      </div>
-    </div>
+    <MarketsData />
   </div>
+
+  // <div className="markets main-tab">
+  // <TabbedNav items={TAB_MENU_MARKETS} tabbedNavigationName={TAB_MENU_MARKETS_NAME} />
+  // <div className="container">
+  //   <div className="container container-inner" style={{ marginTop: '6px' }}>
+  //     <MarketsData />
+  //     <div style={{ minHeight: '12px' }}></div>
+  //   </div>
+  // </div>
+  // </div>
 )
 
 export default (Markets)

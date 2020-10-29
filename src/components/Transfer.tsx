@@ -47,40 +47,77 @@ const BalancesConnected = ({
 }:PropsFromRedux) => {
   //console.log('+++',balances, assetSelected, )
   return (
-    <div className="container-balances">
-
-      <h1>Transfer Assets<QuestionMark/></h1>
-
-      <select
-        className="transfer-asset-select"
-        value={assetSelected}
-        onChange={e => selectAsset(e.target.value)}
-      >
-        {Object.keys(balances).map((assetSymbol) => (
-          <option key={assetSymbol} value={assetSymbol}>{assetSymbol}</option>
-          ))}
-      </select>
+    <div className="pt-2">
+      <div className="form-row mb-3">
+        <div className="col-4">
+          <select
+            className="form-control form-control-sm transfer-asset-select"
+            value={assetSelected}
+            onChange={e => selectAsset(e.target.value)}
+          >
+            {Object.keys(balances).map((assetSymbol) => (
+              <option key={assetSymbol} value={assetSymbol}>{assetSymbol}</option>
+              ))}
+          </select>
+        </div>
+      </div>
 
       <div className="balances-details">
-        <div className="wallet-address">
-          <span>My Wallet</span><QuestionMark/>
-          <span>{accountAddress}</span>
-        </div>
+        <h3 className="wallet-address">Account</h3>
+        <p>{accountAddress}</p>
+
+        <h3>Balances On</h3>
         <div>
-          <span>Mainnet Balance</span><QuestionMark/>
+          <span>Mainnet: </span>
           {balances[assetSelected].mainnet.toFixed()} {assetSelected}
         </div>
         <div>
-          <span>Side Chain Balance</span><QuestionMark/>
+          <span>Side Chain: </span>
           {wei2ether(balances[assetSelected].sidechain, 10)} {assetSelected}
         </div>
         <div>
-          <span>Resardis Balance</span><QuestionMark/>
+          <span>Resardis: </span>
           {wei2ether(balances[assetSelected].resardis, 10)} {assetSelected}
         </div>
       </div>
 
     </div>
+
+
+    // <div className="container-balances">
+
+    //   <h1>Transfer Assets<QuestionMark/></h1>
+
+    //   <select
+    //     className="transfer-asset-select"
+    //     value={assetSelected}
+    //     onChange={e => selectAsset(e.target.value)}
+    //   >
+    //     {Object.keys(balances).map((assetSymbol) => (
+    //       <option key={assetSymbol} value={assetSymbol}>{assetSymbol}</option>
+    //       ))}
+    //   </select>
+
+    //   <div className="balances-details">
+    //     <div className="wallet-address">
+    //       <span>My Wallet</span><QuestionMark/>
+    //       <span>{accountAddress}</span>
+    //     </div>
+    //     <div>
+    //       <span>Mainnet Balance</span><QuestionMark/>
+    //       {balances[assetSelected].mainnet.toFixed()} {assetSelected}
+    //     </div>
+    //     <div>
+    //       <span>Side Chain Balance</span><QuestionMark/>
+    //       {wei2ether(balances[assetSelected].sidechain, 10)} {assetSelected}
+    //     </div>
+    //     <div>
+    //       <span>Resardis Balance</span><QuestionMark/>
+    //       {wei2ether(balances[assetSelected].resardis, 10)} {assetSelected}
+    //     </div>
+    //   </div>
+
+    // </div>
   )
 }
 
@@ -129,107 +166,258 @@ const TransferFormConnected = ({
   }
 
   return (
-    <div className="container-transfer-form">
+    <div>
 
-      <div className="selects-labels">
-        <span>From</span>
-        <span>To</span>
-      </div>
+    <div className="transfer-selects mb-3">
+      <form>
+        <div className="form-row justify-content-between">
+          <div className="col-4">
+            <div className="text-center mb-1">
+              <span>From</span>
+            </div>
+            <select name="transferFrom" className="form-control form-control-sm transfer-asset-select"
+              value={transferData.transferFrom}
+              onChange={e => updateTransferData(e)}
+            >
+              <option value="mainnet">Mainnet</option>
+              <option value="sidechain">Side Chain</option>
+              <option value="resardis">Resardis</option>
+            </select>
+          </div>
+          <div className="col-4">
+            <div className="text-center mb-1">
+              <span>To</span>
+            </div>
+            <select name="transferTo" className="form-control form-control-sm transfer-asset-select"
+              value={transferData.transferTo}
+              onChange={e => updateTransferData(e)}
+            >
+              {transferData.transferFrom !== 'mainnet' && <option value="mainnet">Mainnet</option>}
+              {transferData.transferFrom !== 'sidechain' && <option value="sidechain">Side Chain</option>}
+              {transferData.transferFrom !== 'resardis' && <option value="resardis">Resardis</option>}
+            </select>
+          </div>
+        </div>
+      </form>
+    </div>
 
-      <div className="transfer-selects">
-        <select name="transferFrom" className="transfer-asset-select"
-          value={transferData.transferFrom}
-          onChange={e => updateTransferData(e)}
-        >
-          <option value="mainnet">Mainnet</option>
-          <option value="sidechain">Side Chain</option>
-          <option value="resardis">Resardis</option>
-        </select>
-
-        <select name="transferTo" className="transfer-asset-select"
-          value={transferData.transferTo}
-          onChange={e => updateTransferData(e)}
-        >
-          {transferData.transferFrom !== 'mainnet' && <option value="mainnet">Mainnet</option>}
-          {transferData.transferFrom !== 'sidechain' && <option value="sidechain">Side Chain</option>}
-          {transferData.transferFrom !== 'resardis' && <option value="resardis">Resardis</option>}
-        </select>
-      </div>
-
-      <div className="transfer-details">
-        <div>
-          <div>Amount (
+    <div className="transfer-details">
+      <div className="form-group row justify-content-between">
+        <label htmlFor="inputtransferamount"
+          className="col-4 col-form-label col-form-label-sm">
+            Amount (
             {wei2ether(balances[assetSelected][transferData.transferFrom])}
             &nbsp;
             {assetSelected})
-          </div>
-          {transferData.err && (
-            <div className="form-amount-error">
-              Not enough {assetSelected} for this transfer
+        </label>
+        <div className="col-8">
+          <div className="input-group input-group-sm mb-2">
+            <div className="input-group-prepend">
+              <span className="input-group-text">00000 USD</span>
             </div>
-          )}
-          <span>00000 USD</span>
-          <input type="text" name="amount"
-            value={transferData.amount}
-            onChange={e => updateTransferData(e)} />
+            <input className="form-control"
+              id="inputtransferamount" name="amount" type="text"
+              value={transferData.amount}
+              onChange={e => updateTransferData(e)}
+            />
+          </div>
         </div>
-        <div>
-          <div>Fee</div>
-          <span>00000 USD</span>
-          <input type="text" disabled value={transferData.fee} /></div>
-        <div>
-          <div>Total</div>
-          <span>00000 USD</span>
-          <input type="text" disabled value={transferData.amount} /></div>
+        {transferData.err && (
+          <div className="form-amount-error">
+            Not enough {assetSelected} for this transfer
+          </div>
+        )}
       </div>
 
-      <div className="transfer-button">
-        <button id={DOMID}
-          onClick={() => {
-            if (!transferData.err) {
-              const tokenAddress = getSelectedAssetAddress(assetSelected, network) || ''
-              const buttonElement = document.getElementById(DOMID)
+      <div className="form-group row justify-content-between">
+        <label htmlFor="inputtransferfee"
+          className="col-4 col-form-label col-form-label-sm">
+            Fee
+        </label>
+        <div className="col-8">
+          <div className="input-group input-group-sm mb-2">
+            <div className="input-group-prepend">
+              <span className="input-group-text">00000 USD</span>
+            </div>
+            <input className="form-control"
+              id="inputtransferfee" type="text"
+              value={transferData.fee}
+              disabled
+            />
+          </div>
+        </div>
+      </div>
 
-              if (buttonElement) buttonElement.innerHTML = 'transfer starting...'
-
-              if (transferData.transferFrom === 'resardis') {
-                withdraw(api, transferData.amount, tokenAddress, DOMID)
-              } else if (transferData.transferTo === 'resardis') {
-                if (tokenAddress === ethers.constants.AddressZero) {
-                  deposit(api, transferData.amount, tokenAddress, DOMID)
-                } else {
-                  depositAfterApprove(
-                    api,
-                    transferData.amount,
-                    tokenAddress,
-                    accountAddress,
-                    network.contract,
-                    DOMID
-                  )
-                }
-              }
-            }
-          }
-        }>Transfer</button>
+      <div className="form-group row justify-content-between">
+        <label htmlFor="inputtransfertotal"
+          className="col-4 col-form-label col-form-label-sm">
+            Total
+        </label>
+        <div className="col-8">
+          <div className="input-group input-group-sm mb-2">
+            <div className="input-group-prepend">
+              <span className="input-group-text">00000 USD</span>
+            </div>
+            <input className="form-control"
+              id="inputtransfertotal" type="text"
+              value={transferData.amount}
+              disabled
+            />
+          </div>
+        </div>
       </div>
     </div>
 
+    <div>
+      <button id={DOMID}
+        className="btn px-4 py-1 btn-transfer"
+        onClick={() => {
+          if (!transferData.err) {
+            const tokenAddress = getSelectedAssetAddress(assetSelected, network) || ''
+            const buttonElement = document.getElementById(DOMID)
 
+            if (buttonElement) buttonElement.innerHTML = 'transfer starting...'
+
+            if (transferData.transferFrom === 'resardis') {
+              withdraw(api, transferData.amount, tokenAddress, DOMID)
+            } else if (transferData.transferTo === 'resardis') {
+              if (tokenAddress === ethers.constants.AddressZero) {
+                deposit(api, transferData.amount, tokenAddress, DOMID)
+              } else {
+                depositAfterApprove(
+                  api,
+                  transferData.amount,
+                  tokenAddress,
+                  accountAddress,
+                  network.contract,
+                  DOMID
+                )
+              }
+            }
+          }
+        }
+      }>Transfer</button>
+    </div>
+  </div>
+
+    // <div className="container-transfer-form">
+
+    //   <div className="selects-labels">
+    //     <span>From</span>
+    //     <span>To</span>
+    //   </div>
+
+    //   <div className="transfer-selects">
+    //     <select name="transferFrom" className="transfer-asset-select"
+    //       value={transferData.transferFrom}
+    //       onChange={e => updateTransferData(e)}
+    //     >
+    //       <option value="mainnet">Mainnet</option>
+    //       <option value="sidechain">Side Chain</option>
+    //       <option value="resardis">Resardis</option>
+    //     </select>
+
+    //     <select name="transferTo" className="transfer-asset-select"
+    //       value={transferData.transferTo}
+    //       onChange={e => updateTransferData(e)}
+    //     >
+    //       {transferData.transferFrom !== 'mainnet' && <option value="mainnet">Mainnet</option>}
+    //       {transferData.transferFrom !== 'sidechain' && <option value="sidechain">Side Chain</option>}
+    //       {transferData.transferFrom !== 'resardis' && <option value="resardis">Resardis</option>}
+    //     </select>
+    //   </div>
+
+    //   <div className="transfer-details">
+    //     <div>
+    //       <div>Amount (
+    //         {wei2ether(balances[assetSelected][transferData.transferFrom])}
+    //         &nbsp;
+    //         {assetSelected})
+    //       </div>
+    //       {transferData.err && (
+    //         <div className="form-amount-error">
+    //           Not enough {assetSelected} for this transfer
+    //         </div>
+    //       )}
+    //       <span>00000 USD</span>
+    //       <input type="text" name="amount"
+    //         value={transferData.amount}
+    //         onChange={e => updateTransferData(e)} />
+    //     </div>
+    //     <div>
+    //       <div>Fee</div>
+    //       <span>00000 USD</span>
+    //       <input type="text" disabled value={transferData.fee} /></div>
+    //     <div>
+    //       <div>Total</div>
+    //       <span>00000 USD</span>
+    //       <input type="text" disabled value={transferData.amount} /></div>
+    //   </div>
+
+    //   <div className="transfer-button">
+    //     <button id={DOMID}
+    //       onClick={() => {
+    //         if (!transferData.err) {
+    //           const tokenAddress = getSelectedAssetAddress(assetSelected, network) || ''
+    //           const buttonElement = document.getElementById(DOMID)
+
+    //           if (buttonElement) buttonElement.innerHTML = 'transfer starting...'
+
+    //           if (transferData.transferFrom === 'resardis') {
+    //             withdraw(api, transferData.amount, tokenAddress, DOMID)
+    //           } else if (transferData.transferTo === 'resardis') {
+    //             if (tokenAddress === ethers.constants.AddressZero) {
+    //               deposit(api, transferData.amount, tokenAddress, DOMID)
+    //             } else {
+    //               depositAfterApprove(
+    //                 api,
+    //                 transferData.amount,
+    //                 tokenAddress,
+    //                 accountAddress,
+    //                 network.contract,
+    //                 DOMID
+    //               )
+    //             }
+    //           }
+    //         }
+    //       }
+    //     }>Transfer</button>
+    //   </div>
+    // </div>
   )
 }
 const TransferForm = connector(TransferFormConnected)
 
 const Transfer = () => (
-  <div className="container container-transfer">
+  <div className="row py-3">
 
-    <div className="container-transfer-inner">
-      <Balances />
-      <TransferForm />
+    <div className="col col-12 pb-4">
+      <h2 className="mb-3">Transfer Assets</h2>
+      <div className="row justify-content-around">
+        <div className="col col-md-auto">
+          <Balances />
+        </div>
+        <div className="col col-md-auto">
+          <TransferForm />
+        </div>
+      </div>
     </div>
 
-    <TransferHistory />
-
+    <div className="col col-12">
+      <TransferHistory />
+    </div>
   </div>
+
+  // <div className="container container-transfer">
+
+  //   <div className="container-transfer-inner">
+  //     <Balances />
+  //     <TransferForm />
+  //   </div>
+
+  //   <TransferHistory />
+
+  // </div>
 
 )
 

@@ -8,15 +8,17 @@ interface TabbedNavProps {
 }
 
 const TabbedNav = ({ items, tabbedNavigationName }: TabbedNavProps) => (
-  <div className="tabbed-nav">
-    {items.map(item => (
-      <TabItem
-        key={item.title}
-        item={item}
-        tabbedNavigationName={tabbedNavigationName}
-      />
-    ))}
-  </div>
+  <nav>
+    <ul className="nav nav-tabs justify-content-between" role="tablist">
+      {items.map(item => (
+        <TabItem
+          key={item.title}
+          item={item}
+          tabbedNavigationName={tabbedNavigationName}
+        />
+      ))}
+    </ul>
+  </nav>
 )
 
 export { TabbedNav }

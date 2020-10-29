@@ -1,0 +1,60 @@
+// NAVIGATION BAR
+
+@import "variables";
+
+.navbar {
+    line-height: $alt-line-height;
+  
+    .navbar-brand {
+      display: inline-block;
+  
+      img {
+        display: inline-block;
+        width: auto;
+        padding-bottom: 3px;
+        vertical-align: text-bottom;
+      }
+  
+      .navbar-brand-name {
+        display: inline-block;
+        color: $gray-100;
+        font-size: 34px;
+        line-height: 1;
+        font-weight: $font-weight-light;
+        vertical-align: text-bottom;
+      }
+    }
+  
+    .nav-item {
+      font-size: $alt-font-size;
+  
+      .nav-link {
+        color: $gray-200;
+      }
+  
+      .nav-link:hover {
+        color: $orange;
+      }
+    }
+  
+    .navbar-toggler {
+      .navbar-toggler-icon {
+        width: 1.625em;
+        height: 1.625em;
+      }
+    }
+  
+    .dropdown-menu {
+      font-size: $alt-font-size;
+      line-height: $alt-line-height;
+  
+      .dropdown-item {
+        font-size: $alt-font-size;
+        line-height: $alt-line-height;
+      }
+  
+      .dropdown-item:hover {
+        background-color: $gray-400;
+      }
+    }
+}

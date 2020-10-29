@@ -84,7 +84,7 @@ const DateHeader = () => (
   </div>
 )
 
-const Cancel = () => <button className="cancel-all-button">Cancel all</button>
+const Cancel = () => <button className="btn btn-secondary btn-sm text-capitalize cancel-all-button">Cancel all</button>
 
 const Search = connector(({ textFilter, updateTextFilter }: PropsFromRedux) => (
   <SearchBox value={textFilter} updateTextFilter={updateTextFilter} target={TAB_USERDATA} />
@@ -188,33 +188,34 @@ const NoWallet = () => {
   const buttonId = shortid()
 
   if (typeof window.ethereum === 'undefined') return (
-    <div className="no-wallet-info">
-      <p>No wallet found</p>
-      <p>Please consider trying <a href="https://metamask.io/" style={{ color: '#FBB03B' }}>MetaMask</a>?</p>
+    <div className="text-center py-3 no-wallet-info">
+      <p className="text-danger text-capitalize mb-1">No wallet found!</p>
+      <p>Please consider trying <a href="https://metamask.io/">MetaMask</a>?</p>
     </div>
   )
 
   return (
-    <div className="no-wallet-info">
-      <p>Wallet found, but it seems to be locked?</p>
-      <p><button className="enable-wallet-button" id={buttonId} onClick={() => {
+    <div className="py-3 text-center no-wallet-info">
+      <p>Wallet found, but it seems to be locked?
+        <button className="btn mx-3 enable-wallet-button" id={buttonId} onClick={() => {
 
-        const buttonElement = document.getElementById(buttonId)
+          const buttonElement = document.getElementById(buttonId)
 
-        window.ethereum
-        .request({ method: 'eth_requestAccounts' })
-        .then(() => window.location.reload(true))
-        .catch((err:any) => {
-          if (err.code === 4001) {
-            if (buttonElement) buttonElement.innerHTML = 'Request denied?'
-          } else {
-            if (buttonElement) buttonElement.innerHTML = 'Error occurred:' + err.message
-          }
-        })
-      }
-      }>
-        Enable wallet
-      </button></p>
+          window.ethereum
+          .request({ method: 'eth_requestAccounts' })
+          .then(() => window.location.reload(true))
+          .catch((err:any) => {
+            if (err.code === 4001) {
+              if (buttonElement) buttonElement.innerHTML = 'Request denied?'
+            } else {
+              if (buttonElement) buttonElement.innerHTML = 'Error occurred:' + err.message
+            }
+          })
+        }
+        }>
+          Enable Wallet
+        </button>
+      </p>
     </div>
   )
 
@@ -237,11 +238,13 @@ const Table = ({ headers, activeTab, isWalletEnabled }:PropsFromRedux) => {
 
   return (
   <>
-    <table className="user-data-table">
+  <div className="user-data-table">
+    <table className="table table-borderless table-dark table-striped table-hover table-sm">
       <thead>
         <tr>
           {headers.map((header:HeaderItemType) => (
             <th
+              scope="col"
               key={shortid()}
               onClick={() => {
                 if (sortBy === header.sortable) {
@@ -258,10 +261,7 @@ const Table = ({ headers, activeTab, isWalletEnabled }:PropsFromRedux) => {
           ))}
         </tr>
       </thead>
-    </table>
-    <div className="container-scroll">
-      <table className="user-data-table">
-        <tbody>
+      <tbody>
           {activeTab === TAB_USERDATA_OPEN_ORDERS ?
             <OpenOrders sortBy={sortBy} sortDirection={sortDirection} />
           : activeTab === TAB_USERDATA_ORDER_HISTORY ?
@@ -273,8 +273,48 @@ const Table = ({ headers, activeTab, isWalletEnabled }:PropsFromRedux) => {
           }
         </tbody>
       </table>
-    </div>
+      </div>
   </>
+
+  // <>
+  //   <table className="user-data-table">
+  //     <thead>
+  //       <tr>
+  //         {headers.map((header:HeaderItemType) => (
+  //           <th
+  //             key={shortid()}
+  //             onClick={() => {
+  //               if (sortBy === header.sortable) {
+  //                 console.log('flip')
+  //                flipSortDirection()
+  //               } else {
+  //                 console.log(header.sortable)
+  //                 setSortby(header.sortable)
+  //               }
+  //             }}
+  //           >
+  //             {header.display}
+  //           </th>
+  //         ))}
+  //       </tr>
+  //     </thead>
+  //   </table>
+  //   <div className="container-scroll">
+  //     <table className="user-data-table">
+  //       <tbody>
+  //         {activeTab === TAB_USERDATA_OPEN_ORDERS ?
+  //           <OpenOrders sortBy={sortBy} sortDirection={sortDirection} />
+  //         : activeTab === TAB_USERDATA_ORDER_HISTORY ?
+  //           <OrderHistory sortBy={sortBy} sortDirection={sortDirection} />
+  //         : activeTab === TAB_USERDATA_FUNDS ?
+  //           <Funds sortBy={sortBy} sortDirection={sortDirection} />
+  //         :
+  //           <TradeHistory sortBy={sortBy} sortDirection={sortDirection} />
+  //         }
+  //       </tbody>
+  //     </table>
+  //   </div>
+  // </>
 )}
 
 export default connector((props:PropsFromRedux) => (

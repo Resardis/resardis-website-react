@@ -1,13 +1,13 @@
-.order-form-row {
+/* .order-form-row {
   display: flex;
   justify-content: space-between;
   margin-bottom: 6px;
   align-items: center;
   font-size: 20px;
   font-weight: 300;
-}
+} */
 
-.order-form-header {
+/* .order-form-header {
   border-bottom: 1px solid #8E9091;
   display: flex;
   justify-content: left;
@@ -26,9 +26,9 @@
 .order-type-button-selected {
   border-bottom: 1px solid #FAAD47;
   color: #FAAD47;
-}
+} */
 
-.order-form-box {
+/* .order-form-box {
   background-color: #2A2E31;
   color: #C2C3C3;
   flex: 1;
@@ -38,9 +38,9 @@
 .order-form-boxes {
   display: flex;
   font-size: 16px;
-}
+} */
 
-.order-form-boxes input {
+/* .order-form-boxes input {
   display: flex;
   background: #A8ACAC;
   border: 1px solid #76797B;
@@ -49,8 +49,8 @@
   color: #2A2E31;
   width: 150px;
   text-align: left;
-}
-
+} */
+/* 
 .order-form-boxes > :first-child {
   margin: 10px 4px 6px 0;
   border-radius: 0 0 0 12px;
@@ -59,9 +59,9 @@
 .order-form-boxes > :last-child {
   margin: 10px 0 6px 4px;
   border-radius: 0 0 12px 0;
-}
+} */
 
-.order-price {
+/* .order-price {
   display: flex;
   align-items: stretch;
   background: black;
@@ -111,4 +111,4 @@
   font-size: 10px;
   margin-left: auto;
   margin-right: 8px;
-}
+} */

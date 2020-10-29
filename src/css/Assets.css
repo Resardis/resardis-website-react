@@ -1,4 +1,4 @@
-.funds .container {
+/* .funds .container {
   margin: 0 12px 12px 12px;
 }
 
@@ -52,13 +52,13 @@
 .assets-hide-zero {
   font-size: 18px;
   margin-right: auto;
-}
+} */
 
 /* .assets-table {
   table-layout: fixed;
 } */
 
-.assets-table th {
+/* .assets-table th {
   background-color: #808080;
   font-size: 14px;
   width: 8%;
@@ -77,4 +77,4 @@
   outline: none;
   padding: 2px 10px;
   font-size: 10px;
-}
+} */

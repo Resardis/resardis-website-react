@@ -88,11 +88,12 @@ const TransferHistoryTable = ({ transfers }:{ transfers: any }) => {
 
   return (
     <>
-    <table className="transfer-table">
+    <table className="table table-borderless table-dark table-striped table-hover table-sm transfer-table">
       <thead>
         <tr>
           {transferHistoryHeader.map(header => (
             <th
+              scope="col"
               key={header.name}
               onClick={() => {
                 if (sortBy === header.sortable) {
@@ -107,25 +108,60 @@ const TransferHistoryTable = ({ transfers }:{ transfers: any }) => {
           ))}
         </tr>
       </thead>
+      <tbody>
+        {sortAndFilter(transfers, sortBy, sortDirection).map((row:TransferHistoryType) => (
+          <tr key={shortid()}>
+            <td>-</td>
+            <td>{row.target}</td>
+            <td>{row.tokenName}</td>
+            <td>{row.token}</td>
+            <td>{wei2ether(new BigNumber(row.amount))}</td>
+            <td>{row.networkName}</td>
+          </tr>
+        ))}
+      </tbody>
     </table>
+    </>
 
-    <div className="container-scroll">
-      <table className="transfer-table">
-        <tbody>
-          {sortAndFilter(transfers, sortBy, sortDirection).map((row:TransferHistoryType) => (
-            <tr key={shortid()}>
-              <td>-</td>
-              <td>{row.target}</td>
-              <td>{row.tokenName}</td>
-              <td>{row.token}</td>
-              <td>{wei2ether(new BigNumber(row.amount))}</td>
-              <td>{row.networkName}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  </>
+  //   <>
+  //   <table className="transfer-table">
+  //     <thead>
+  //       <tr>
+  //         {transferHistoryHeader.map(header => (
+  //           <th
+  //             key={header.name}
+  //             onClick={() => {
+  //               if (sortBy === header.sortable) {
+  //                 flipSortDirection()
+  //               } else {
+  //                 setSortby(header.sortable)
+  //               }
+  //             }}
+  //           >
+  //             {header.name}
+  //           </th>
+  //         ))}
+  //       </tr>
+  //     </thead>
+  //   </table>
+
+  //   <div className="container-scroll">
+  //     <table className="transfer-table">
+  //       <tbody>
+  //         {sortAndFilter(transfers, sortBy, sortDirection).map((row:TransferHistoryType) => (
+  //           <tr key={shortid()}>
+  //             <td>-</td>
+  //             <td>{row.target}</td>
+  //             <td>{row.tokenName}</td>
+  //             <td>{row.token}</td>
+  //             <td>{wei2ether(new BigNumber(row.amount))}</td>
+  //             <td>{row.networkName}</td>
+  //           </tr>
+  //         ))}
+  //       </tbody>
+  //     </table>
+  //   </div>
+  // </>
   )
 }
 
@@ -166,11 +202,17 @@ const TransferHistoryConnected = (props:PropsFromRedux) => {
   ]
 
   return (
-    <div className="container">
-      <h1>Transfer History</h1>
+    <div>
+      <h2 className="mb-3">Transfer History</h2>
       <TransferHistoryTable transfers={transfers} />
-      <div style={{ minHeight: '12px' }}></div>
     </div>
+
+
+    // <div className="container">
+    //   <h1>Transfer History</h1>
+    //   <TransferHistoryTable transfers={transfers} />
+    //   <div style={{ minHeight: '12px' }}></div>
+    // </div>
   )
 }
 

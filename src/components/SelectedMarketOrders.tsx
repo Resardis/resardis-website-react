@@ -22,15 +22,13 @@ interface OrdersProps {
 type OrderType = Array<BigNumber>
 
 const OrdersHeader = ({ baseCurrency, quoteCurrency }:OrdersHeaderProps) => (
-  <table className="market-orders-header">
-    <thead>
-      <tr>
-        <th>Price</th>
-        <th>Amount({baseCurrency})</th>
-        <th>Total({quoteCurrency})</th>
-      </tr>
-    </thead>
-  </table>
+  <thead>
+    <tr>
+      <th scope="col">Price</th>
+      <th scope="col">Amount({baseCurrency})</th>
+      <th scope="col">Total({quoteCurrency})</th>
+    </tr>
+  </thead>
 )
 
 type ColorTheme = { [key:string]: Array<[string, string, string]> }
@@ -78,11 +76,11 @@ interface OrdersTableProps {
   orders: OrdersData,
   total: BigNumber,
 }
+
 const SellOrdersTable = ({ orders, total }:OrdersTableProps) => {
   let totalSoFar:BigNumber = total
 
   return (
-  <table className="market-orders-content">
     <tbody>
       {Object.keys(orders)
       .sort((a, b) => orders[a][0].gt(orders[b][0]) ? 1 : -1)
@@ -92,14 +90,12 @@ const SellOrdersTable = ({ orders, total }:OrdersTableProps) => {
         return <OrderRow key={priceIndex} order={order} total={total} totalSoFar={totalSoFar} rowIndex={rowIndex} color="red" />
       })}
     </tbody>
-  </table>
 )}
 
 const BuyOrdersTable = ({ orders, total }:OrdersTableProps) => {
   let totalSoFar:BigNumber = new BigNumber(0)
 
   return (
-  <table className="market-orders-content">
     <tbody>
       {Object.keys(orders)
       .sort((a, b) => orders[a][0].gt(orders[b][0]) ? -1 : 1)
@@ -109,17 +105,14 @@ const BuyOrdersTable = ({ orders, total }:OrdersTableProps) => {
         return <OrderRow key={priceIndex} order={order} total={total} totalSoFar={totalSoFar} rowIndex={rowIndex} color="green" />
       })}
     </tbody>
-  </table>
 )}
 
 const NoOrdersTable = () => (
-  <table className="market-orders-content">
     <tbody>
-      <tr>
-        <td>no orders found</td>
+      <tr className="text-center text-capitalize">
+        <td colSpan={3}>no orders found</td>
       </tr>
     </tbody>
-  </table>
 )
 
 const getPrice = (trade:TradeType) => {
@@ -229,28 +222,28 @@ const Orders = ({
   const { orders:buyOrders, total:totalBuy } = processOrders(d2)
 
   return <>
-    <div className="container" style={{ padding: '0 12px 12px 12px' }}>
-      <OrdersHeader baseCurrency={baseCurrency} quoteCurrency={quoteCurrency} />
-      <div className="container-scroll" style={{ margin: 0 }}>
-        {Object.keys(sellOrders).length ? (
-          <SellOrdersTable orders={sellOrders} total={totalSell} />
-        ) : (
-          <NoOrdersTable />
-        )}
-      </div>
+    <div className="orderbook orderbook-sell-orders">
+      <table className="table table-borderless table-dark table-striped table-hover table-sm">
+        <OrdersHeader baseCurrency={baseCurrency} quoteCurrency={quoteCurrency} />
+          {Object.keys(sellOrders).length ? (
+            <SellOrdersTable orders={sellOrders} total={totalSell} />
+          ) : (
+            <NoOrdersTable />
+          )}
+      </table>
     </div>
 
     <LastTradePrice network={network} selectedCurrencyPair={selectedCurrencyPair} />
 
-    <div className="container" style={{ borderRadius: '12px', padding: '12px 12px 0 12px' }}>
-      <div className="container-scroll">
+    <div className="orderbook orderbook-buy-orders">
+      <table className="table table-borderless table-dark table-striped table-hover table-sm">
         {Object.keys(buyOrders).length ? (
           <BuyOrdersTable orders={buyOrders} total={totalBuy} />
         ) : (
           <NoOrdersTable />
         )}
-      </div>
-      <OrdersHeader baseCurrency={baseCurrency} quoteCurrency={quoteCurrency} />
+        <OrdersHeader baseCurrency={baseCurrency} quoteCurrency={quoteCurrency} />
+      </table>
     </div>
   </>
 }
