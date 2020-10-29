@@ -19,15 +19,13 @@ interface OrdersProps {
 }
 
 const OrdersHeader = ({ baseCurrency, quoteCurrency }:OrdersHeaderProps) => (
-  <table className="market-orders-header">
-    <thead>
-      <tr>
-        <th>Price</th>
-        <th>Amount({baseCurrency})</th>
-        <th>Total({quoteCurrency})</th>
-      </tr>
-    </thead>
-  </table>
+  <thead>
+    <tr>
+      <th scope="col">Price</th>
+      <th scope="col">Amount({baseCurrency})</th>
+      <th scope="col">Total({quoteCurrency})</th>
+    </tr>
+  </thead>
 )
 
 type ColorTheme = { [key:string]: Array<[string, string, string]> }
@@ -59,7 +57,6 @@ interface OrdersTableProps {
   total: BigNumber,
 }
 const OrdersTable = ({orders, color, total}:OrdersTableProps) => (
-  <table className="market-orders-content">
     <tbody>
       {Object.keys(orders)
       .sort((a, b) => orders[a][0].gt(orders[b][0]) ? 1 : -1)
@@ -68,24 +65,21 @@ const OrdersTable = ({orders, color, total}:OrdersTableProps) => (
 
         return (
           <tr key={priceIndex} style={orderRowBackgroudColor(order, total, i, color)}>
-            <td style={{ textAlign: 'left' }}>{wei2ether(order[0])}</td>
-            <td>{wei2ether(order[1])}</td>
-            <td>{wei2ether(order[2])}</td>
+            <td className="p-1" style={{ textAlign: 'left' }}>{wei2ether(order[0])}</td>
+            <td className="p-1">{wei2ether(order[1])}</td>
+            <td className="p-1">{wei2ether(order[2])}</td>
           </tr>
         )
       })}
     </tbody>
-  </table>
 )
 
 const NoOrdersTable = () => (
-  <table className="market-orders-content">
     <tbody>
-      <tr>
-        <td>no orders found</td>
+      <tr className="text-center text-capitalize">
+        <td colSpan={3}>no orders found</td>
       </tr>
     </tbody>
-  </table>
 )
 
 const Orders = ({
@@ -131,15 +125,15 @@ const Orders = ({
   })
 
   return <>
-    <div className="container" style={{ padding: '0 12px 12px 12px' }}>
-      <OrdersHeader baseCurrency={baseCurrency} quoteCurrency={quoteCurrency} />
-      <div className="container-scroll" style={{ margin: 0 }}>
-        {Object.keys(redOrders).length ? (
-          <OrdersTable orders={redOrders} color="red" total={totalRed} />
-        ) : (
-          <NoOrdersTable />
-        )}
-      </div>
+    <div className="orderbook orderbook-sell-orders">
+      <table className="table table-borderless table-dark table-striped table-hover table-sm">
+        <OrdersHeader baseCurrency={baseCurrency} quoteCurrency={quoteCurrency} />
+          {Object.keys(redOrders).length ? (
+            <OrdersTable orders={redOrders} color="red" total={totalRed} />
+          ) : (
+            <NoOrdersTable />
+          )}
+      </table>
     </div>
 
     {(totalGreen.gt(totalRed)) && (
@@ -160,15 +154,15 @@ const Orders = ({
       </div>
     )}
 
-    <div className="container" style={{ borderRadius: '12px', padding: '12px 12px 0 12px' }}>
-      <div className="container-scroll">
+    <div className="orderbook orderbook-buy-orders">
+      <table className="table table-borderless table-dark table-striped table-hover table-sm">
         {Object.keys(greenOrders).length ? (
           <OrdersTable orders={greenOrders} color="green" total={totalGreen} />
         ) : (
           <NoOrdersTable />
         )}
-      </div>
-      <OrdersHeader baseCurrency={baseCurrency} quoteCurrency={quoteCurrency} />
+        <OrdersHeader baseCurrency={baseCurrency} quoteCurrency={quoteCurrency} />
+      </table>
     </div>
   </>
 }

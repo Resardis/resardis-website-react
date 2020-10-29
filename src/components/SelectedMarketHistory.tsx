@@ -39,31 +39,22 @@ const History = ({ selectedCurrencyPair }:OrdersProps) => {
   })
 
   return <>
-    <table className="market-orders-history">
+    <table className="table table-borderless table-dark table-hover table-sm">
       <thead>
         <tr>
-          <th>Price</th>
-          <th>Amount</th>
-          <th>Total</th>
+          <th scope="col">Price</th>
+          <th scope="col">Amount</th>
+          <th scope="col">Total</th>
         </tr>
       </thead>
+      <tbody>
+        {orders.length ? orders : (
+          <tr className="text-center text-capitalize">
+            <td colSpan={3}>no orders found</td>
+          </tr>
+        )}
+      </tbody>
     </table>
-    <div className="container">
-      <div className="container container-inner" style={{ margin: 0 }}>
-        <div className="container-scroll" style={{ margin: 0 }}>
-          <table>
-            <tbody>
-              {orders.length ? orders : (
-                <tr>
-                  <td colSpan={3}>no orders found</td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-        <div style={{ minHeight: '12px' }}></div>
-      </div>
-    </div>
   </>
 }
 

@@ -125,90 +125,179 @@ const Assets = ({
   const toggleHidingEmptyBalances = () => setHideEmptyBalances(!hideEmptyBalances)
 
   return (
-  <div className="container">
-
-    <div className="assets-top-header">
-      <SearchBox value={textFilter} updateTextFilter={updateTextFilter} target="-" />
-
-      <div className="assets-hide-zero">
-        <input
-          type="checkbox"
-          onChange={() => toggleHidingEmptyBalances()}
-          checked={hideEmptyBalances}
-        />
-        Hide 0 Balances
-      </div>
-      <div className="assets-total">
-        Total Balance: {totalBalanceUSD.toFixed()} USD / {totalBalanceBTC.toFixed()} BTC
-      </div>
+  <div>
+    <div className="row py-2 justify-content-left align-items-center assets-top-header">
+        <div className="col col-md-auto">
+          <SearchBox value={textFilter} updateTextFilter={updateTextFilter} target="-" />
+        </div>
+        <div className="col col-md-auto">
+          <div className="input-group input-group-lg assets-hide-zero">
+            <div className="input-group-prepend">
+              <div className="input-group-text">
+                <input
+                  className="mr-2 align-text-bottom"
+                  type="checkbox"
+                  onChange={() => toggleHidingEmptyBalances()}
+                  checked={hideEmptyBalances}
+                />
+                <span>Hide 0 Balances</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="col col-md-auto">
+          <span className="assets-total">
+            Total Balance: {totalBalanceUSD.toFixed()} USD / {totalBalanceBTC.toFixed()} BTC
+          </span>
+        </div>
     </div>
-
-    <table className="assets-table">
-      <thead>
-        <tr>
-          {assetsHeader.map(header => (
-            <th
-              key={header.name}
-              onClick={() => {
-                sortBy === header.sortable ? flipSortDirection() : setSortby(header.sortable)
-              }}
-            >
-              {header.name}
-            </th>
-          )
-          )}
-        </tr>
-      </thead>
-    </table>
-
-    <div className="container-scroll">
-
-    <table className="assets-table">
-      <tbody>
-      {sortAndFilter(balances, textFilter, sortBy, sortDirection, hideEmptyBalances).map(symbol => {
-          //console.log(balances[symbol])
-          const tokenMarketData = marketData[`${symbol}/ETH`] ? marketData[`${symbol}/ETH`] : []
-          const hasMarketData = tokenMarketData.length > 0
-
-          return (
-          <tr key={symbol}>
-            <td style={{ textAlign: 'left' }}>{tokenNames[symbol]}</td>
-            <td>{symbol}</td>
-            <td>{wei2ether(balances[symbol].resardis)}</td>
-            <td>{wei2ether(balances[symbol].sidechain)}</td>
-            <td>{wei2ether(balances[symbol].resardisInUse)}</td>
-            {hasMarketData ? (
-              <>
-              <td style={{ color: tokenMarketData[1] < 0 ? '#D5002A' : '#00AA55'}}>{tokenMarketData[1]}%</td>
-              <td>?</td>
-              <td>{tokenMarketData[3].toFixed(8)}</td>
-              </>
-            ) : (
-              <>
-              <td>N/A</td>
-              <td>N/A</td>
-              <td>N/A</td>
-              </>
-            )}
-            <td>
-              <button
-                className="trade-button"
+    <div className="assets-table-wrapper">
+      <table className="table table-borderless table-dark table-striped table-hover table-sm">
+        <thead>
+          <tr>
+            {assetsHeader.map(header => (
+              <th
+                scope="col"
+                key={header.name}
                 onClick={() => {
-                  selectScreen('Market')
-                  selectCurrencyPair(`${symbol}/ETH`)
-                  console.log('trade', symbol)
+                  sortBy === header.sortable ? flipSortDirection() : setSortby(header.sortable)
                 }}
               >
-                trade
-              </button>
-            </td>
+                {header.name}
+              </th>
+            )
+            )}
           </tr>
-        )})}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+        {sortAndFilter(balances, textFilter, sortBy, sortDirection, hideEmptyBalances).map(symbol => {
+            //console.log(balances[symbol])
+            const tokenMarketData = marketData[`${symbol}/ETH`] ? marketData[`${symbol}/ETH`] : []
+            const hasMarketData = tokenMarketData.length > 0
+
+            return (
+            <tr key={symbol}>
+              <td style={{ textAlign: 'left' }}>{tokenNames[symbol]}</td>
+              <td>{symbol}</td>
+              <td>{wei2ether(balances[symbol].resardis)}</td>
+              <td>{wei2ether(balances[symbol].sidechain)}</td>
+              <td>{wei2ether(balances[symbol].resardisInUse)}</td>
+              {hasMarketData ? (
+                <>
+                <td style={{ color: tokenMarketData[1] < 0 ? '#D5002A' : '#00AA55'}}>{tokenMarketData[1]}%</td>
+                <td>?</td>
+                <td>{tokenMarketData[3].toFixed(8)}</td>
+                </>
+              ) : (
+                <>
+                <td>N/A</td>
+                <td>N/A</td>
+                <td>N/A</td>
+                </>
+              )}
+              <td>
+                <button
+                  className="btn btn-secondary btn-sm text-capitalize trade-button"
+                  onClick={() => {
+                    selectScreen('Market')
+                    selectCurrencyPair(`${symbol}/ETH`)
+                    console.log('trade', symbol)
+                  }}
+                >
+                  trade
+                </button>
+              </td>
+            </tr>
+          )})}
+        </tbody>
+      </table>
     </div>
-    <div style={{ minHeight: '12px' }}></div>
   </div>
+
+  // <div className="container">
+
+  //   <div className="assets-top-header">
+  //     <SearchBox value={textFilter} updateTextFilter={updateTextFilter} target="-" />
+
+  //     <div className="assets-hide-zero">
+  //       <input
+  //         type="checkbox"
+  //         onChange={() => toggleHidingEmptyBalances()}
+  //         checked={hideEmptyBalances}
+  //       />
+  //       Hide 0 Balances
+  //     </div>
+  //     <div className="assets-total">
+  //       Total Balance: {totalBalanceUSD.toFixed()} USD / {totalBalanceBTC.toFixed()} BTC
+  //     </div>
+  //   </div>
+
+  //   <table className="assets-table">
+  //     <thead>
+  //       <tr>
+  //         {assetsHeader.map(header => (
+  //           <th
+  //             key={header.name}
+  //             onClick={() => {
+  //               sortBy === header.sortable ? flipSortDirection() : setSortby(header.sortable)
+  //             }}
+  //           >
+  //             {header.name}
+  //           </th>
+  //         )
+  //         )}
+  //       </tr>
+  //     </thead>
+  //   </table>
+
+  //   <div className="container-scroll">
+
+  //   <table className="assets-table">
+  //     <tbody>
+  //     {sortAndFilter(balances, textFilter, sortBy, sortDirection, hideEmptyBalances).map(symbol => {
+  //         //console.log(balances[symbol])
+  //         const tokenMarketData = marketData[`${symbol}/ETH`] ? marketData[`${symbol}/ETH`] : []
+  //         const hasMarketData = tokenMarketData.length > 0
+
+  //         return (
+  //         <tr key={symbol}>
+  //           <td style={{ textAlign: 'left' }}>{tokenNames[symbol]}</td>
+  //           <td>{symbol}</td>
+  //           <td>{wei2ether(balances[symbol].resardis)}</td>
+  //           <td>{wei2ether(balances[symbol].sidechain)}</td>
+  //           <td>{wei2ether(balances[symbol].resardisInUse)}</td>
+  //           {hasMarketData ? (
+  //             <>
+  //             <td style={{ color: tokenMarketData[1] < 0 ? '#D5002A' : '#00AA55'}}>{tokenMarketData[1]}%</td>
+  //             <td>?</td>
+  //             <td>{tokenMarketData[3].toFixed(8)}</td>
+  //             </>
+  //           ) : (
+  //             <>
+  //             <td>N/A</td>
+  //             <td>N/A</td>
+  //             <td>N/A</td>
+  //             </>
+  //           )}
+  //           <td>
+  //             <button
+  //               className="trade-button"
+  //               onClick={() => {
+  //                 selectScreen('Market')
+  //                 selectCurrencyPair(`${symbol}/ETH`)
+  //                 console.log('trade', symbol)
+  //               }}
+  //             >
+  //               trade
+  //             </button>
+  //           </td>
+  //         </tr>
+  //       )})}
+  //     </tbody>
+  //   </table>
+  //   </div>
+  //   <div style={{ minHeight: '12px' }}></div>
+  // </div>
 )}
 
 export default connector(Assets)

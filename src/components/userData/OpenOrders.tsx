@@ -64,7 +64,7 @@ const OpenOrders = ({ orders, textFilter, activeOffers, sortBy, sortDirection, a
         <td>
           <button
             id={DOMID}
-            className="cancel-button"
+            className="btn btn-secondary btn-sm text-capitalize cancel-button"
             onClick={() => {
               const buttonElement = document.getElementById(DOMID)
               if (buttonElement) buttonElement.innerHTML = 'cancelling...'

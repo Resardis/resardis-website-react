@@ -68,12 +68,19 @@ const GraphContainer = () => (
 const Graph = ({ selectedCurrencyPair }:PropsFromRedux) => (
   <div className="graph main-tab">
 
-    <LegendTop />
+  <div className="row">
+      <div className="col-12">
+      <LegendTop />
+      </div>
 
-    <div style={{ display: 'flex', flex: 1 }}>
+      <div className="col-1">
       <MenuLeft />
+      </div>
+      <div className="col-11">
       <GraphContainer />
-    </div>
+      </div>
+  </div>
+
 
   </div>
 )

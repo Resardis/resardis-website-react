@@ -33,12 +33,22 @@ type PropsFromRedux = ConnectedProps<typeof connector>
 type Props = PropsFromRedux & OwnProps
 
 const TabItem = (props: Props) => (
-  <div
-    className={"tabbed-nav-item tabbed-nav-item-" + (props.active ? "active" : "inactive")}
-    onClick={() => props.activateTab({ [props.tabbedNavigationName]: props.item.key })}
-  >
-    {props.item.title}
-  </div>
+  <li className="nav-item">
+    <a
+      className={"nav-link" + (props.active ? " active" : "")}
+      onClick={() => props.activateTab({ [props.tabbedNavigationName]: props.item.key })}
+      role="tab"
+      href="#"
+    >
+      {props.item.title}
+    </a>
+  </li>
+  // <div
+  //   className={"tabbed-nav-item tabbed-nav-item-" + (props.active ? "active" : "inactive")}
+  //   onClick={() => props.activateTab({ [props.tabbedNavigationName]: props.item.key })}
+  // >
+  //   {props.item.title}
+  // </div>
 )
 
 export default connector(TabItem)

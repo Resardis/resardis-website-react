@@ -1,5 +1,5 @@
 import React from 'react'
-import metaMaskLogo from '../assets/metamask.jpg';
+import metaMaskLogo from '../assets/metamask.png';
 import { RootState } from '../reducers'
 import { connect, ConnectedProps } from 'react-redux'
 import '../css/Wallet.css'
@@ -51,27 +51,33 @@ interface WalletContainer {
 }
 
 const WalletContainer = ({borderColor, children}:WalletContainer) => (
-  <div className="wallet-container">
-    <div className={`wallet-main border-${borderColor}`}>
+  <div>
+    <div className="wallet-main">
       {children}
     </div>
   </div>
+
+  // <div className="wallet-container">
+  //   <div className={`wallet-main border-${borderColor}`}>
+  //     {children}
+  //   </div>
+  // </div>
 )
 
 const MetaMaskLogo = () => (
   <div>
-    <img src={metaMaskLogo} style={{ width: '32px' }} alt="MetaMask logo" />
+    <img className="metamask-logo" src={metaMaskLogo} alt="MetaMask logo" />
   </div>
 )
 
 const PleaseInstallProvider = () => (
   <WalletContainer borderColor="red">
-    <div className="no-wallet">
-      <p>
+    <div className="text-center no-wallet">
+      <p className="text-danger text-capitalize mb-1">
         No Ethereum provider found
       </p>
-      <p>
-        Please consider trying <a href="https://metamask.io/" style={{ color: 'inherit' }}>MetaMask</a>
+      <p className="mb-1">
+        Please consider trying <a href="https://metamask.io/">MetaMask</a>.
       </p>
     </div>
   </WalletContainer>
@@ -107,10 +113,16 @@ const Wallets = ({
 
   return (
     <WalletContainer borderColor="green">
-      <MetaMaskLogo />
-      <div className="wallet-data">
-        <div className="wallet-account">{accountAddress}</div>
-        <div className="wallet-balance">{assetSelected} {balances[assetSelected].balance}</div>
+      <div className="row justify-content-around">
+        <div className="col-auto px-1">
+          <MetaMaskLogo />
+        </div>
+        <div className="col-auto px-1">
+          <div className="wallet-data">
+            <div className="wallet-account">{accountAddress}</div>
+            <div className="wallet-balance">{assetSelected} {balances[assetSelected].balance}</div>
+          </div>
+        </div>
       </div>
     </WalletContainer>
   )

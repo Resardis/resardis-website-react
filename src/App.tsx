@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect, ConnectedProps } from 'react-redux'
 import { RootState } from './reducers'
-import './App.css'
+import './App.scss'
 import {
   FundsWindow,
   Funds,
@@ -38,21 +38,45 @@ const App = ({ selectedScreen, isWalletEnabled, openFundsWindow }: PropsFromRedu
   //if (!isWalletEnabled) openFundsWindow()
 
   return (
-    <div className="main-grid">
+    <div>
       <FundsWindow />
       <Header />
 
-      {selectedScreen === 'Funds' ? (
-        <Funds />
-        ) : (
-        <>
-          <SelectedMarket />
-          <Graph />
-          <OrderForm />
-          <UserData />
-          <Markets/>
-        </>
-      )}
+      <div className="container-fluid main-container py-3">
+        <div className="row h-100">
+          {selectedScreen === 'Funds' ? (
+            <div className="col-12">
+              <Funds />
+            </div>
+            ) : (
+            <>
+            <div className="col-xl-3 selected-market-parent">
+              <SelectedMarket />
+            </div>
+            <div className="col-xl-6 middle-column">
+              <div className="row pb-3">
+                <div className="col-12 graph-wrapper">
+                  <Graph />
+                </div>
+              </div>
+              <div className="row pb-3">
+                <div className="col-12 order-form-wrapper">
+                  <OrderForm />
+                </div>
+              </div>
+              <div className="row pb-3">
+                <div className="col-12 user-data-wrapper">
+                  <UserData />
+                </div>
+              </div>
+            </div>
+            <div className="col-xl-3">
+              <Markets/>
+            </div>
+            </>
+          )}
+       </div>
+      </div>
 
     </div>
   )
