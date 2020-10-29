@@ -1,0 +1,54 @@
+// GENERAL SETTINGS
+html {
+    height: 100%;
+  
+    body {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+  }
+  
+  img {
+    width: 100%;
+    max-width: 100%;
+  }
+  
+  a {
+    transition-duration: $link-transition-duration;
+    transition-timing-function: $link-timing-function;
+  }
+  
+  .text-lightgrey {
+    color: $gray-300;
+  }
+  
+  .text-midgrey {
+    color: $gray-600;
+  }
+  
+  .text-darkgrey {
+    color: $gray-700;
+  }
+  
+  .text-orange {
+    color: $orange;
+  }
+  
+  .btn-outline-dark:hover {
+    color: $orange;
+    background-color: $dark;
+    border-color: $dark;
+  }
+  
+  .text-justify {
+    hyphens: auto;
+  
+    p {
+      hyphens: auto !important;
+    }
+  }
+  
+  .push-footer {
+    flex: 1 0 auto;
+  }
