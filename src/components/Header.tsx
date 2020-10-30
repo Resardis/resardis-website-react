@@ -1,10 +1,12 @@
 import React from 'react'
 import logo from '../assets/resardis-logo.png';
-import { ReactComponent as Menu } from '../svg/menu.svg'
 import { RootState } from '../reducers'
 import { connect, ConnectedProps } from 'react-redux'
 import { openFundsWindow, selectScreen } from '../actions'
 import { OpenFundsWindowAction, SelectScreenAction } from '../constants/actionTypes'
+import Container from 'react-bootstrap/Container'
+import Navbar from 'react-bootstrap/Navbar'
+import ListGroup from 'react-bootstrap/ListGroup'
 import '../scss/Header.scss'
 
 interface StateProps {
@@ -56,38 +58,33 @@ const HeaderItemConnected = ({
   selectScreen
 }:Props) => {
   const isActive = (selectedScreen === item.name)
-//todo: disable changin screen to Funds if !isWalletEnabled
-
-  let dataToggle = ""
-  let dataTarget = ""
+  //todo: disable changin screen to Funds if !isWalletEnabled
 
   let className =
     isActive ? 'nav-item px-3 text-uppercase' :
     item.action !== 'null' ? 'nav-item px-3 text-uppercase' : 'nav-item header-item-disabled px-3 text-uppercase'
 
   if (!isWalletEnabled && item.name === 'Funds') className = 'nav-item header-item-disabled px-3 text-uppercase'
-  if (item.name === 'Account') {dataToggle="modal"; dataTarget="#accountmodal"}
 
   return (
-    <li
-      className={className}
-      data-toggle={dataToggle}
-      data-target={dataTarget}
-      onClick={() => {
-        // console.log('==', isActive, isWalletEnabled, item)
-        if (isActive) return
-        if (item.action === 'screenOrWallet') {
-          if (isWalletEnabled)
-            selectScreen(item.name)
-          else
-            openFundsWindow()
-        }
-        if (item.action === 'screen') selectScreen(item.name)
-        if (item.action === 'wallets') openFundsWindow()
-      }}
-    >
-      {item.name}
-    </li>
+  <ListGroup.Item
+    as="li"
+    className={className}
+    onClick={() => {
+      // console.log('==', isActive, isWalletEnabled, item)
+      if (isActive) return
+      if (item.action === 'screenOrWallet') {
+        if (isWalletEnabled)
+          selectScreen(item.name)
+        else
+          openFundsWindow()
+      }
+      if (item.action === 'screen') selectScreen(item.name)
+      if (item.action === 'wallets') openFundsWindow()
+    }}
+  >
+    {item.name}
+  </ListGroup.Item>
   )
 }
 
@@ -95,19 +92,22 @@ const HeaderItem = connector(HeaderItemConnected)
 
 const Header = () => {
   return (
-    <nav className="navbar navbar-expand-lg sticky-top navbar-dark bg-dark pt-2 pb-2">
-      <a className="navbar-brand py-1" href="">
-        <img src={logo} height="43" alt="Resardis" /><span className="navbar-brand-name text-uppercase">Resardis</span>
-      </a>
-      <div className="collapse navbar-collapse font-weight-bold">
-        <ul className="navbar-nav ml-auto pt-2">
+  <Navbar expand="md" variant="dark" bg="dark">
+    <Container fluid>
+      <Navbar.Brand href="https://www.resardis.com/">
+        <img src={logo} height="43" alt="Resardis" />
+        <span className="navbar-brand-name text-uppercase">Resardis</span>
+      </Navbar.Brand>
+      <Navbar.Toggle as="button" aria-controls="navbar-toggler" />
+      <Navbar.Collapse id="navbar-toggler" className="font-weight-bold">
+        <ListGroup as="ul" className="navbar-nav ml-auto pt-2">
           {headerItems.map(item => (
             <HeaderItem key={item.name} item={item} />
           ))}
-        </ul>
-      </div>
-      {/* <Menu fill="#C2C3C3" width="64px" height="64px" /> */}
-    </nav>
+        </ListGroup>
+      </Navbar.Collapse>
+    </Container>
+  </Navbar>
   )
 }
 
