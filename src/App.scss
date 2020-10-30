@@ -102,6 +102,8 @@ select.form-control {
     }
 }
 
+
+
 .main-container {
     min-height: 92.5vh;
 
@@ -165,6 +167,10 @@ select.form-control {
 }
 
 .navbar {
+    .list-group,
+    .list-group-item {
+        background-color: inherit;
+    }
     .header-item-disabled {
         color: $gray-600;
         pointer-events: none;
@@ -178,6 +184,54 @@ select.form-control {
         }
     }
 
+    .market-orders-history {
+        overflow-y: auto;
+        height: 83vh;
+    }
+
+    .market-depth {
+        height: 80.5vh;
+        overflow-y: auto;
+
+        .table {
+            margin-bottom: 0px;
+            tr, td {
+                margin: 0px 0px 0px 0px !important;
+                padding: 0px 0px 0px 0px !important;
+
+            }
+            min-width: 100%;
+            tbody {
+                min-width: 100%;
+            }
+        }
+
+        .depth-line-container {
+            background-color: $table-dark-bg;
+            display: flex;
+
+            .depth-line {
+                background-color: $table-dark-bg;
+
+                height: 1px;
+                background-color: #8C8F8B;
+                flex: 1;
+                margin: 0 10px;
+            }
+        }
+    }
+
+    // .market-depth {
+    //     min-width: 100%;
+
+    //     .table {
+    //         min-width: 100%;
+    //         tbody {
+    //             min-width: 100%;
+    //         }
+    //     }
+    // }
+
     .orderbook {
         overflow-y: auto;
         height: 40vh;
@@ -185,17 +239,24 @@ select.form-control {
             height: 20vh;
         }
         @media only all and (min-width: map-get($grid-breakpoints, lg)) {
-            height: 10vh;
+            height: 30vh;
+        }
+        @media only all and (min-width: map-get($grid-breakpoints, xl)) {
+            height: 39.5vh;
         }
     }
 
     .orders-price-change-indicator {
+        display: flex;
         height: 10vh;
         @media only all and (min-width: map-get($grid-breakpoints, md)) {
             height: 5vh;
         }
         @media only all and (min-width: map-get($grid-breakpoints, lg)) {
-            height: 3vh;
+            height: 4vh;
+        }
+        @media only all and (min-width: map-get($grid-breakpoints, xl)) {
+            height: 4vh;
         }
     }
 }
@@ -259,6 +320,10 @@ select.form-control {
         .form-control:disabled {
             background-color: $gray-600;
             border-color: $gray-600;
+        }
+
+        .order-form-balance {
+            font-size: $data-font-size;
         }
     }
 
@@ -348,9 +413,7 @@ select.form-control {
         margin-right: 1px;
         font-size: $alt-font-size;
         line-height: $alt-line-height;
-        .search-icon {
-            top: 0px;
-        }
+
         .search-input {
             font-size: $alt-font-size;
             color: $dark;
@@ -547,6 +610,37 @@ select.form-control {
 
 .enable-wallet-button {
     background-color: $green;
+}
+
+
+.search-wrapper {
+    display: inline-block;
+    position: relative;
+
+    ::placeholder {
+        color: $gray-600;
+    }
+
+    .search-input {
+        border: 0;
+        border-bottom: 1px solid $gray-600;
+        background-color: inherit;
+        color: inherit;
+        outline: none;
+        padding-left: 28px;
+        width: 70%;
+        min-height: 26px;
+      }
+      
+      .search-icon {
+        position: absolute;
+        top: 5px;
+        left: 5px;
+        z-index: 1;
+        width: 16px;
+        height: auto;
+        fill: $gray-600;
+      }
 }
 // .main-grid {
 //   display: grid;

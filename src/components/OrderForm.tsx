@@ -188,7 +188,7 @@ const OrderFormConnected = ({
       </div>
 
       <div className="form-group row align-items-center justify-content-between">
-        <div className="col-auto px-3">
+        <div className="col-auto px-3 order-form-balance">
           Balance {isBuy ?
             `${quoteCurrency} ${wei2ether(quoteCurrencyBalance, 6)}`
             :
@@ -196,7 +196,7 @@ const OrderFormConnected = ({
           }
         </div>
         <div className="col-auto">
-          <button className={'btn px-4 py-1 order-button ' + (isBuy ? 'btn-buy' : 'btn-sell')}
+          <button className={'btn px-2 py-1 order-button ' + (isBuy ? 'btn-buy' : 'btn-sell')}
             id={isBuy ? 'buyButtonOrderID' : 'sellButtonOrderID'}
             onClick={() => {
               console.log(`_==_=++', quoteCurrency: ${quoteCurrency}, baseCurrency: ${baseCurrency}, baseToken: ${orderData.baseToken}, quoteToken: ${orderData.quoteToken}`)

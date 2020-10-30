@@ -67,17 +67,15 @@ const OrderRow = ({ order, total, rowIndex, color, addLegend, setHighlightFrom }
   >
     <td style={{ marginBottom: '1px' }}>
       {(addLegend || showContent) ? (
-        <div className="depth-line-container" style={{ height: '8px' }}>
-          <div className="depth-line"></div>
+        <div className="depth-line-container align-items-center justify-content-center" style={{ height: '10px' }}>
           {showContent ? (
-            <span>av. price: {wei2ether(order.avgPriceSoFar, 8)}amount: {wei2ether(order.amountSoFar)}, total:{wei2ether(order.totalSoFar)} </span>
+            <span>Avg. price: {wei2ether(order.avgPriceSoFar, 6)}, Amount: {wei2ether(order.amountSoFar)}, Total:{wei2ether(order.totalSoFar)} </span>
           ) : (
             <span>{wei2ether(order.totalSoFar)}</span>
           )}
-          <div className="depth-line"></div>
         </div>
       ) : (
-        <div style={{ height: '8px' }}></div>
+        <div style={{ height: '10px' }}></div>
       )}
     </td>
   </tr>
@@ -122,7 +120,7 @@ const OrdersTable = ({ orders, total, reverse, colorBar, colorBarLight }:OrdersT
   })
 
   return (
-  <table className="market-orders-content">
+  <table className="table table-borderless table-dark table-striped table-hover table-sm market-orders-content">
     <tbody>
       {reverse ? orderRows.reverse() : orderRows}
     </tbody>
@@ -130,7 +128,7 @@ const OrdersTable = ({ orders, total, reverse, colorBar, colorBarLight }:OrdersT
 )}
 
 const NoOrdersTable = () => (
-  <table className="market-orders-content">
+  <table className="table table-borderless table-dark table-striped table-hover table-sm market-orders-content">
     <tbody>
       <tr>
         <td>no orders found</td>
@@ -210,16 +208,14 @@ const Depth = ({
   )
 
   return <>
-    <div className="container">
-      <div className="container-inner-box container-scroll" style={{ backgroundColor: '#454849' }}>
-          <OrdersTable orders={sellOrders} total={totalSell} reverse={true} colorBar="red" colorBarLight="lightred" />
-          <div className="depth-line-container">
-            <div className="depth-line"></div>
-              0.0000
-            <div className="depth-line"></div>
-          </div>
-          <OrdersTable orders={buyOrders} total={totalBuy} reverse={false} colorBar="green" colorBarLight="lightgreen" />
-      </div>
+    <div className="market-depth">
+        <OrdersTable orders={sellOrders} total={totalSell} reverse={true} colorBar="red" colorBarLight="lightred" />
+        <div className="depth-line-container align-items-center justify-content-center">
+          <div className="depth-line"></div>
+            0.0000
+          <div className="depth-line"></div>
+        </div>
+        <OrdersTable orders={buyOrders} total={totalBuy} reverse={false} colorBar="green" colorBarLight="lightgreen" />
     </div>
   </>
 }

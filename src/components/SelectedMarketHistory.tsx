@@ -51,7 +51,8 @@ const History = ({ selectedCurrencyPair, network }:OrdersProps) => {
     })
 
   return <>
-    <table className="table table-borderless table-dark table-hover table-sm">
+  <div className="market-orders-history">
+    <table className="table table-borderless table-dark table-striped table-hover table-sm">
       <thead>
         <tr>
           <th scope="col">Price</th>
@@ -67,6 +68,7 @@ const History = ({ selectedCurrencyPair, network }:OrdersProps) => {
         )}
       </tbody>
     </table>
+  </div>
   </>
 }
 

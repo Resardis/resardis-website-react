@@ -214,7 +214,7 @@ const MarketsData = (props: PropsFromRedux) => {
           <tr key={shortid()}
             onClick={() => props.selectCurrencyPair(row[0])}
             style={{
-              background: props.selectedCurrencyPair === row[0] ? '#76797B' : '',
+              background: props.selectedCurrencyPair === row[0] ? '#495057' : '',
               cursor: 'pointer'
             }}
           >
