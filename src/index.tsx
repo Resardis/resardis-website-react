@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
 import App from './App'
 import { EthereumProvider, TheGraphProvider } from './components'
-import './index.css'
 import { ApolloProvider, ApolloClient, InMemoryCache, HttpLink } from '@apollo/client'
 import store from './store'
 

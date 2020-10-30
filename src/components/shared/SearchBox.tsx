@@ -1,6 +1,6 @@
 import React from 'react'
 import { ReactComponent as SearchIcon } from '../../svg/search.svg'
-// import '../../css/SearchInput.css'
+import '../../scss/SearchInput.scss'
 
 interface SearchBox {
   value:string, updateTextFilter:Function, target:string,

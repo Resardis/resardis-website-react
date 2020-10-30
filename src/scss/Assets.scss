@@ -1,0 +1,164 @@
+@import "variables";
+
+.funds {
+    .nav-tabs {
+        @media only all and (min-width: map-get($grid-breakpoints, xs)) {
+            justify-content: left !important;
+        }
+        // .nav-item {
+        //     padding-left: 6px;
+        //     padding-right: 6px;
+        // }
+    }
+
+    .assets-top-header {
+        background-color: $gray-600;
+        color: $dark;
+        margin-left: 1px;
+        margin-right: 1px;
+        font-size: $alt-font-size;
+        line-height: $alt-line-height;
+
+        .search-input {
+            font-size: $alt-font-size;
+            color: $dark;
+            background-color: $gray-500;
+        }
+
+        .input-group, .input-group-text {
+            font-size: $alt-font-size;
+            background-color: $gray-600;
+            color: $dark;
+            border: 0px;
+        }
+    }
+
+    .assets-table-wrapper {
+        height: 50%;
+        overflow-y: auto;
+    }
+
+    .table {
+        .cancel-all-button,
+        .cancel-button,
+        .trade-button {
+            font-size: $data-font-size;
+            line-height: $data-line-height;
+        }
+    }
+
+    .question-mark {
+        margin-left: 4px;
+        margin-top: -2px;
+        border-radius: 12px;
+        background-color: #B3B3B3;
+        color: #4D4D4D;
+        font-size: 10px;
+        width: 12px;
+        text-align: center;
+        display: inline-block;
+    }
+      
+    h2 {
+        display: inline-block;
+        border-bottom: 2px solid $orange;
+    }
+
+    h3 {
+        display: inline-block;
+        font-size: $h5-font-size;
+        border-bottom: 2px solid $orange;
+    }
+      
+    .selects-labels {
+        width: 90%;
+        display: flex;
+        justify-content: space-between;
+    }
+      
+    .selects-labels span {
+        width: 40%;
+        text-align: center;
+        margin: 4px;
+        font-weight: 300;
+    }
+      
+    // .transfer-selects {
+    //     background-color: #666;
+    //     border-radius: 18px;
+    //     padding: 4px;
+    //     width: 90%;
+    //     display: flex;
+    //     justify-content: space-between;
+    //     margin-bottom: 36px;
+    // }
+      
+    // .transfer-details {
+    //     width: 87%;
+    // }
+      
+    // .transfer-details div {
+    //     margin-bottom: 6px;
+    //     display: flex;
+    //     justify-content: space-between;
+    //     align-items: center;
+    // }
+      
+    // .transfer-details div div:first-child {
+    //     margin-right: auto;
+    // }
+      
+    // .transfer-details input {
+    //     background-color: #B3B3B3;
+    //     border: 1px solid #4D4D4D;
+    //     outline: none;
+    //     padding: 4px;
+    // }
+      
+    // .transfer-details span {
+    //     font-size: 12px;
+    //     font-style: italic;
+    //     margin-right: 8px;
+    // }
+      
+    // .transfer-button {
+    //     width: 90%;
+    //     text-align: right;
+    //     margin: 10px 0;
+    // }
+      
+    // .transfer-button button {
+    //     border: none;
+    //     border-radius: 18px;
+    //     background-color: #FBB03B;
+    //     color: #333;
+    //     padding: 6px 28px;
+    //     font-size: 16px;
+    //     outline: none;
+    // }
+
+    .btn-transfer {
+        background-color: $green;
+    }
+
+    .btn-transfer:hover {
+        background-color: darken($green, 10%);
+    }
+      
+    .balances-details {
+        font-size: $font-size-base;
+    }
+      
+    .wallet-address span:first-child {
+        color: #FBB03B;
+    }
+      
+    .form-amount-error {
+        text-align: right;
+        color: red;
+        font-size: 10px;
+        margin-left: auto;
+        margin-right: 8px;
+    }
+      
+}

@@ -1,0 +1,85 @@
+@import "variables";
+
+.selected-market {
+    .nav-tabs {
+        .nav-item {
+            width: 31.0%;
+        }
+    }
+
+    .market-orders-history {
+        overflow-y: auto;
+        height: 83vh;
+    }
+
+    .market-depth {
+        height: 80.5vh;
+        overflow-y: auto;
+
+        .table {
+            margin-bottom: 0px;
+            tr, td {
+                margin: 0px 0px 0px 0px !important;
+                padding: 0px 0px 0px 0px !important;
+
+            }
+            min-width: 100%;
+            tbody {
+                min-width: 100%;
+            }
+        }
+
+        .depth-line-container {
+            background-color: $table-dark-bg;
+            display: flex;
+
+            .depth-line {
+                background-color: $table-dark-bg;
+
+                height: 1px;
+                background-color: #8C8F8B;
+                flex: 1;
+                margin: 0 10px;
+            }
+        }
+    }
+
+    // .market-depth {
+    //     min-width: 100%;
+
+    //     .table {
+    //         min-width: 100%;
+    //         tbody {
+    //             min-width: 100%;
+    //         }
+    //     }
+    // }
+
+    .orderbook {
+        overflow-y: auto;
+        height: 40vh;
+        @media only all and (min-width: map-get($grid-breakpoints, md)) {
+            height: 20vh;
+        }
+        @media only all and (min-width: map-get($grid-breakpoints, lg)) {
+            height: 30vh;
+        }
+        @media only all and (min-width: map-get($grid-breakpoints, xl)) {
+            height: 39.5vh;
+        }
+    }
+
+    .orders-price-change-indicator {
+        display: flex;
+        height: 10vh;
+        @media only all and (min-width: map-get($grid-breakpoints, md)) {
+            height: 5vh;
+        }
+        @media only all and (min-width: map-get($grid-breakpoints, lg)) {
+            height: 4vh;
+        }
+        @media only all and (min-width: map-get($grid-breakpoints, xl)) {
+            height: 4vh;
+        }
+    }
+}

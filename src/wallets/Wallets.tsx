@@ -2,7 +2,7 @@ import React from 'react'
 import metaMaskLogo from '../assets/metamask.png';
 import { RootState } from '../reducers'
 import { connect, ConnectedProps } from 'react-redux'
-import '../css/Wallet.css'
+import '../scss/Wallet.scss'
 import { ethers } from 'ethers'
 import { BigNumber } from 'bignumber.js'
 import { BalancesType } from '../reducers/funds'

@@ -57,4 +57,13 @@
         background-color: $gray-400;
       }
     }
+
+    .list-group,
+    .list-group-item {
+        background-color: inherit;
+    }
+    .header-item-disabled {
+        color: $gray-600;
+        pointer-events: none;
+    }
 }

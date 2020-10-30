@@ -12,7 +12,7 @@ import {
 import Orders from './SelectedMarketOrders'
 import Depth from './SelectedMarketDepth'
 import History from './SelectedMarketHistory'
-import '../css/SelectedMarket.css'
+import '../scss/SelectedMarket.scss'
 import { Network } from '../constants/networks'
 
 interface StateProps {

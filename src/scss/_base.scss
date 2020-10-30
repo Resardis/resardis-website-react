@@ -1,0 +1,122 @@
+html {
+    height: 100%;
+  
+    body {
+      height: 100%;
+      background-color: $gray-900;
+
+      #root,
+      #root > div {
+          height: 100%;
+      }
+    }
+}
+
+a,
+.btn {
+    transition-duration: $link-transition-duration;
+    transition-timing-function: $link-timing-function;
+}
+
+input[type="radio"],
+input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+}
+
+select.form-control {
+    background-color: $gray-300;
+    border-color: $gray-300;
+    border-width: 0px;
+    border-radius: 16px;
+    outline: none;
+}
+
+.table {
+    font-size: $data-font-size;
+    line-height: $data-line-height;
+
+    thead {
+        font-size: $data-header-font-size;
+        vertical-align: middle;
+        th {
+            position: sticky;
+            top: 0;
+            background-color: $table-dark-bg;
+            font-weight: normal;
+            vertical-align: middle;
+        }
+    }
+
+    tbody {
+        td {
+            white-space: nowrap;
+            vertical-align: middle;
+        }
+    }
+}
+
+.nav-tabs {
+    text-align: center;
+
+    .nav-item {
+        display: flex;
+        padding: 1px 2px 1px 2px;
+        margin: 0px 1px 0px 1px;
+
+        .nav-link {
+            flex-grow: 1;
+            color: $body-color;
+            background-color: $gray-700;
+            border-color: $gray-700;
+
+        }
+
+        .nav-link:hover {
+            background-color: darken($gray-700, 10%);
+            border-color: $gray-600;
+        }
+
+        .nav-link.active {
+            color: $nav-tabs-link-active-color;
+            background-color: $orange;
+            border-color: $orange;
+        }
+
+        .nav-link.active:hover {
+            background-color: null;
+            border-color: null;
+        }
+
+    }
+}
+
+.enable-wallet-button {
+    background-color: $green;
+}
+
+.main-container {
+    min-height: 92.5vh;
+
+    @media only all and (min-width: map-get($grid-breakpoints, xl)) {
+        height: 92.5vh;
+    }
+
+    @media only all and (min-width: map-get($grid-breakpoints, lg)) {
+        .selected-market-parent,
+        .selected-market {
+            height: 100%;
+        }
+    }
+
+    .middle-column {
+        .graph-wrapper,
+        .order-form-wrapper,
+        .user-data-wrapper {
+            @media only all and (min-width: map-get($grid-breakpoints, lg)) {
+                height: 32%;
+            }
+        }
+    }
+
+}

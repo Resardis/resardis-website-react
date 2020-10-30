@@ -1,0 +1,55 @@
+@import "variables";
+
+.order-form {
+    .order-form-header {
+        justify-content: left;
+
+        .nav-tabs {
+            .nav-item {
+                background-color: inherit;
+            }
+        }
+
+        .order-type-button {
+            border: 0;
+            background-color: inherit;
+            color: $body-color;
+            outline: none;
+        }
+    
+        .order-type-button.active {
+            border-bottom: 2px solid $orange;
+            color: $orange;
+        }
+    }
+
+    .order-form-body {
+        font-size: $alt-font-size;
+        line-height: $alt-line-height;
+
+        .form-control:disabled {
+            background-color: $gray-600;
+            border-color: $gray-600;
+        }
+
+        .order-form-balance {
+            font-size: $data-font-size;
+        }
+    }
+
+    .btn-buy {
+        background-color: $green;
+    }
+
+    .btn-buy:hover {
+        background-color: darken($green, 10%);
+    }
+
+    .btn-sell {
+        background-color: $red;
+    }
+
+    .btn-sell:hover {
+        background-color: darken($red, 10%);
+    }
+}

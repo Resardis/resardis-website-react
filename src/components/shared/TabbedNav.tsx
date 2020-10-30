@@ -1,6 +1,6 @@
 import React from 'react'
 import TabItem, { Item } from './TabItem'
-import '../../css/TabbedNav.css'
+import '../../scss/TabbedNav.scss'
 
 interface TabbedNavProps {
   items: Item[],

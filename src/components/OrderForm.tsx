@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { connect, ConnectedProps } from 'react-redux'
 import { RootState } from '../reducers'
-import '../css/OrderForm.css'
+import '../scss/OrderForm.scss'
 import { BigNumber } from 'bignumber.js'
 import { wei2ether } from '../helpers'
 import { createOrder } from '../contracts'

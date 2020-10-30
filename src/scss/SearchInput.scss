@@ -1,0 +1,31 @@
+@import "variables";
+
+.search-wrapper {
+    display: inline-block;
+    position: relative;
+
+    ::placeholder {
+        color: $gray-600;
+    }
+
+    .search-input {
+        border: 0;
+        border-bottom: 1px solid $gray-600;
+        background-color: inherit;
+        color: inherit;
+        outline: none;
+        padding-left: 28px;
+        width: 70%;
+        min-height: 26px;
+      }
+      
+      .search-icon {
+        position: absolute;
+        top: 5px;
+        left: 5px;
+        z-index: 1;
+        width: 16px;
+        height: auto;
+        fill: $gray-600;
+      }
+}

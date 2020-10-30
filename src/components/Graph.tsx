@@ -2,7 +2,7 @@ import React from 'react'
 import { connect, ConnectedProps } from 'react-redux'
 import { RootState } from '../reducers'
 import { ReactComponent as Menu } from '../svg/menu.svg'
-import '../css/Graph.css'
+import '../scss/Graph.scss'
 
 interface StateProps {
   selectedCurrencyPair: string,

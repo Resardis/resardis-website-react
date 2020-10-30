@@ -1,0 +1,22 @@
+@import "variables";
+
+.user-data {
+    .nav-tabs {
+        .nav-item {
+            width: 23.50%;
+        }
+    }
+
+    .user-data-table {
+        height: 325px;
+        overflow-y: auto;
+
+        .table {
+            .cancel-all-button,
+            .cancel-button {
+                font-size: $data-font-size;
+                line-height: $data-line-height;
+            }
+        }
+    }
+}
