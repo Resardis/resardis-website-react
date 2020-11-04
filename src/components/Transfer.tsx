@@ -82,42 +82,6 @@ const BalancesConnected = ({
       </div>
 
     </div>
-
-
-    // <div className="container-balances">
-
-    //   <h1>Transfer Assets<QuestionMark/></h1>
-
-    //   <select
-    //     className="transfer-asset-select"
-    //     value={assetSelected}
-    //     onChange={e => selectAsset(e.target.value)}
-    //   >
-    //     {Object.keys(balances).map((assetSymbol) => (
-    //       <option key={assetSymbol} value={assetSymbol}>{assetSymbol}</option>
-    //       ))}
-    //   </select>
-
-    //   <div className="balances-details">
-    //     <div className="wallet-address">
-    //       <span>My Wallet</span><QuestionMark/>
-    //       <span>{accountAddress}</span>
-    //     </div>
-    //     <div>
-    //       <span>Mainnet Balance</span><QuestionMark/>
-    //       {balances[assetSelected].mainnet.toFixed()} {assetSelected}
-    //     </div>
-    //     <div>
-    //       <span>Side Chain Balance</span><QuestionMark/>
-    //       {wei2ether(balances[assetSelected].sidechain, 10)} {assetSelected}
-    //     </div>
-    //     <div>
-    //       <span>Resardis Balance</span><QuestionMark/>
-    //       {wei2ether(balances[assetSelected].resardis, 10)} {assetSelected}
-    //     </div>
-    //   </div>
-
-    // </div>
   )
 }
 
@@ -299,91 +263,6 @@ const TransferFormConnected = ({
       }>Transfer</button>
     </div>
   </div>
-
-    // <div className="container-transfer-form">
-
-    //   <div className="selects-labels">
-    //     <span>From</span>
-    //     <span>To</span>
-    //   </div>
-
-    //   <div className="transfer-selects">
-    //     <select name="transferFrom" className="transfer-asset-select"
-    //       value={transferData.transferFrom}
-    //       onChange={e => updateTransferData(e)}
-    //     >
-    //       <option value="mainnet">Mainnet</option>
-    //       <option value="sidechain">Side Chain</option>
-    //       <option value="resardis">Resardis</option>
-    //     </select>
-
-    //     <select name="transferTo" className="transfer-asset-select"
-    //       value={transferData.transferTo}
-    //       onChange={e => updateTransferData(e)}
-    //     >
-    //       {transferData.transferFrom !== 'mainnet' && <option value="mainnet">Mainnet</option>}
-    //       {transferData.transferFrom !== 'sidechain' && <option value="sidechain">Side Chain</option>}
-    //       {transferData.transferFrom !== 'resardis' && <option value="resardis">Resardis</option>}
-    //     </select>
-    //   </div>
-
-    //   <div className="transfer-details">
-    //     <div>
-    //       <div>Amount (
-    //         {wei2ether(balances[assetSelected][transferData.transferFrom])}
-    //         &nbsp;
-    //         {assetSelected})
-    //       </div>
-    //       {transferData.err && (
-    //         <div className="form-amount-error">
-    //           Not enough {assetSelected} for this transfer
-    //         </div>
-    //       )}
-    //       <span>00000 USD</span>
-    //       <input type="text" name="amount"
-    //         value={transferData.amount}
-    //         onChange={e => updateTransferData(e)} />
-    //     </div>
-    //     <div>
-    //       <div>Fee</div>
-    //       <span>00000 USD</span>
-    //       <input type="text" disabled value={transferData.fee} /></div>
-    //     <div>
-    //       <div>Total</div>
-    //       <span>00000 USD</span>
-    //       <input type="text" disabled value={transferData.amount} /></div>
-    //   </div>
-
-    //   <div className="transfer-button">
-    //     <button id={DOMID}
-    //       onClick={() => {
-    //         if (!transferData.err) {
-    //           const tokenAddress = getSelectedAssetAddress(assetSelected, network) || ''
-    //           const buttonElement = document.getElementById(DOMID)
-
-    //           if (buttonElement) buttonElement.innerHTML = 'transfer starting...'
-
-    //           if (transferData.transferFrom === 'resardis') {
-    //             withdraw(api, transferData.amount, tokenAddress, DOMID)
-    //           } else if (transferData.transferTo === 'resardis') {
-    //             if (tokenAddress === ethers.constants.AddressZero) {
-    //               deposit(api, transferData.amount, tokenAddress, DOMID)
-    //             } else {
-    //               depositAfterApprove(
-    //                 api,
-    //                 transferData.amount,
-    //                 tokenAddress,
-    //                 accountAddress,
-    //                 network.contract,
-    //                 DOMID
-    //               )
-    //             }
-    //           }
-    //         }
-    //       }
-    //     }>Transfer</button>
-    //   </div>
-    // </div>
   )
 }
 const TransferForm = connector(TransferFormConnected)
@@ -407,18 +286,6 @@ const Transfer = () => (
       <TransferHistory />
     </div>
   </div>
-
-  // <div className="container container-transfer">
-
-  //   <div className="container-transfer-inner">
-  //     <Balances />
-  //     <TransferForm />
-  //   </div>
-
-  //   <TransferHistory />
-
-  // </div>
-
 )
 
 export default connector(Transfer)

@@ -43,21 +43,6 @@ const FundsWindowConnected = ({ isFundsWindowOpen, closeFundsWindow }:PropsFromR
       </div>
     </div>
     </>
-
-    // <>
-    // <div className="modal-backdrop" onClick={() => closeFundsWindow()} />
-    // <div className="modal-main main-tab">
-    //   <Wallets />
-    //   <div style={{ textAlign: 'right' }}>
-    //     <button className="wallet-button"
-    //       onClick={() => closeFundsWindow()}
-    //       style={{ margin: '3px 10px 10px 10px'}}
-    //     >
-    //       Close
-    //     </button>
-    //   </div>
-    // </div>
-    // </>
   )
 }
 const FundsWindowModal = connector(FundsWindowConnected)

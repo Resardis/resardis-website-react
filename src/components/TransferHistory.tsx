@@ -122,46 +122,6 @@ const TransferHistoryTable = ({ transfers }:{ transfers: any }) => {
       </tbody>
     </table>
     </>
-
-  //   <>
-  //   <table className="transfer-table">
-  //     <thead>
-  //       <tr>
-  //         {transferHistoryHeader.map(header => (
-  //           <th
-  //             key={header.name}
-  //             onClick={() => {
-  //               if (sortBy === header.sortable) {
-  //                 flipSortDirection()
-  //               } else {
-  //                 setSortby(header.sortable)
-  //               }
-  //             }}
-  //           >
-  //             {header.name}
-  //           </th>
-  //         ))}
-  //       </tr>
-  //     </thead>
-  //   </table>
-
-  //   <div className="container-scroll">
-  //     <table className="transfer-table">
-  //       <tbody>
-  //         {sortAndFilter(transfers, sortBy, sortDirection).map((row:TransferHistoryType) => (
-  //           <tr key={shortid()}>
-  //             <td>-</td>
-  //             <td>{row.target}</td>
-  //             <td>{row.tokenName}</td>
-  //             <td>{row.token}</td>
-  //             <td>{wei2ether(new BigNumber(row.amount))}</td>
-  //             <td>{row.networkName}</td>
-  //           </tr>
-  //         ))}
-  //       </tbody>
-  //     </table>
-  //   </div>
-  // </>
   )
 }
 
@@ -206,13 +166,6 @@ const TransferHistoryConnected = (props:PropsFromRedux) => {
       <h2 className="mb-3">Transfer History</h2>
       <TransferHistoryTable transfers={transfers} />
     </div>
-
-
-    // <div className="container">
-    //   <h1>Transfer History</h1>
-    //   <TransferHistoryTable transfers={transfers} />
-    //   <div style={{ minHeight: '12px' }}></div>
-    // </div>
   )
 }
 

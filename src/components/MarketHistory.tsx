@@ -26,12 +26,6 @@ const MarketHistory = ({ activeTab }:PropsFromRedux) => (
       <div style={{ minHeight: '12px' }}></div>
     </div>
   </div>
-  // <div className="container">
-  //   <div className="container container-inner" style={{ marginTop: '6px' }}>
-  //     <div>{activeTab}</div>
-  //     <div style={{ minHeight: '12px' }}></div>
-  //   </div>
-  // </div>
 )
 
 export default connector(MarketHistory)

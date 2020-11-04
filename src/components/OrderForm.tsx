@@ -208,66 +208,6 @@ const OrderFormConnected = ({
         </div>
       </div>
     </form>
-
-
-  // <div className="order-form-box">
-  //   <div className="order-form-row">
-  //     <div>Price</div>
-  //     <div className={"order-price" + (isLimit ? '' : ' order-price-disabled')}>
-  //       <div>
-  //         1 {baseCurrency} =
-  //       </div>
-  //       {orderType === 'limit' ? (
-  //         <input name="price" type="text" value={orderData.price} onChange={e => updateOrderData(e)} />
-  //       ) : (
-  //         <input name="price" type="text" value={orderData.price} disabled />
-  //       )}
-  //     </div>
-  //   </div>
-  //   <div className="order-form-row">
-  //     <div>Amount</div>
-  //     {buyError && (
-  //       <div className="order-form-error">
-  //         Not enough ETH for this buy order
-  //       </div>
-  //     )}
-  //     {sellError && (
-  //       <div className="order-form-error">
-  //         Not enough {baseCurrency} for this sell order
-  //       </div>
-  //     )}
-  //     <input
-  //       style={ (buyError || sellError) ? { borderColor: 'red' } : {}}
-  //       name="amount"
-  //       type="text"
-  //       value={orderData.amount}
-  //       onChange={e => updateOrderData(e)}
-  //      />
-  //   </div>
-
-  //   <div className="order-form-row">
-  //     <div>Total</div>
-  //     <input name="total" type="text" disabled value={`${orderData.total} ${quoteCurrency}`} />
-  //   </div>
-  //   <div className="order-form-row">
-  //   <div className="order-balance">
-  //     Balance {isBuy ?
-  //       `${quoteCurrency} ${wei2ether(quoteCurrencyBalance, 10)}`
-  //       :
-  //       `${baseCurrency} ${wei2ether(baseCurrencyBalance, 10)}`
-  //     }
-  //   </div>
-  //   <button className={'order-button ' + (isBuy ? 'greenBG' : 'redBG')}
-  //     id={isBuy ? 'buyButtonOrderID' : 'sellButtonOrderID'}
-  //     onClick={() => {
-  //       console.log(`_==_=++', quoteCurrency: ${quoteCurrency}, baseCurrency: ${baseCurrency}, baseToken: ${orderData.baseToken}, quoteToken: ${orderData.quoteToken}`)
-  //       createOrder(api, orderData, DOMID)
-  //     }}
-  //   >
-  //     {isBuy ? 'Buy' : 'Sell'} {baseCurrency}
-  //   </button>
-  //   </div>
-  // </div>
 )}
 const OrderForm = connector(OrderFormConnected)
 

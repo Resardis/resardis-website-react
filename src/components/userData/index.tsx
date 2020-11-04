@@ -275,46 +275,6 @@ const Table = ({ headers, activeTab, isWalletEnabled }:PropsFromRedux) => {
       </table>
       </div>
   </>
-
-  // <>
-  //   <table className="user-data-table">
-  //     <thead>
-  //       <tr>
-  //         {headers.map((header:HeaderItemType) => (
-  //           <th
-  //             key={shortid()}
-  //             onClick={() => {
-  //               if (sortBy === header.sortable) {
-  //                 console.log('flip')
-  //                flipSortDirection()
-  //               } else {
-  //                 console.log(header.sortable)
-  //                 setSortby(header.sortable)
-  //               }
-  //             }}
-  //           >
-  //             {header.display}
-  //           </th>
-  //         ))}
-  //       </tr>
-  //     </thead>
-  //   </table>
-  //   <div className="container-scroll">
-  //     <table className="user-data-table">
-  //       <tbody>
-  //         {activeTab === TAB_USERDATA_OPEN_ORDERS ?
-  //           <OpenOrders sortBy={sortBy} sortDirection={sortDirection} />
-  //         : activeTab === TAB_USERDATA_ORDER_HISTORY ?
-  //           <OrderHistory sortBy={sortBy} sortDirection={sortDirection} />
-  //         : activeTab === TAB_USERDATA_FUNDS ?
-  //           <Funds sortBy={sortBy} sortDirection={sortDirection} />
-  //         :
-  //           <TradeHistory sortBy={sortBy} sortDirection={sortDirection} />
-  //         }
-  //       </tbody>
-  //     </table>
-  //   </div>
-  // </>
 )}
 
 export default connector((props:PropsFromRedux) => (

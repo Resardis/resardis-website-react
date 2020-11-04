@@ -152,7 +152,7 @@ const MarketsData = (props: PropsFromRedux) => {
         price = takeAmt.div(giveAmt)
       }
 
-//console.log('dataPoints.forEach', set, takeAmt.toString(), giveAmt.toString())
+      //console.log('dataPoints.forEach', set, takeAmt.toString(), giveAmt.toString())
       if (order.pair in pairs[set]) {
         // query sorts orders, so the first seen is the one to take price from
         if (!('price' in pairs[set])) {
@@ -229,49 +229,6 @@ const MarketsData = (props: PropsFromRedux) => {
       </table>
     </div>
     </>
-
-    // <>
-    // <table>
-    //   <thead>
-    //     <tr>
-    //       <th>
-    //         <Search />
-    //       </th>
-    //       <th onClick={() => updateSorting(sortingTypes.SORT_BY_CHANGE24, props)}>
-    //         24h change
-    //       </th>
-    //       <th onClick={() => updateSorting(sortingTypes.SORT_BY_VOLUME, props)}>
-    //         24h volume
-    //       </th>
-    //       <th onClick={() => updateSorting(sortingTypes.SORT_BY_PRICE, props)}>
-    //         price (ETH)
-    //       </th>
-    //     </tr>
-    //   </thead>
-    // </table>
-
-    // <div className="container-scroll">
-
-    // <table>
-    //   <tbody>
-    //     {sortAndFilter(marketData, props).map(row => (
-    //       <tr key={shortid()}
-    //         onClick={() => props.selectCurrencyPair(row[0])}
-    //         style={{
-    //           background: props.selectedCurrencyPair === row[0] ? '#76797B' : '',
-    //           cursor: 'pointer'
-    //         }}
-    //       >
-    //         <td style={{ textAlign: 'left' }}>{row[0]}</td>
-    //         <td style={{ color: row[1] < 0 ? '#D5002A' : '#00AA55'}}>{row[1]}%</td>
-    //         <td>{number4DP(row[2])}</td>
-    //         <td>{row[3].toFixed(8)}</td>
-    //       </tr>
-    //     ))}
-    //   </tbody>
-    // </table>
-    // </div>
-    // </>
   )
 }
 

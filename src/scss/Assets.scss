@@ -5,10 +5,6 @@
         @media only all and (min-width: map-get($grid-breakpoints, xs)) {
             justify-content: left !important;
         }
-        // .nav-item {
-        //     padding-left: 6px;
-        //     padding-right: 6px;
-        // }
     }
 
     .assets-top-header {
@@ -83,60 +79,6 @@
         font-weight: 300;
     }
       
-    // .transfer-selects {
-    //     background-color: #666;
-    //     border-radius: 18px;
-    //     padding: 4px;
-    //     width: 90%;
-    //     display: flex;
-    //     justify-content: space-between;
-    //     margin-bottom: 36px;
-    // }
-      
-    // .transfer-details {
-    //     width: 87%;
-    // }
-      
-    // .transfer-details div {
-    //     margin-bottom: 6px;
-    //     display: flex;
-    //     justify-content: space-between;
-    //     align-items: center;
-    // }
-      
-    // .transfer-details div div:first-child {
-    //     margin-right: auto;
-    // }
-      
-    // .transfer-details input {
-    //     background-color: #B3B3B3;
-    //     border: 1px solid #4D4D4D;
-    //     outline: none;
-    //     padding: 4px;
-    // }
-      
-    // .transfer-details span {
-    //     font-size: 12px;
-    //     font-style: italic;
-    //     margin-right: 8px;
-    // }
-      
-    // .transfer-button {
-    //     width: 90%;
-    //     text-align: right;
-    //     margin: 10px 0;
-    // }
-      
-    // .transfer-button button {
-    //     border: none;
-    //     border-radius: 18px;
-    //     background-color: #FBB03B;
-    //     color: #333;
-    //     padding: 6px 28px;
-    //     font-size: 16px;
-    //     outline: none;
-    // }
-
     .btn-transfer {
         background-color: $green;
     }

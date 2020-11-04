@@ -34,26 +34,26 @@ const MenuLeft = () => (
 
 const LegendTopConnected = ({ selectedCurrencyPair }:PropsFromRedux) => (
   <div className="graph-legend-top">
-      <h4>{selectedCurrencyPair}</h4>
-      <h4>Ave</h4>
-      <h4>0.00000000</h4>
+    <h4>{selectedCurrencyPair}</h4>
+    <h4>Ave</h4>
+    <h4>0.00000000</h4>
 
-      <div>
-        24h Change<br/>
-        %13
-      </div>
-      <div>
-        24h High<br/>
-        0.00000000
-      </div>
-      <div>
-        24h Low<br/>
-        0.00000000
-      </div>
-      <div>
-        24h Volume<br/>
-        0.00000000
-      </div>
+    <div>
+      24h Change<br/>
+      %13
+    </div>
+    <div>
+      24h High<br/>
+      0.00000000
+    </div>
+    <div>
+      24h Low<br/>
+      0.00000000
+    </div>
+    <div>
+      24h Volume<br/>
+      0.00000000
+    </div>
   </div>
 )
 
@@ -67,21 +67,18 @@ const GraphContainer = () => (
 
 const Graph = ({ selectedCurrencyPair }:PropsFromRedux) => (
   <div className="graph main-tab">
-
-  <div className="row">
+    <div className="row">
       <div className="col-12">
-      <LegendTop />
+        <LegendTop />
       </div>
 
       <div className="col-1">
-      <MenuLeft />
+        <MenuLeft />
       </div>
       <div className="col-11">
-      <GraphContainer />
+        <GraphContainer />
       </div>
-  </div>
-
-
+    </div>
   </div>
 )
 

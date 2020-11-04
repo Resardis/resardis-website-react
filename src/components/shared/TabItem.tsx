@@ -43,12 +43,6 @@ const TabItem = (props: Props) => (
       {props.item.title}
     </a>
   </li>
-  // <div
-  //   className={"tabbed-nav-item tabbed-nav-item-" + (props.active ? "active" : "inactive")}
-  //   onClick={() => props.activateTab({ [props.tabbedNavigationName]: props.item.key })}
-  // >
-  //   {props.item.title}
-  // </div>
 )
 
 export default connector(TabItem)
