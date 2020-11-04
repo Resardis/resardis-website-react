@@ -38,7 +38,7 @@ const App = ({ selectedScreen, isWalletEnabled, openFundsWindow }: PropsFromRedu
   //if (!isWalletEnabled) openFundsWindow()
 
   return (
-    <div>
+    <div className="h-100">
       <FundsWindow />
       <Header />
 
@@ -50,27 +50,21 @@ const App = ({ selectedScreen, isWalletEnabled, openFundsWindow }: PropsFromRedu
             </div>
             ) : (
             <>
-            <div className="col-xl-3 selected-market-parent">
+            <div className="col-xl-3 left-column">
               <SelectedMarket />
             </div>
             <div className="col-xl-6 middle-column">
-              <div className="row pb-3">
-                <div className="col-12 graph-wrapper">
+                <div className="graph-wrapper">
                   <Graph />
                 </div>
-              </div>
-              <div className="row pb-3">
-                <div className="col-12 order-form-wrapper">
+                <div className="order-form-wrapper">
                   <OrderForm />
                 </div>
-              </div>
-              <div className="row pb-3">
-                <div className="col-12 user-data-wrapper">
+                <div className="user-data-wrapper">
                   <UserData />
                 </div>
-              </div>
             </div>
-            <div className="col-xl-3">
+            <div className="col-xl-3 right-column">
               <Markets/>
             </div>
             </>

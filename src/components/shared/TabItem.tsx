@@ -33,7 +33,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>
 type Props = PropsFromRedux & OwnProps
 
 const TabItem = (props: Props) => (
-  <li className="nav-item">
+  <li className="nav-item pb-0">
     <a
       className={"nav-link" + (props.active ? " active" : "")}
       onClick={() => props.activateTab({ [props.tabbedNavigationName]: props.item.key })}

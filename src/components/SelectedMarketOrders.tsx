@@ -152,19 +152,19 @@ const LastTradePrice = ({ network, selectedCurrencyPair }:LastTradePriceProps) =
   })
 
   if (nextToLastPrice.eq(0) || lastPrice.eq(nextToLastPrice)) return (
-    <div className="orders-price-change-indicator align-items-center justify-content-center">
+    <div className="orders-price-change-indicator py-2">
       0.0000000
     </div>
   )
 
   if (lastPrice.gt(nextToLastPrice)) return (
-    <div className="orders-price-change-indicator align-items-center justify-content-center green">
+    <div className="orders-price-change-indicator py-2 green">
       {wei2ether(lastPrice.minus(nextToLastPrice), 18)} <ArrowUp fill="#169A51" />
     </div>
   )
 
   return (
-    <div className="orders-price-change-indicator align-items-center justify-content-center red">
+    <div className="orders-price-change-indicator py-2 red">
       {wei2ether(nextToLastPrice.minus(lastPrice), 18)} <ArrowDown fill="#C22D38" />
     </div>
   )

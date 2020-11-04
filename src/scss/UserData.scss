@@ -1,21 +1,43 @@
 @import "variables";
 
-.user-data {
-    .nav-tabs {
-        .nav-item {
-            width: 23.50%;
+.user-data-wrapper {
+    padding-bottom: 16px;
+
+    .user-data {
+        height: 100%;
+
+        .nav-tabs {
+            .nav-item {
+                width: 23.50%;
+            }
+        }
+    
+        .user-data-table {
+            height: 35vh;
+            overflow-y: auto;
+    
+            .table {
+                .cancel-all-button,
+                .cancel-button {
+                    font-size: $data-font-size;
+                    line-height: $data-line-height;
+                }
+            }
         }
     }
 
-    .user-data-table {
-        height: 325px;
-        overflow-y: auto;
+    @media only all and (min-width: map-get($grid-breakpoints, xl)) {
+        padding-bottom: 0px;
+        flex: 1;
+        overflow: auto;
 
-        .table {
-            .cancel-all-button,
-            .cancel-button {
-                font-size: $data-font-size;
-                line-height: $data-line-height;
+        .user-data {
+            display: flex;
+            flex-direction: column;
+
+            .user-data-table {
+                height: 100%;
+                flex: 1;
             }
         }
     }

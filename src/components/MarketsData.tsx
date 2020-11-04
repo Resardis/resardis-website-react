@@ -191,41 +191,43 @@ const MarketsData = (props: PropsFromRedux) => {
 
   return (
     <>
-    <table className="table table-borderless table-dark table-striped table-hover table-sm">
-      <thead>
-        <tr>
-          <th scope="col">
-            <Search />
-          </th>
-          <th scope="col" onClick={() => updateSorting(sortingTypes.SORT_BY_CHANGE24, props)}>
-            24h Change
-          </th>
-          <th scope="col" onClick={() => updateSorting(sortingTypes.SORT_BY_VOLUME, props)}>
-            24h Volume
-          </th>
-          <th scope="col" onClick={() => updateSorting(sortingTypes.SORT_BY_PRICE, props)}>
-            Price (ETH)
-          </th>
-        </tr>
-      </thead>
-
-      <tbody>
-        {sortAndFilter(marketData, props).map(row => (
-          <tr key={shortid()}
-            onClick={() => props.selectCurrencyPair(row[0])}
-            style={{
-              background: props.selectedCurrencyPair === row[0] ? '#495057' : '',
-              cursor: 'pointer'
-            }}
-          >
-            <td style={{ textAlign: 'left' }}>{row[0]}</td>
-            <td style={{ color: row[1] < 0 ? '#D5002A' : '#00AA55'}}>{row[1]}%</td>
-            <td>{number4DP(row[2])}</td>
-            <td>{row[3].toFixed(8)}</td>
+    <div className="markets-table">
+      <table className="table table-borderless table-dark table-striped table-hover table-sm">
+        <thead>
+          <tr>
+            <th scope="col">
+              <Search />
+            </th>
+            <th scope="col" onClick={() => updateSorting(sortingTypes.SORT_BY_CHANGE24, props)}>
+              24h Change
+            </th>
+            <th scope="col" onClick={() => updateSorting(sortingTypes.SORT_BY_VOLUME, props)}>
+              24h Volume
+            </th>
+            <th scope="col" onClick={() => updateSorting(sortingTypes.SORT_BY_PRICE, props)}>
+              Price (ETH)
+            </th>
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+
+        <tbody>
+          {sortAndFilter(marketData, props).map(row => (
+            <tr key={shortid()}
+              onClick={() => props.selectCurrencyPair(row[0])}
+              style={{
+                background: props.selectedCurrencyPair === row[0] ? '#495057' : '',
+                cursor: 'pointer'
+              }}
+            >
+              <td style={{ textAlign: 'left' }}>{row[0]}</td>
+              <td style={{ color: row[1] < 0 ? '#D5002A' : '#00AA55'}}>{row[1]}%</td>
+              <td>{number4DP(row[2])}</td>
+              <td>{row[3].toFixed(8)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
     </>
 
     // <>

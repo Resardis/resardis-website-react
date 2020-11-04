@@ -1,52 +1,66 @@
 @import "variables";
 
-.graph {
-    height: 100%;
 
-    .graph-menu-left {
-        margin-left: 3px;
+.graph-wrapper {
+    height: 50vh;
+
+    @media only all and (min-width: map-get($grid-breakpoints, md)) {
+        height: 35vh;
     }
+
+    @media only all and (min-width: map-get($grid-breakpoints, xl)) {
+        height: 30%;
+    }
+
+    .graph {
+        height: 100%;
     
-    .graph-legend-top {
-        font-size: $data-font-size;
-        padding: 12px;
-        color: #A8ACAC;
-        padding-left: 60px;
-        padding-right: 16px;
+        .graph-menu-left {
+            margin-left: 3px;
+        }
+        
+        .graph-legend-top {
+            font-size: $data-font-size;
+            padding: 12px;
+            color: #A8ACAC;
+            padding-left: 60px;
+            padding-right: 16px;
+        }
+        
+        .graph-menu-left button {
+          border: 1px solid white;
+          margin-right: 6px;
+          margin-bottom: 6px;
+          border-radius: 20px;
+          background-color: #5D6162;
+          color: #C2C3C3;
+          height: 36px;
+          width: 36px;
+          font-size: 16px;
+        }
+        
+        .graph-container {
+          background-color: #292E31;
+          border: 1px solid #EDEEED;
+          border-radius: 0 12px 12px 0;
+          height: 100%;
+        }
+        
+        .graph-legend-top h4 {
+            font-size: $data-font-size;
+            margin: 0;
+            padding-right: 8px;
+            padding-left: 8px;
+            display: inline-block;
+        }
+        
+        .graph-legend-top div {
+            font-size: $data-font-size;
+            padding-right: 8px;
+            padding-left: 8px;
+            text-align: center;
+            display:inline-block;
+        }
     }
-    
-    .graph-menu-left button {
-      border: 1px solid white;
-      margin-right: 6px;
-      margin-bottom: 6px;
-      border-radius: 20px;
-      background-color: #5D6162;
-      color: #C2C3C3;
-      height: 36px;
-      width: 36px;
-      font-size: 16px;
-    }
-    
-    .graph-container {
-      background-color: #292E31;
-      border: 1px solid #EDEEED;
-      border-radius: 0 12px 12px 0;
-      height: 100%;
-    }
-    
-    .graph-legend-top h4 {
-        font-size: $data-font-size;
-        margin: 0;
-        padding-right: 8px;
-        padding-left: 8px;
-        display: inline-block;
-    }
-    
-    .graph-legend-top div {
-        font-size: $data-font-size;
-        padding-right: 8px;
-        padding-left: 8px;
-        text-align: center;
-        display:inline-block;
-    }
+
 }

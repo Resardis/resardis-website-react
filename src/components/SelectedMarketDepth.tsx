@@ -120,7 +120,7 @@ const OrdersTable = ({ orders, total, reverse, colorBar, colorBarLight }:OrdersT
   })
 
   return (
-  <table className="table table-borderless table-dark table-striped table-hover table-sm market-orders-content">
+  <table className="table table-borderless table-dark table-striped table-hover table-sm">
     <tbody>
       {reverse ? orderRows.reverse() : orderRows}
     </tbody>
@@ -128,7 +128,7 @@ const OrdersTable = ({ orders, total, reverse, colorBar, colorBarLight }:OrdersT
 )}
 
 const NoOrdersTable = () => (
-  <table className="table table-borderless table-dark table-striped table-hover table-sm market-orders-content">
+  <table className="table table-borderless table-dark table-striped table-hover table-sm">
     <tbody>
       <tr>
         <td>no orders found</td>
@@ -208,15 +208,17 @@ const Depth = ({
   )
 
   return <>
-    <div className="market-depth">
+      <div className="market-depth market-depth-sell">
         <OrdersTable orders={sellOrders} total={totalSell} reverse={true} colorBar="red" colorBarLight="lightred" />
-        <div className="depth-line-container align-items-center justify-content-center">
-          <div className="depth-line"></div>
-            0.0000
-          <div className="depth-line"></div>
-        </div>
+      </div>
+      <div className="depth-line-container align-items-center justify-content-center">
+        <div className="depth-line"></div>
+          0.0000
+        <div className="depth-line"></div>
+      </div>
+      <div className="market-depth market-depth-buy">
         <OrdersTable orders={buyOrders} total={totalBuy} reverse={false} colorBar="green" colorBarLight="lightgreen" />
-    </div>
+      </div>
   </>
 }
 

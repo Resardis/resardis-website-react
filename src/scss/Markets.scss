@@ -1,9 +1,20 @@
 @import "variables";
 
 .markets {
+    padding-bottom: 16px;
+
+    .markets-table {
+        height: 35vh;
+        overflow-y: auto;
+    }
+
     .nav-tabs {
         .nav-item {
-            width: 46.5%;
+            width: 48%;
         }
+    }
+
+    @media only all and (min-width: map-get($grid-breakpoints, xl)) {
+        padding-bottom: 0px;
     }
 }

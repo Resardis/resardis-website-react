@@ -39,12 +39,17 @@ select.form-control {
     thead {
         font-size: $data-header-font-size;
         vertical-align: middle;
+        position: sticky;
+        top: -2px;
+        z-index: 10;
+    
         th {
             position: sticky;
-            top: 0;
+            top: -2px;
             background-color: $table-dark-bg;
             font-weight: normal;
             vertical-align: middle;
+            z-index: 10;
         }
     }
 
@@ -96,27 +101,20 @@ select.form-control {
 }
 
 .main-container {
-    min-height: 92.5vh;
+    min-height: 90vh;
+    height: 100%;
 
     @media only all and (min-width: map-get($grid-breakpoints, xl)) {
-        height: 92.5vh;
-    }
+        height: 90vh;
 
-    @media only all and (min-width: map-get($grid-breakpoints, lg)) {
-        .selected-market-parent,
-        .selected-market {
+        .left-column {
             height: 100%;
         }
-    }
 
-    .middle-column {
-        .graph-wrapper,
-        .order-form-wrapper,
-        .user-data-wrapper {
-            @media only all and (min-width: map-get($grid-breakpoints, lg)) {
-                height: 32%;
-            }
+        .middle-column {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
         }
     }
-
 }
