@@ -9,7 +9,8 @@ import store from './store'
 
 const client = new ApolloClient({
   link: new HttpLink({
-    uri: 'https://graph.resardis.com/subgraphs/name/resardis/testnet',
+//    uri: 'https://graph.resardis.com/subgraphs/name/resardis/testnet',
+    uri: 'https://graph-mumbai.resardis.com/subgraphs/name/resardis/dex-mumbai'
   }),
   cache: new InMemoryCache(),
 

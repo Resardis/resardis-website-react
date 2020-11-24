@@ -78,8 +78,8 @@ const mapStateToProps = (state: RootState, ownProps:OwnProps):StateProps => {
     amount: new BigNumber(0),
     baseCurrency,
     quoteCurrency,
-    baseCurrencyBalance: state.funds.balances[baseCurrency].resardis,
-    quoteCurrencyBalance: state.funds.balances[quoteCurrency].resardis,
+    baseCurrencyBalance: state.funds.balances[baseCurrency] ? state.funds.balances[baseCurrency].resardis : new BigNumber(0),
+    quoteCurrencyBalance: state.funds.balances[quoteCurrency] ? state.funds.balances[quoteCurrency].resardis : new BigNumber(0),
     ...commonProps
   }
 }

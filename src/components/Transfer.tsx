@@ -190,31 +190,39 @@ const TransferFormConnected = ({
               const tokenAddress = getSelectedAssetAddress(assetSelected, network) || ''
               const buttonElement = document.getElementById(DOMID)
 
-              if (buttonElement) buttonElement.innerHTML = 'transfer starting...'
+              if (buttonElement) buttonElement.innerHTML = 'Transfer starting...'
 
               if (transferData.transferFrom === 'resardis') {
                 withdraw(api, transferData.amount, tokenAddress, DOMID)
               } else if (transferData.transferTo === 'resardis') {
+                // deposit(api, transferData.amount, tokenAddress, DOMID)
+
                 if (tokenAddress === ethers.constants.AddressZero) {
-                  deposit(api, transferData.amount, tokenAddress, DOMID)
+                  deposit(
+                    api,
+                    transferData.amount,
+                    tokenAddress,
+                    accountAddress,
+                    network,
+                    DOMID
+                  )
                 } else {
                   depositAfterApprove(
                     api,
                     transferData.amount,
                     tokenAddress,
                     accountAddress,
-                    network.contract,
+                    network,
                     DOMID
                   )
                 }
+
               }
             }
           }
         }>Transfer</button>
       </div>
     </div>
-
-
   )
 }
 const TransferForm = connector(TransferFormConnected)

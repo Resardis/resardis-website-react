@@ -44,3 +44,10 @@
   font-size: 14px;
   text-align: center;
 }
+
+.chart-message {
+  display: grid;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
