@@ -97,3 +97,9 @@ export const getSelectedCurrencyTokenPair = (selectedCurrencyPair:string, networ
     Object.keys(network.tokens).find(address => network.tokens[address] === quoteCurrency) || '',
   ]
 }
+
+export const getDefaultNetwork = ():Network => {
+  // TODO: make it recognize current URL (window.location?)
+
+  return networks['80001']
+}
