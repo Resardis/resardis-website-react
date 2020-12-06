@@ -28,7 +28,6 @@ export interface ActivationPayload {
 
 export interface ContractPayload {
   contractAPI: Object|null,
-  network: Network,
 }
 
 export interface ActivateTabAction {

@@ -6,19 +6,11 @@ import {
   AddActiveOfferIDAction,
   RemoveActiveOfferIDAction,
 } from '../constants/actionTypes'
-import { Network } from '../constants/networks'
 
-export const noNetwork:Network = {
-  tokens: {},
-  name: '',
-  contract: '',
-}
-
-export const setContractAPI = (contractAPI:object|null, network:Network = noNetwork):SetContractAPIAction => ({
+export const setContractAPI = (contractAPI:object|null):SetContractAPIAction => ({
   type: SET_CONTRACT_API,
   payload: {
     contractAPI,
-    network,
   }
 })
 

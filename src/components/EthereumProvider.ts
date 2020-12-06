@@ -63,6 +63,7 @@ const connectMetaMask = () => {
     })
 }
 
+// TODO: check if the user is connected to the right network
 const initEthConnection = async () => {
   const provider = new ethers.providers.Web3Provider(window.ethereum)
   let account
@@ -79,7 +80,7 @@ const initEthConnection = async () => {
 
   if (!(networkID in networks)) {
     console.error('Unknown network', networkID)
-    store.dispatch(setContractAPI(null, ))
+    // store.dispatch(setContractAPI(null, ))
     store.dispatch(clearAssetsBalance())
     return
   }
@@ -145,7 +146,7 @@ const initEthConnection = async () => {
 // //////////////////////////////////////////////////
 
 
-  store.dispatch(setContractAPI(contractAPI, network))
+  store.dispatch(setContractAPI(contractAPI))
 
   getBalances(
     provider,
