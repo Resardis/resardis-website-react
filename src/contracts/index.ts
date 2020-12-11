@@ -1,27 +1,40 @@
 import { BigNumber as BN } from 'bignumber.js'
 import { tokenABIs, getTokenNameFromAddress } from '../constants/networks'
-import abiERC20Standard from '../abi/ERC20Standard.json'
+//import abiERC20Standard from '../abi/ERC20Standard.json'
+import abiERC20Standard from '../abi/ERC20MintableX.json'
 import { ethers } from 'ethers'
 import { addActiveOfferID, removeActiveOfferID } from '../actions/contractActions'
 import { setAssetBalance, setIsWalletEnabled, setAccountAddress } from '../actions/walletActions'
 import { BigNumber } from 'bignumber.js'
 import store from '../store'
+// @ts-ignore
+import WalletConnectProvider from '@maticnetwork/walletconnect-provider'
+import Web3 from 'web3'
+import abiResardis from '../abi/Resardis.json'
 
 // TODO - change Function to correct type
 const getTokenBalancesFromDEX = (contractAPI:any, network:any, account:string) => {
   // function balanceOf(address token, address user) external view returns (uint256) {
 
   Object.keys(network.tokens).forEach(tokenAddress => {
-    contractAPI.functions.balanceOf(tokenAddress, account)
-    .then((balances:any) => {
+    // console.log('Getting DEX balance of', tokenAddress, account)
+    contractAPI.methods
+    .balanceOf(tokenAddress, account)
+    .call()
+    .then((balance:any) => {
+      if (tokenAddress === '0xfe4F5145f6e09952a5ba9e956ED0C25e3Fa4c7F1')
+      //console.log('Got DEX balance of', tokenAddress, account, balance, new BN(balance.toString()))
       //console.log(network.tokens[tokenAddress], balances)
       store.dispatch(setAssetBalance({
         symbol: network.tokens[tokenAddress],
         source: 'resardis',
-        balance: new BN(balances[0].toString())
+        balance: new BN(balance.toString())
       }))
     })
-    contractAPI.functions.balanceInUse(tokenAddress, account)
+
+    contractAPI.methods
+    .balanceInUse(tokenAddress, account)
+    .call()
     .then((balances:any) => {
       //console.log(network.tokens[tokenAddress], balances)
       store.dispatch(setAssetBalance({
@@ -34,23 +47,30 @@ const getTokenBalancesFromDEX = (contractAPI:any, network:any, account:string) =
   })
 }
 
+const getTokenBalanceFromSidechain = (network:any, accountAddress: string, tokenAddress:string) => {
+  const abi = (tokenAddress in tokenABIs) ? tokenABIs[tokenAddress] : abiERC20Standard
+  let tokenContractAPI = new window.web3.eth.Contract(abi, tokenAddress)
+
+  tokenContractAPI.methods
+  .balanceOf(accountAddress)
+  .call()
+  .then((balance:any) => {
+    //console.log('Got balance of token:', tokenAddress, balance)
+    store.dispatch(setAssetBalance({
+      symbol: network.tokens[tokenAddress],
+      source: 'sidechain',
+      balance: new BN(balance.toString())
+    }))
+  })
+  .catch((err:any) => {
+    console.error('Cannot get balance of token', accountAddress, err)
+  })
+}
+
 const getTokenBalancesFromSidechain = (provider:any, network:any, account:string) => {
   Object.keys(network.tokens).forEach(tokenAddress => {
     if (tokenAddress === ethers.constants.AddressZero) return
-
-    const abi = (tokenAddress in tokenABIs) ? tokenABIs[tokenAddress] : abiERC20Standard
-    let tokenContract = new ethers.Contract(tokenAddress, abi, provider.getSigner())
-
-    tokenContract.functions.balanceOf(account)
-    .then((balance:any) => {
-      store.dispatch(setAssetBalance({
-        symbol: network.tokens[tokenAddress],
-        source: 'sidechain',
-        balance: new BN(balance.toString())
-      }))
-    })
-    .catch(err => console.error('Cannot call balanceOf', network.tokens[tokenAddress], tokenAddress, err))
-
+    getTokenBalanceFromSidechain(network, account, tokenAddress)
   })
 }
 
@@ -80,7 +100,9 @@ export const getBalances = async (
 
 // TODO: isActive -> Redux, isActiveBatch
 export const isActive = (contractAPI:any, offerID:number) => {
-  return contractAPI.functions.isActive(offerID)
+  return contractAPI.methods
+    .isActive(offerID)
+    .call()
     .then((res:any) => {
       if (res.active) {
         store.dispatch(addActiveOfferID(offerID))
@@ -292,27 +314,42 @@ export const withdraw = (contractAPI:any, amountToWithdraw:string, tokenAddress:
   }
 }
 
+
+// deposit(api, transferData.amount, tokenAddress, DOMID)
 export const deposit = (
   contractAPI:any,
   amountToDeposit:string,
   tokenAddress:string,
+  accountAddress: string,
+  network: any,
   DOMID:string
 ) => {
-  //   emit LogDeposit(
-  //     address(0),
-  //     msg.sender,
-  //     msg.value,
-  //     tokens[address(0)][msg.sender]
+  // emit LogDeposit(
+  // token,
+  // msg.sender,
+  // amount,
+  // tokens[token][msg.sender]
   // );
 
-  contractAPI.on('LogDeposit', async (tokenAddress:string, user:string, amount:BigNumber, balance:BigNumber) => {
-    console.log('LogDeposit res', tokenAddress, user, amount.toString(), balance.toString())
-    if (await contractAPI.signer.getAddress() === user) {
+  contractAPI.once('LogDeposit', {
+    filter: { user: accountAddress }
+  }, (error:any, event:any) => {
+    console.log(error, event)
+
+    if (error) {
+      updateButton(DOMID, 'error!')
+      console.log('Depositing failed', error)
+    } else {
+      console.log('Depositing finished!')
+
       store.dispatch(setAssetBalance({
         symbol: getTokenNameFromAddress(tokenAddress),
         source: 'resardis',
-        balance: new BN(balance.toString())
+        balance: new BN(event.returnValues.balance.toString())
       }))
+
+      getTokenBalanceFromSidechain(network, accountAddress, tokenAddress)
+
       updateButton(DOMID, 'Transfer: done')
     }
   })
@@ -322,13 +359,29 @@ export const deposit = (
 
   updateButton(DOMID, 'signing TX...')
 
+////////////////////////////////////////////////////
+// const maticProvider = new WalletConnectProvider(
+//   {
+//     host: `https://rpc-mumbai.matic.today`,
+//     callbacks: {
+//       onConnect: console.log('connected'),
+//       onDisconnect: console.log('disconnected!')
+//     }
+//   }
+// )
+// const maticWeb3 = new Web3(maticProvider)
+// const web3 = window.web3
+// let contr = new web3.eth.Contract(abiResardis, '0xdf3786659dc64e343fFED27eD213Ed6138834B19')
+////////////////////////////////////////////////////
+
+
   if (tokenAddress === ethers.constants.AddressZero) {
     // function deposit() external payable {
     return contractAPI.functions.deposit({
       gasLimit: 500000
     })
     .then((res:any) => {
-      updateButton(DOMID, 'waiting for TX...')
+      updateButton(DOMID, 'Waiting for TX...')
       console.log('---deposit 1', res)
     })
     .catch((err:any) => {
@@ -340,11 +393,13 @@ export const deposit = (
       // remember to call Token(address).approve(this, amount)
       // or this contract will not be able to do the transfer on your behalf.
 
-        return contractAPI.functions.depositToken(tokenAddress, amount.toFixed(), {
-          gasLimit: 500000
-        })
+    return contractAPI.methods.depositToken(tokenAddress, amount.toFixed()
+        // , {   gasLimit: 500000 }
+      ).send({
+        from: '0xA586B76cbb1F4a7850c137275A6D5ffC5c9A5283'
+      })
       .then((res:any) => {
-        updateButton(DOMID, 'waiting for TX...')
+        //updateButton(DOMID, 'waiting for TX...')
         console.log('---deposit 2', res)
       })
       .catch((err:any) => {
@@ -356,17 +411,17 @@ export const deposit = (
 
 
 const allowance = (accountAddress: string, tokenAddress:string, resardisAddress: string,) => {
-  const provider = new ethers.providers.Web3Provider(window.ethereum)
   const abi = (tokenAddress in tokenABIs) ? tokenABIs[tokenAddress] : abiERC20Standard
-  let tokenContract = new ethers.Contract(tokenAddress, abi, provider.getSigner())
-  return tokenContract.functions.allowance(resardisAddress, accountAddress, {
-    gasLimit: 500000
-  })
+  let tokenContractAPI = new window.web3.eth.Contract(abi, tokenAddress)
+
+  tokenContractAPI.methods
+  .allowance(resardisAddress, accountAddress)
+  .call()
   .then((res:any) => {
-    console.log('--allowance result', res)
+     console.log('Got allowance result, token:', tokenAddress, 'res', res)
   })
-  .catch(err => {
-    console.error('Cannot call allowance ovr', accountAddress, resardisAddress, err)
+  .catch((err:any) => {
+    console.error('Cannot call allowance', accountAddress, resardisAddress, err)
   })
 
 }
@@ -376,40 +431,43 @@ export const depositAfterApprove = (
   amountToDeposit:string,
   tokenAddress:string,
   accountAddress: string,
-  resardisAddress: string,
+  network: any,
   DOMID:string
 ) => {
-  console.log('depositAfterApprove', tokenAddress, accountAddress, resardisAddress)
-  //allowance(accountAddress, tokenAddress, resardisAddress)
-  //console.log('past allowance')
+  console.log('depositAfterApprove',
+    'contractAPI:',contractAPI,
+    'amountToDeposit:',amountToDeposit,
+    'tokenAddress:',tokenAddress,
+    'accountAddress:',accountAddress,
+    'resardisAddress:', network.contract
+  )
+  const resardisAddress = network.contract
+
+  allowance(accountAddress, tokenAddress, resardisAddress)
+  console.log('past allowance')
 
   const amount:BN = new BN(amountToDeposit).multipliedBy(1e+18)
 
+  // prepare token's own contract for calling allowance/approval
   const provider = new ethers.providers.Web3Provider(window.ethereum)
-
   const abi = (tokenAddress in tokenABIs) ? tokenABIs[tokenAddress] : abiERC20Standard
   let tokenContract = new ethers.Contract(tokenAddress, abi, provider.getSigner())
 
-  //function allowance(address owner, address spender) external view returns (uint256);
+  tokenContract.functions.approve(resardisAddress, amount.toFixed(), {
+    gasLimit: 500000
+  })
+  .then(async (res:any) => {
+    console.log('--deposit approved --5!', amountToDeposit, res)
+    const x = await allowance(accountAddress, tokenAddress, resardisAddress)
+    console.log('--deposit approved --6!', x,amountToDeposit, res)
+    await deposit(contractAPI, amountToDeposit, tokenAddress, accountAddress, network, DOMID)
+    console.log('all done')
+   })
+  .catch(err => {
+    console.error('Cannot call allowance', accountAddress, resardisAddress, err)
+  })
 
-    // tokenContract.functions.allowance(accountAddress, resardisAddress, {
-    //   gasLimit: 1000000000
-    // })
-    tokenContract.functions.approve(resardisAddress, amount.toFixed(), {
-      gasLimit: 500000
-    })
-    .then(async (res:any) => {
-      console.log('--deposit approved!', amountToDeposit, res)
-        //await allowance(accountAddress, tokenAddress, resardisAddress)
-        await deposit(contractAPI, amountToDeposit, tokenAddress, DOMID)
-console.log('all done')
-
-    })
-    .catch(err => {
-      console.error('Cannot call allowance', accountAddress, resardisAddress, err)
-    })
-
-        // remember to call Token(address).approve(this, amount)
+  // remember to call Token(address).approve(this, amount)
 
   //deposit(contractAPI, amountToDeposit, tokenAddress, DOMID)
 

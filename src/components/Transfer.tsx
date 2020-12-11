@@ -232,7 +232,7 @@ const TransferFormConnected = ({
       </div>
     </div>
 
-    <div>
+    <div className="transfer-button">
       <button id={DOMID}
         className="btn px-4 py-1 btn-transfer"
         onClick={() => {
@@ -240,20 +240,26 @@ const TransferFormConnected = ({
             const tokenAddress = getSelectedAssetAddress(assetSelected, network) || ''
             const buttonElement = document.getElementById(DOMID)
 
-            if (buttonElement) buttonElement.innerHTML = 'transfer starting...'
+            if (buttonElement) buttonElement.innerHTML = 'Transfer starting...'
 
             if (transferData.transferFrom === 'resardis') {
               withdraw(api, transferData.amount, tokenAddress, DOMID)
             } else if (transferData.transferTo === 'resardis') {
               if (tokenAddress === ethers.constants.AddressZero) {
-                deposit(api, transferData.amount, tokenAddress, DOMID)
+                deposit(
+                  api,
+                  transferData.amount,
+                  tokenAddress,
+                  accountAddress,
+                  network,
+                  DOMID)
               } else {
                 depositAfterApprove(
                   api,
                   transferData.amount,
                   tokenAddress,
                   accountAddress,
-                  network.contract,
+                  network,
                   DOMID
                 )
               }
