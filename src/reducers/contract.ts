@@ -5,7 +5,7 @@ import {
 } from '../constants/actionTypes'
 import { ContractActions } from '../actions/contractActions'
 import { Network } from '../constants/networks'
-import { noNetwork } from '../actions/contractActions'
+import { getDefaultNetwork } from '../constants/networks'
 
 export interface Contract {
   activeOffers: {
@@ -15,10 +15,14 @@ export interface Contract {
   network: Network,
 }
 
+// initial state: the choice of Network is a) main, b) mumbai (test net), c) some other net, local or whatever
+// how can we distinguish? ${networkID} our wallet is connected to - maybe, but we don't care what user is using,
+// what we care about is this particular instance connected to specific contract on a known network.
+
 const initialState: Contract = {
   activeOffers: {},
   contractAPI: null,
-  network: noNetwork,
+  network: getDefaultNetwork(),
 }
 
 const contractReducer = (state:Contract = initialState, action:ContractActions):Contract => {
@@ -26,7 +30,7 @@ const contractReducer = (state:Contract = initialState, action:ContractActions):
 
   switch(action.type) {
     case SET_CONTRACT_API:
-      return { ...state, contractAPI: action.payload.contractAPI, network: action.payload.network }
+      return { ...state, contractAPI: action.payload.contractAPI }
 
     case ADD_ACTIVE_OFFER:
       newState.activeOffers = { ...newState.activeOffers, [action.payload.toString()]: true }
