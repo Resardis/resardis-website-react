@@ -1,6 +1,7 @@
 import {
   TEXT_FILTER,
-  SET_IS_WALLET_ENABLED,
+  SET_ACTIVE_WALLET,
+  SET_WALLET_INFO,
   SET_ACCOUNT_ADDRESS,
   SET_ASSET_BALANCE,
   SELECT_ASSET,
@@ -19,9 +20,25 @@ export type BalancesType = {
   }
 }
 
+export type Wallet = {
+  name: string,
+  instance: any,
+  web3: any,
+  [key:string]: any,
+}
+
+export type WalletInfoType = {
+  walletName: string,
+  property: string,
+  value: any,
+}
+
 export interface Funds {
-  isWalletEnabled: boolean,
+  activeWallet: string,
   accountAddress: string,
+  wallets: {
+    [key:string]: Wallet
+  },
   textFilter: string,
   hideEmptyBalances: boolean,
   totalBalanceBTC: BigNumber,
@@ -47,8 +64,37 @@ const createBalances = () => Object.keys(networks)
   }, {})
 
 const initialState: Funds = {
-  isWalletEnabled: false,
+  activeWallet: '',
   accountAddress: '',
+
+  wallets: {
+    metamask: {
+      name: 'metamask',
+      present: false,
+      enabled: false,
+      instance: null,
+      web3: null,
+    },
+    portis: {
+      name: 'portis',
+      isLoggedIn: false,
+      instance: null,
+      web3: null,
+    },
+    fortmatic: {
+      name: 'fortmatic',
+      isLoggedIn: false,
+      instance: null,
+      web3: null,
+    },
+    torus: {
+      name: 'torus',
+      isLoggedIn: false,
+      instance: null,
+      web3: null,
+    },
+  },
+
   textFilter: '',
   hideEmptyBalances: false,
   totalBalanceBTC: new BigNumber(0),
@@ -59,7 +105,6 @@ const initialState: Funds = {
 
 const fundsReducer = (state:Funds = initialState, action:TableActions|AccountActions):Funds => {
   const newState = { ...state }
-
   switch(action.type) {
     case TEXT_FILTER:
       if (action.payload.target === TAB_FUNDS_ASSETS)
@@ -67,8 +112,16 @@ const fundsReducer = (state:Funds = initialState, action:TableActions|AccountAct
       else
         return state
 
-    case SET_IS_WALLET_ENABLED:
-      newState.isWalletEnabled = action.payload
+    case SET_ACTIVE_WALLET:
+      // console.log('--SET_ACTIVE_WALLET', action.payload)
+      newState.activeWallet = action.payload
+      return newState
+
+    case SET_WALLET_INFO:
+      // console.log('--SET_WALLET_INFO', action.payload)
+      const { walletName, property, value } = action.payload
+      newState.wallets = { ...newState.wallets, [walletName]: { ...newState.wallets[walletName], [property]: value }}
+      if (property === 'accounts') newState.wallets[walletName].account = value.length ? value[0] : ''
       return newState
 
     case SET_ACCOUNT_ADDRESS:
@@ -76,6 +129,7 @@ const fundsReducer = (state:Funds = initialState, action:TableActions|AccountAct
       return newState
 
     case SET_ASSET_BALANCE:
+      // console.log('--SET_ASSET_BALANCE', )
       newState.balances = { ...newState.balances }
       newState.balances[action.payload.symbol][action.payload.source] = action.payload.balance
       return newState

@@ -1,26 +1,27 @@
 import { BigNumber } from 'bignumber.js'
 import { PairData } from '../reducers/markets'
-import { Network } from '../constants/networks'
+import { WalletInfoType } from '../reducers/funds'
 
 export const ACTIVATE_TAB = 'ACTIVATE_TAB'
+export const ADD_ACTIVE_OFFER = 'ADD_ACTIVE_OFFER'
+export const ADD_MY_ORDER = 'ADD_MY_ORDER'
+export const CLEAR_ASSETS_BALANCE = 'CLEAR_ASSETS_BALANCE'
+export const CLOSE_FUNDS_WINDOW = 'CLOSE_FUNDS_WINDOW'
+export const OPEN_FUNDS_WINDOW = 'OPEN_FUNDS_WINDOW'
+export const REMOVE_ACTIVE_OFFER = 'REMOVE_ACTIVE_OFFER'
+export const SELECT_ASSET = 'SELECT_ASSET'
+export const SELECT_CURRENCY_PAIR = 'SELECT_CURRENCY_PAIR'
+export const SELECT_ORDER = 'SELECT_ORDER'
+export const SELECT_SCREEN = 'SELECT_SCREEN'
+export const SET_ACCOUNT_ADDRESS = 'SET_ACCOUNT_ADDRESS'
+export const SET_ACTIVE_WALLET = 'SET_ACTIVE_WALLET'
+export const SET_ASSET_BALANCE = 'SET_ASSET_BALANCE'
+export const SET_CONTRACT_API = 'SET_CONTRACT_API'
+export const SET_WALLET_INFO = 'SET_WALLET_INFO'
 export const SORT_BY = 'SORT_BY'
 export const SORT_DIRECTION = 'SORT_DIRECTION'
 export const TEXT_FILTER = 'TEXT_FILTER'
-export const SELECT_CURRENCY_PAIR = 'SELECT_CURRENCY_PAIR'
-export const OPEN_FUNDS_WINDOW = 'OPEN_FUNDS_WINDOW'
-export const CLOSE_FUNDS_WINDOW = 'CLOSE_FUNDS_WINDOW'
-export const SELECT_SCREEN = 'SELECT_SCREEN'
-export const SET_IS_WALLET_ENABLED = 'SET_WALLET_ENABLED'
-export const SET_ACCOUNT_ADDRESS = 'SET_ACCOUNT_ADDRESS'
-export const SET_ASSET_BALANCE = 'SET_ASSET_BALANCE'
-export const SELECT_ASSET = 'SELECT_ASSET'
 export const UPDATE_CURRENCY_PAIR_DATA = 'UPDATE_CURRENCY_PAIR_DATA'
-export const SET_CONTRACT_API = 'SET_CONTRACT_API'
-export const ADD_ACTIVE_OFFER = 'ADD_ACTIVE_OFFER'
-export const REMOVE_ACTIVE_OFFER = 'REMOVE_ACTIVE_OFFER'
-export const CLEAR_ASSETS_BALANCE = 'CLEAR_ASSETS_BALANCE'
-export const ADD_MY_ORDER = 'ADD_MY_ORDER'
-export const SELECT_ORDER = 'SELECT_ORDER'
 
 export interface ActivationPayload {
   [tabbedNavigationName:string]: string,
@@ -106,9 +107,14 @@ export interface SelectScreenAction {
   payload: string,
 }
 
-export interface SetIsWalletEnabled {
-  type: typeof SET_IS_WALLET_ENABLED,
-  payload: boolean,
+export interface SetActiveWallet {
+  type: typeof SET_ACTIVE_WALLET,
+  payload: string,
+}
+
+export interface SetWalletInfo {
+  type: typeof SET_WALLET_INFO,
+  payload: WalletInfoType,
 }
 
 export interface AccountAddressAction {

@@ -4,8 +4,8 @@ import { RootState } from '../reducers'
 import { connect, ConnectedProps } from 'react-redux'
 import { closeFundsWindow } from '../actions'
 import { CloseFundsWindowAction } from '../constants/actionTypes'
-import '../scss/FundsModalWindow.scss'
-import Wallets from '../wallets/Wallets'
+import '../scss/FundsModalWindow.css'
+import Wallets from '../wallets'
 
 interface StateProps {
   isFundsWindowOpen: boolean,

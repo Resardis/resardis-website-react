@@ -4,7 +4,7 @@ import { tokenABIs, getTokenNameFromAddress } from '../constants/networks'
 import abiERC20Standard from '../abi/ERC20MintableX.json'
 import { ethers } from 'ethers'
 import { addActiveOfferID, removeActiveOfferID } from '../actions/contractActions'
-import { setAssetBalance, setIsWalletEnabled, setAccountAddress } from '../actions/walletActions'
+import { setAssetBalance, setAccountAddress } from '../actions/walletActions'
 import { BigNumber } from 'bignumber.js'
 import store from '../store'
 // @ts-ignore
@@ -26,7 +26,7 @@ const getTokenBalancesFromDEX = (contractAPI:any, network:any, account:string) =
       //console.log('Got DEX balance of', tokenAddress, account, balance, new BN(balance.toString()))
       //console.log(network.tokens[tokenAddress], balances)
       store.dispatch(setAssetBalance({
-        symbol: network.tokens[tokenAddress],
+        symbol: getTokenNameFromAddress(tokenAddress),
         source: 'resardis',
         balance: new BN(balance.toString())
       }))
@@ -38,7 +38,7 @@ const getTokenBalancesFromDEX = (contractAPI:any, network:any, account:string) =
     .then((balances:any) => {
       //console.log(network.tokens[tokenAddress], balances)
       store.dispatch(setAssetBalance({
-        symbol: network.tokens[tokenAddress],
+        symbol: getTokenNameFromAddress(tokenAddress),
         source: 'resardisInUse',
         balance: new BN(balances[0].toString())
       }))
@@ -47,9 +47,10 @@ const getTokenBalancesFromDEX = (contractAPI:any, network:any, account:string) =
   })
 }
 
-const getTokenBalanceFromSidechain = (network:any, accountAddress: string, tokenAddress:string) => {
+const getTokenBalanceFromSidechain = (web3:any, accountAddress: string, tokenAddress:string) => {
   const abi = (tokenAddress in tokenABIs) ? tokenABIs[tokenAddress] : abiERC20Standard
-  let tokenContractAPI = new window.web3.eth.Contract(abi, tokenAddress)
+
+  let tokenContractAPI = new web3.eth.Contract(abi, tokenAddress)
 
   tokenContractAPI.methods
   .balanceOf(accountAddress)
@@ -57,7 +58,7 @@ const getTokenBalanceFromSidechain = (network:any, accountAddress: string, token
   .then((balance:any) => {
     //console.log('Got balance of token:', tokenAddress, balance)
     store.dispatch(setAssetBalance({
-      symbol: network.tokens[tokenAddress],
+      symbol: getTokenNameFromAddress(tokenAddress),
       source: 'sidechain',
       balance: new BN(balance.toString())
     }))
@@ -67,28 +68,28 @@ const getTokenBalanceFromSidechain = (network:any, accountAddress: string, token
   })
 }
 
-const getTokenBalancesFromSidechain = (provider:any, network:any, account:string) => {
+const getTokenBalancesFromSidechain = (web3:any, network:any, account:string) => {
   Object.keys(network.tokens).forEach(tokenAddress => {
     if (tokenAddress === ethers.constants.AddressZero) return
-    getTokenBalanceFromSidechain(network, account, tokenAddress)
+    getTokenBalanceFromSidechain(web3, account, tokenAddress)
   })
 }
 
 export const getBalances = async (
-  provider:any,
+  web3:any,
   contractAPI:any,
   account:string,
   network:any,
 ) => {
-  store.dispatch(setIsWalletEnabled(true))
-  store.dispatch(setAccountAddress(account))
+  // store.dispatch(setIsWalletEnabled(true))
+  // store.dispatch(setAccountAddress(account))
 
   // get balances of tokens added to DEX contract
   getTokenBalancesFromDEX(contractAPI, network, account)
   // get balances of tokens in the wallet
-  getTokenBalancesFromSidechain(provider, network, account)
+  getTokenBalancesFromSidechain(web3, network, account)
 
-  const balance = await provider.getBalance(account)
+  const balance = await web3.eth.getBalance(account)
 
   setAssetBalance({
     symbol: 'ETH',
@@ -321,7 +322,6 @@ export const deposit = (
   amountToDeposit:string,
   tokenAddress:string,
   accountAddress: string,
-  network: any,
   DOMID:string
 ) => {
   // emit LogDeposit(
@@ -348,7 +348,7 @@ export const deposit = (
         balance: new BN(event.returnValues.balance.toString())
       }))
 
-      getTokenBalanceFromSidechain(network, accountAddress, tokenAddress)
+      getTokenBalanceFromSidechain(null, accountAddress, tokenAddress)
 
       updateButton(DOMID, 'Transfer: done')
     }
@@ -410,7 +410,7 @@ export const deposit = (
 }
 
 
-const allowance = (accountAddress: string, tokenAddress:string, resardisAddress: string,) => {
+const allowance = (accountAddress: string, tokenAddress:string, resardisAddress: string) => {
   const abi = (tokenAddress in tokenABIs) ? tokenABIs[tokenAddress] : abiERC20Standard
   let tokenContractAPI = new window.web3.eth.Contract(abi, tokenAddress)
 
@@ -460,7 +460,7 @@ export const depositAfterApprove = (
     console.log('--deposit approved --5!', amountToDeposit, res)
     const x = await allowance(accountAddress, tokenAddress, resardisAddress)
     console.log('--deposit approved --6!', x,amountToDeposit, res)
-    await deposit(contractAPI, amountToDeposit, tokenAddress, accountAddress, network, DOMID)
+    await deposit(contractAPI, amountToDeposit, tokenAddress, accountAddress, DOMID)
     console.log('all done')
    })
   .catch(err => {
