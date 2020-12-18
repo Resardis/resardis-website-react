@@ -4,6 +4,7 @@ export type Tokens = { [key:string]: string }
 type TokensABIs = { [key:string]: any }
 
 export type Network = {
+  chainID: string,
   tokens:Tokens,
   name:string,
   contract:string,
@@ -25,6 +26,7 @@ export type Networks = {
 
 export const networks:Networks = {
   '80001': {
+    chainID: '80001',
     name: 'sidechain',
     // contract: '0xdf3786659dc64e343fFED27eD213Ed6138834B19',
     contract: '0x62069B20F297AB15236A30489ec8DC4b44D4ca61',

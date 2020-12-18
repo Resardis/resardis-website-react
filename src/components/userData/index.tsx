@@ -15,6 +15,8 @@ import { SearchBox } from '../shared'
 import { sortingDirections, sortingTypes } from '../../constants/actionTypes'
 import { BigNumber } from 'bignumber.js'
 import { MyOrdersListType } from '../../constants/actionTypes'
+import { openFundsWindow } from '../../actions'
+import { OpenFundsWindowAction } from '../../constants/actionTypes'
 
 import Funds from './Funds'
 import OpenOrders from './OpenOrders'
@@ -37,7 +39,7 @@ interface StateProps {
   activeTab: string,
   textFilter: string,
   headers: Headers,
-  isWalletEnabled: boolean,
+  activeWallet: string,
 }
 
 let headersAll:HeadersAll
@@ -50,11 +52,12 @@ const mapStateToProps = (state: RootState):StateProps => ({
   activeTab: state.activeTabs[TAB_MENU_USERDATA_NAME],
   textFilter: state.userData.textFilter,
   headers: headersAll[state.activeTabs[TAB_MENU_USERDATA_NAME]],
-  isWalletEnabled: state.funds.isWalletEnabled,
+  activeWallet: state.funds.activeWallet,
 })
 
 const mapDispatchToProps = (dispatch:any) => ({
   updateTextFilter: (target:string, textFilter:string) => dispatch(updateTextFilter(target, textFilter)),
+  openFundsWindow: ():OpenFundsWindowAction => dispatch(openFundsWindow()),
 })
 
 const connector = connect(mapStateToProps, mapDispatchToProps)
@@ -184,56 +187,25 @@ export const sortAndFilter = (
   return runSortBy(data, runTextFilter(data, runActiveFilter(data)))
 }
 
-const NoWallet = () => {
-  const buttonId = shortid()
+const NoWalletConnected = ({ openFundsWindow }:{ openFundsWindow:Function }) => (
+  <div className="no-wallet-info">
+    <p>No active wallet found</p>
+    <button className="enable-wallet-button" onClick={() => openFundsWindow()}>open wallets</button>
+  </div>
+)
+const NoWallet = connect(null, mapDispatchToProps)(NoWalletConnected)
 
-  if (typeof window.ethereum === 'undefined') return (
-    <div className="no-wallet-info">
-      <p>No wallet found</p>
-      <p>Please consider trying <a href="https://metamask.io/" style={{ color: '#FBB03B' }}>MetaMask</a>?</p>
-    </div>
-  )
-
-  return (
-    <div className="no-wallet-info">
-      <p>Wallet found, but it seems to be locked?</p>
-      <p><button className="enable-wallet-button" id={buttonId} onClick={() => {
-
-        const buttonElement = document.getElementById(buttonId)
-
-        window.ethereum
-        .request({ method: 'eth_requestAccounts' })
-        .then(() => window.location.reload(true))
-        .catch((err:any) => {
-          if (err.code === 4001) {
-            if (buttonElement) buttonElement.innerHTML = 'Request denied?'
-          } else {
-            if (buttonElement) buttonElement.innerHTML = 'Error occurred:' + err.message
-          }
-        })
-      }
-      }>
-        Enable wallet
-      </button></p>
-    </div>
-  )
-
-}
-
-const Table = ({ headers, activeTab, isWalletEnabled }:PropsFromRedux) => {
+const Table = ({ headers, activeTab, activeWallet }:PropsFromRedux) => {
   const [ sortBy, setSortby ] = useState(sortingTypes.SORT_BY_DATE)
   const [ sortDirection, setSortDirection ] = useState(sortingDirections.SORT_DESC)
 
   const flipSortDirection = () => {
     setSortDirection(sortDirection === sortingDirections.SORT_DESC ?
       sortingDirections.SORT_ASC : sortingDirections.SORT_DESC
-      )
-    }
+    )
+  }
 
-
-  if (!isWalletEnabled) return (
-    <NoWallet />
-  )
+  if (!activeWallet) return <NoWallet />
 
   return (
   <>

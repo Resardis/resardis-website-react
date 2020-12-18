@@ -203,7 +203,6 @@ const TransferFormConnected = ({
                     transferData.amount,
                     tokenAddress,
                     accountAddress,
-                    network,
                     DOMID
                   )
                 } else {

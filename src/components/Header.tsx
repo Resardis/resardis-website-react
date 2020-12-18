@@ -10,7 +10,7 @@ import '../css/Header.css'
 interface StateProps {
   isFundsWindowOpen: boolean,
   selectedScreen: string,
-  isWalletEnabled: boolean,
+  activeWallet: string,
 }
 
 interface OwnProps {
@@ -23,7 +23,7 @@ interface OwnProps {
 const mapStateToProps = (state: RootState):StateProps => ({
   isFundsWindowOpen: state.fundsWindow.isOpen,
   selectedScreen: state.selectedScreen,
-  isWalletEnabled: state.funds.isWalletEnabled,
+  activeWallet: state.funds.activeWallet,
 })
 
 const mapDispatchToProps = (dispatch:any) => ({
@@ -56,7 +56,7 @@ const headerItems = [{
 
 const HeaderItemConnected = ({
   item,
-  isWalletEnabled,
+  activeWallet,
   selectedScreen,
   openFundsWindow,
   selectScreen
@@ -68,7 +68,7 @@ const HeaderItemConnected = ({
     isActive ? 'header-item-active' :
     item.action !== 'null' ? 'header-item' : 'header-item-disabled'
 
-  if (!isWalletEnabled && item.name === 'Funds') className = 'header-item-disabled'
+  if (!activeWallet && item.name === 'Funds') className = 'header-item-disabled'
 
   return (
     <li
@@ -77,7 +77,7 @@ const HeaderItemConnected = ({
         // console.log('==', isActive, isWalletEnabled, item)
         if (isActive) return
         if (item.action === 'screenOrWallet') {
-          if (isWalletEnabled)
+          if (activeWallet)
             selectScreen(item.name)
           else
             openFundsWindow()

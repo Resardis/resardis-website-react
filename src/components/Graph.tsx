@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { useQuery } from '@apollo/client'
 import { connect, ConnectedProps } from 'react-redux'
 import moment from 'moment'
 import { RootState } from '../reducers'
 import { ReactComponent as Menu } from '../svg/menu.svg'
 import { getDataSeries } from '../gqlQueries/Graph'
-import { Network, getTokenAddressFromName, getSelectedCurrencyTokenPair } from '../constants/networks'
+import { Network, getSelectedCurrencyTokenPair } from '../constants/networks'
 import '../css/Graph.css'
 
 import { tsvParse } from 'd3-dsv'
@@ -143,7 +143,7 @@ const buildSeries = (data:any) => {
 }
 
 const ChartComponentConnected = ({ selectedCurrencyPair, chartConfig, network }:Props) => {
-  const [baseToken, quoteToken] = getSelectedCurrencyTokenPair(selectedCurrencyPair, network)
+  const [baseToken, ] = getSelectedCurrencyTokenPair(selectedCurrencyPair, network)
 
   const { loading, error, data } = useQuery(getDataSeries(chartConfig.timeDataType, baseToken), { pollInterval: 1000 })
 
