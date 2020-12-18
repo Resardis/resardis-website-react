@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react'
+import React from 'react'
 import { RootState } from '../reducers'
 import { connect, ConnectedProps } from 'react-redux'
 import '../css/Wallet.css'
@@ -6,6 +6,7 @@ import { BalancesType, Wallet } from '../reducers/funds'
 import { AccountActions } from '../actions/walletActions'
 import { setActiveWallet } from '../actions/walletActions'
 import { Network } from '../constants/networks'
+import { wei2ether } from '../helpers'
 
 import MetaMaskWallet from './MetaMaskWallet'
 import PortisWallet from './PortisWallet'
@@ -70,10 +71,13 @@ export const WalletContainer = ({borderColor, isPrimary, children}:WalletContain
 )
 
 export const WalletDetailsConnected = ({ activeWallet, setActiveWallet, wallet, children, balances, assetSelected, network }:Props) => {
+  console.log('===',assetSelected, balances, balances[assetSelected])
   return (
     <div className="wallet-data" style={{ flexGrow: 1 }}>
       <div className="wallet-account">{wallet.account}</div>
-      <div className="wallet-balance">{assetSelected} {balances[assetSelected].balance}</div>
+      <div className="wallet-balance">
+        {wei2ether(balances[assetSelected].sidechain, 10)} {assetSelected}
+      </div>
 
       <div style={{ textAlign: 'right' }}>
         {activeWallet === wallet.name ? (

@@ -4,7 +4,7 @@ import { connect, ConnectedProps } from 'react-redux'
 import '../css/Wallet.css'
 import Web3 from 'web3'
 import { AccountActions, setWalletInfo } from '../actions/walletActions'
-import metaMaskLogo from '../assets/metamask.jpg'
+import { ReactComponent as MetaMaskLogo } from '../assets/metamask-fox-wordmark-horizontal.svg'
 import { WalletContainer, WalletDetails } from '.'
 
 interface StateProps {
@@ -43,12 +43,6 @@ function connectMetaMask(setWalletInfo:Function) {
     })
 }
 
-const MetaMaskLogo = () => (
-  <div>
-    <img src={metaMaskLogo} style={{ width: '32px' }} alt="MetaMask logo" />
-  </div>
-)
-
 const MetaMaskStatusConnected = ({ wallets, setWalletInfo }:PropsFromRedux) => {
   const metamaskWallet = wallets.metamask
 
@@ -81,7 +75,7 @@ interface MetaMaskWallet {
 
 const MetaMaskWalletConnected = ({ activeWallet, isLoggedIn }:MetaMaskWallet) => (
   <WalletContainer borderColor={ isLoggedIn ? 'green': 'red' } isPrimary={activeWallet === 'metamask'}>
-    <MetaMaskLogo />
+    <MetaMaskLogo height="32" />
     <MetaMaskStatus />
   </WalletContainer>
 )

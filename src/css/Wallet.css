@@ -1,11 +1,11 @@
 .wallet-main {
   display: flex;
+  flex-direction: column;
   padding: 10px;
   margin-bottom: 10px;
   border-radius: 6px;
   align-items: center;
-  background-color:  #76797B;
-  justify-content: space-between;
+  background-color: #76797B;
 }
 
 .border-red {
@@ -77,5 +77,5 @@
 .wallet-button-small {
   padding: 4px 18px;
   font-size: 16px;
-  margin: 4px 0 4px 8px;
+  margin: 4px;
 }

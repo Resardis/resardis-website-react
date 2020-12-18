@@ -115,6 +115,7 @@ const fundsReducer = (state:Funds = initialState, action:TableActions|AccountAct
     case SET_ACTIVE_WALLET:
       // console.log('--SET_ACTIVE_WALLET', action.payload)
       newState.activeWallet = action.payload
+      newState.accountAddress = newState.wallets[action.payload].account
       return newState
 
     case SET_WALLET_INFO:
