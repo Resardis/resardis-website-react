@@ -11,13 +11,14 @@ import store from '../store'
 import WalletConnectProvider from '@maticnetwork/walletconnect-provider'
 import Web3 from 'web3'
 import abiResardis from '../abi/Resardis.json'
+import { Network } from '../constants/networks'
 
 // TODO - change Function to correct type
 const getTokenBalancesFromDEX = (contractAPI:any, network:any, account:string) => {
   // function balanceOf(address token, address user) external view returns (uint256) {
 
   Object.keys(network.tokens).forEach(tokenAddress => {
-    // console.log('Getting DEX balance of', tokenAddress, account)
+    // console.log('Getting DEX balance of', tokenAddress, account, contractAPI)
     contractAPI.methods
     .balanceOf(tokenAddress, account)
     .call()
@@ -31,6 +32,9 @@ const getTokenBalancesFromDEX = (contractAPI:any, network:any, account:string) =
         balance: new BN(balance.toString())
       }))
     })
+    .catch((err:any) => {
+      console.error('Cannot get DEX balance of token', tokenAddress, account, err)
+    })
 
     contractAPI.methods
     .balanceInUse(tokenAddress, account)
@@ -42,6 +46,9 @@ const getTokenBalancesFromDEX = (contractAPI:any, network:any, account:string) =
         source: 'resardisInUse',
         balance: new BN(balances[0].toString())
       }))
+    })
+    .catch((err:any) => {
+      console.error('Cannot get DEX balance in use of token', tokenAddress, account, err)
     })
 
   })
@@ -79,7 +86,7 @@ export const getBalances = async (
   web3:any,
   contractAPI:any,
   account:string,
-  network:any,
+  network:Network,
 ) => {
   // store.dispatch(setIsWalletEnabled(true))
   // store.dispatch(setAccountAddress(account))

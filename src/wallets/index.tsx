@@ -74,6 +74,9 @@ export const WalletDetailsConnected = ({ activeWallet, setActiveWallet, wallet, 
   console.log('===',assetSelected, balances, balances[assetSelected])
   return (
     <div className="wallet-data" style={{ flexGrow: 1 }}>
+      {wallet.error && (
+        <div className="wallet-error">{wallet.error}</div>
+      )}
       <div className="wallet-account">{wallet.account}</div>
       <div className="wallet-balance">
         {wei2ether(balances[assetSelected].sidechain, 10)} {assetSelected}

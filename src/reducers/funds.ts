@@ -98,9 +98,9 @@ const initialState: Funds = {
   textFilter: '',
   hideEmptyBalances: false,
   totalBalanceBTC: new BigNumber(0),
-  totalBalanceUSD: 2.01,
+  totalBalanceUSD: 0,
   balances: createBalances(),
-  assetSelected: 'ETH',
+  assetSelected: 'MATIC',
 }
 
 const fundsReducer = (state:Funds = initialState, action:TableActions|AccountActions):Funds => {

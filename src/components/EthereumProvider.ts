@@ -73,17 +73,7 @@ const initMetaMask = async (network:Network, setWalletInfo:Function, setActiveWa
     return
   }
 
-  // 1. check network
-  const networkID = await web3.eth.getChainId()
-
-  if (networkID.toString() !== network.chainID) {
-    console.error('Unknown network', networkID)
-    store.dispatch(setContractAPI(null))
-    store.dispatch(clearAssetsBalance())
-    return
-  }
-
-  // 2. get accounts
+  // 1. get accounts
   const accounts = await web3.eth.getAccounts()
 
   setWalletInfo('metamask', 'accounts', accounts)
@@ -93,9 +83,21 @@ const initMetaMask = async (network:Network, setWalletInfo:Function, setActiveWa
     return
   }
 
+  // 2. check network
+  const networkID = await web3.eth.getChainId()
+
+  if (networkID.toString() !== network.chainID) {
+    console.error('Unknown network', networkID)
+    setWalletInfo('metamask', 'error', `Connected to unexpected chain ${networkID.toString()}!`)
+    store.dispatch(setContractAPI(null))
+    store.dispatch(clearAssetsBalance())
+    return
+  }
+
   // let MM be the default, if it is installed and active
   initContractAndBalances(accounts[0], network, web3)
   setActiveWallet('metamask')
+  setWalletInfo('metamask', 'error', '')
 }
 
   // const maticProvider = new WalletConnectProvider(
