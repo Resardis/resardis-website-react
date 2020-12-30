@@ -23,15 +23,24 @@ const connector = connect(mapStateToProps, mapDispatchToProps)
 
 type PropsFromRedux = ConnectedProps<typeof connector>
 
+// TODO: setWalletInfo needs to be able to set {} of properties, not just one
 const logOut = async (torusWallet:any, setWalletInfo:Function) => {
   await torusWallet.instance.cleanUp()
   setWalletInfo('torus', 'isLoggedIn', false)
+  setWalletInfo('torus', 'accounts', [])
+  setWalletInfo('torus', 'error', '')
 }
 
 const logIn = async (torusWallet:any, setWalletInfo:Function) => {
-  const account = await torusWallet.instance.login({})
-  setWalletInfo('torus', 'isLoggedIn', false)
-  setWalletInfo('torus', 'accounts', [account])
+  torusWallet.instance.login({})
+  .then((accounts:string) => {
+    setWalletInfo('torus', 'isLoggedIn', true)
+    setWalletInfo('torus', 'accounts', accounts)
+    setWalletInfo('torus', 'error', '')
+  })
+  .catch((error:any) => {
+    setWalletInfo('torus', 'error', 'Could not log in: ' + error)
+  })
 }
 
 const TorusStatusConnected = ({ wallets, setWalletInfo }:PropsFromRedux) => {
@@ -40,7 +49,7 @@ const TorusStatusConnected = ({ wallets, setWalletInfo }:PropsFromRedux) => {
   if (torusWallet.isLoggedIn) return (
     <WalletDetails wallet={torusWallet}>
       <button className="wallet-button wallet-button-small"
-        onClick={() => torusWallet.instance.showWallet('transfer')}
+        onClick={() => torusWallet.instance.showWallet()}
       >
         Open
       </button>
