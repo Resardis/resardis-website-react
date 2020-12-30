@@ -124,6 +124,7 @@ interface PortisIsLoggedIn {
 const checkPortis = async (network:Network, setWalletInfo:Function) => {
   const portis = new Portis('c4949813-1449-467b-871d-9dd9ce6bd5f6', 'maticMumbai')
   const web3 = new Web3(portis.provider)
+  console.log('Portis instance', portis)
 
   setWalletInfo('portis', 'instance', portis)
   setWalletInfo('portis', 'web3', web3)
@@ -199,8 +200,9 @@ const checkFortmatic = async (network:Network, setWalletInfo:Function) => {
   }
 
   const fm = new Fortmatic('pk_test_84A737E63CBC3C77', mumbaiConfig)
- // @ts-ignore
- const web3 = new Web3(fm.getProvider())
+  // @ts-ignore
+  const web3 = new Web3(fm.getProvider())
+  console.log('Fortmatic instance', fm)
 
   setWalletInfo('fortmatic', 'instance', fm)
   setWalletInfo('fortmatic', 'web3', web3)
@@ -246,6 +248,8 @@ const checkTorus = async (network:Network, setWalletInfo:Function) => {
 
   setWalletInfo('torus', 'instance', torus)
   setWalletInfo('torus', 'web3', new Web3(torus.provider))
+
+  console.log('Torus instance', torus)
 }
 
 const EthereumProvider = ({ network, setWalletInfo, setActiveWallet }: PropsFromRedux) => {
