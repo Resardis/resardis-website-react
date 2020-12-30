@@ -70,8 +70,8 @@ export const WalletContainer = ({borderColor, isPrimary, children}:WalletContain
   </div>
 )
 
-export const WalletDetailsConnected = ({ activeWallet, setActiveWallet, wallet, children, balances, assetSelected, network }:Props) => {
-  console.log('===',assetSelected, balances, balances[assetSelected])
+export const WalletDetailsConnected = ({ activeWallet, setActiveWallet, wallet, children, balances, assetSelected, network, accountAddress }:Props) => {
+  // console.log('===',accountAddress, wallet, assetSelected, balances, balances[assetSelected])
   return (
     <div className="wallet-data" style={{ flexGrow: 1 }}>
       {wallet.error && (
@@ -79,7 +79,11 @@ export const WalletDetailsConnected = ({ activeWallet, setActiveWallet, wallet, 
       )}
       <div className="wallet-account">{wallet.account}</div>
       <div className="wallet-balance">
-        {wei2ether(balances[assetSelected].sidechain, 10)} {assetSelected}
+        {wallet.account === accountAddress ?
+        `${wei2ether(balances[assetSelected].sidechain, 10)} ${assetSelected}`
+        :
+        'activate wallet to see balance'
+        }
       </div>
 
       <div style={{ textAlign: 'right' }}>
