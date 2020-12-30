@@ -193,7 +193,12 @@ const checkMetaMask = async (network:Network, setWalletInfo:Function, setActiveW
 }
 
 const checkFortmatic = async (network:Network, setWalletInfo:Function) => {
-  const fm = new Fortmatic('pk_test_84A737E63CBC3C77')
+  const mumbaiConfig = {
+    rpcUrl: 'https://rpc-mumbai.matic.today',
+    chainId: 80001,
+  }
+
+  const fm = new Fortmatic('pk_test_84A737E63CBC3C77', mumbaiConfig)
  // @ts-ignore
  const web3 = new Web3(fm.getProvider())
 
