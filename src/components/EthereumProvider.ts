@@ -230,7 +230,7 @@ const checkTorus = async (network:Network, setWalletInfo:Function) => {
   })
 
   await torus.init({
-    buildEnv: 'testing',
+    buildEnv: 'production',
     network: {
       host: 'mumbai',
       chainId: 80001,
