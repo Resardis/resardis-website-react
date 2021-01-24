@@ -23,7 +23,7 @@ const getTokenBalancesFromDEX = (contractAPI:any, network:any, account:string) =
     .balanceOf(tokenAddress, account)
     .call()
     .then((balance:any) => {
-      if (tokenAddress === '0xfe4F5145f6e09952a5ba9e956ED0C25e3Fa4c7F1')
+      // if (tokenAddress === '0xfe4F5145f6e09952a5ba9e956ED0C25e3Fa4c7F1')
       //console.log('Got DEX balance of', tokenAddress, account, balance, new BN(balance.toString()))
       //console.log(network.tokens[tokenAddress], balances)
       store.dispatch(setAssetBalance({
@@ -54,10 +54,10 @@ const getTokenBalancesFromDEX = (contractAPI:any, network:any, account:string) =
   })
 }
 
-const getTokenBalanceFromSidechain = (web3:any, accountAddress: string, tokenAddress:string) => {
+const getTokenBalanceFromSidechain = (accountAddress: string, tokenAddress:string) => {
   const abi = (tokenAddress in tokenABIs) ? tokenABIs[tokenAddress] : abiERC20Standard
 
-  let tokenContractAPI = new web3.eth.Contract(abi, tokenAddress)
+  let tokenContractAPI = new window.web3.eth.Contract(abi, tokenAddress)
 
   tokenContractAPI.methods
   .balanceOf(accountAddress)
@@ -75,15 +75,14 @@ const getTokenBalanceFromSidechain = (web3:any, accountAddress: string, tokenAdd
   })
 }
 
-const getTokenBalancesFromSidechain = (web3:any, network:any, account:string) => {
+const getTokenBalancesFromSidechain = (network:any, account:string) => {
   Object.keys(network.tokens).forEach(tokenAddress => {
     if (tokenAddress === ethers.constants.AddressZero) return
-    getTokenBalanceFromSidechain(web3, account, tokenAddress)
+    getTokenBalanceFromSidechain(account, tokenAddress)
   })
 }
 
 export const getBalances = async (
-  web3:any,
   contractAPI:any,
   account:string,
   network:Network,
@@ -94,9 +93,9 @@ export const getBalances = async (
   // get balances of tokens added to DEX contract
   getTokenBalancesFromDEX(contractAPI, network, account)
   // get balances of tokens in the wallet
-  getTokenBalancesFromSidechain(web3, network, account)
+  getTokenBalancesFromSidechain(network, account)
 
-  const balance = await web3.eth.getBalance(account)
+  const balance = await window.web3.eth.getBalance(account)
 
   setAssetBalance({
     symbol: 'ETH',
@@ -141,7 +140,7 @@ type OfferData = {
 }
 
 export const createOrder = (contractAPI:any, offerData:OfferData, DOMID:string) => {
-  console.log('creating new offer:', offerData)
+  console.log('creating new offer:', contractAPI, offerData)
 //   event LogMake(
 //     uint256 indexed id,
 //     bytes32 indexed pair,
@@ -167,7 +166,7 @@ export const createOrder = (contractAPI:any, offerData:OfferData, DOMID:string) 
 //     uint8 offerType
 // );
 
-  contractAPI.on('LogMake', async (id:any, pair:string, maker:string) => {
+  contractAPI.once('LogMake', async (id:any, pair:string, maker:string) => {
     console.log('LogMake res', id.toString(), maker)
     if (await contractAPI.signer.getAddress() === maker) {
       updateButton(DOMID, 'Done!')
@@ -175,7 +174,7 @@ export const createOrder = (contractAPI:any, offerData:OfferData, DOMID:string) 
 
     }
   })
-  contractAPI.on('LogTake', async (id:any, pair:string, maker:string, payGem:string, buyGem:string, taker:string) => {
+  contractAPI.once('LogTake', async (id:any, pair:string, maker:string, payGem:string, buyGem:string, taker:string) => {
     console.log('LogTake res', id.toString(), taker, DOMID)
     if (await contractAPI.signer.getAddress() === taker) {
       updateButton(DOMID, 'Done!')
@@ -355,7 +354,7 @@ export const deposit = (
         balance: new BN(event.returnValues.balance.toString())
       }))
 
-      getTokenBalanceFromSidechain(null, accountAddress, tokenAddress)
+      getTokenBalanceFromSidechain(accountAddress, tokenAddress)
 
       updateButton(DOMID, 'Transfer: done')
     }
@@ -385,7 +384,9 @@ export const deposit = (
   if (tokenAddress === ethers.constants.AddressZero) {
     // function deposit() external payable {
     return contractAPI.functions.deposit({
-      gasLimit: 500000
+      gasLimit: 1500000
+    }).send({
+      from: accountAddress
     })
     .then((res:any) => {
       updateButton(DOMID, 'Waiting for TX...')
@@ -401,9 +402,9 @@ export const deposit = (
       // or this contract will not be able to do the transfer on your behalf.
 
     return contractAPI.methods.depositToken(tokenAddress, amount.toFixed()
-        // , {   gasLimit: 500000 }
+      //, { gasLimit: 1500000 }
       ).send({
-        from: '0xA586B76cbb1F4a7850c137275A6D5ffC5c9A5283'
+        from: accountAddress
       })
       .then((res:any) => {
         //updateButton(DOMID, 'waiting for TX...')
@@ -450,28 +451,32 @@ export const depositAfterApprove = (
   )
   const resardisAddress = network.contract
 
-  allowance(accountAddress, tokenAddress, resardisAddress)
+  // allowance(accountAddress, tokenAddress, resardisAddress)
   console.log('past allowance')
 
   const amount:BN = new BN(amountToDeposit).multipliedBy(1e+18)
 
   // prepare token's own contract for calling allowance/approval
-  const provider = new ethers.providers.Web3Provider(window.ethereum)
+  // const provider = new ethers.providers.Web3Provider(window.ethereum)
   const abi = (tokenAddress in tokenABIs) ? tokenABIs[tokenAddress] : abiERC20Standard
-  let tokenContract = new ethers.Contract(tokenAddress, abi, provider.getSigner())
+  // let tokenContract = new ethers.Contract(tokenAddress, abi, provider.getSigner())
+  let tokenContractAPI = new window.web3.eth.Contract(abi, tokenAddress)
 
-  tokenContract.functions.approve(resardisAddress, amount.toFixed(), {
-    gasLimit: 500000
-  })
+  // const x = tokenContractAPI.approve.sendTransaction(resardisAddress, )
+
+
+  tokenContractAPI.methods.approve(resardisAddress, amount.toFixed()).send({from: accountAddress})
+  // .once('transactionHash', (hash) => { console.log(hash); })
+  // .once('receipt', (receipt) => { console.log(receipt); });
+
   .then(async (res:any) => {
-    console.log('--deposit approved --5!', amountToDeposit, res)
-    const x = await allowance(accountAddress, tokenAddress, resardisAddress)
-    console.log('--deposit approved --6!', x,amountToDeposit, res)
+    // just checking - allowance prints out the amount of tokens already approved
+    // allowance(accountAddress, tokenAddress, resardisAddress)
     await deposit(contractAPI, amountToDeposit, tokenAddress, accountAddress, DOMID)
     console.log('all done')
-   })
-  .catch(err => {
-    console.error('Cannot call allowance', accountAddress, resardisAddress, err)
+  })
+  .catch((err:any) => {
+    console.error('Cannot deposit', accountAddress, resardisAddress, err)
   })
 
   // remember to call Token(address).approve(this, amount)
@@ -479,5 +484,4 @@ export const depositAfterApprove = (
   //deposit(contractAPI, amountToDeposit, tokenAddress, DOMID)
 
 }
-
 

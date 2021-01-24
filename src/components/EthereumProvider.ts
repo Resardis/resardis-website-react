@@ -44,13 +44,15 @@ const connector = connect(mapStateToProps, mapDispatchToProps)
 type PropsFromRedux = ConnectedProps<typeof connector>
 
 export const initContractAndBalances = (accountAddress:string, network:Network, web3:any) => {
+  // make sure this is present for all who need it
+  window.web3 = web3
+
   // @ts-ignore
   let contractAPI = new web3.eth.Contract(abiResardis, network.contract)
 
   store.dispatch(setContractAPI(contractAPI))
 
   getBalances(
-    web3,
     contractAPI,
     accountAddress,
     network,
