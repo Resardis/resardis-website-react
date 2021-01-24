@@ -198,7 +198,8 @@ const OrderFormConnected = ({
         <div className="col-auto">
           <button className={'btn px-2 py-1 order-button ' + (isBuy ? 'btn-buy' : 'btn-sell')}
             id={isBuy ? 'buyButtonOrderID' : 'sellButtonOrderID'}
-            onClick={() => {
+            onClick={e => {
+              e.preventDefault()
               console.log(`_==_=++', quoteCurrency: ${quoteCurrency}, baseCurrency: ${baseCurrency}, baseToken: ${orderData.baseToken}, quoteToken: ${orderData.quoteToken}`)
               createOrder(api, orderData, DOMID)
             }}
