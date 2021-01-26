@@ -139,7 +139,7 @@ type OfferData = {
   offerType:number,
 }
 
-export const createOrder = (contractAPI:any, offerData:OfferData, DOMID:string) => {
+export const createOrder = (contractAPI:any, offerData:OfferData, accountAddress:string, DOMID:string) => {
   console.log('creating new offer:', contractAPI, offerData)
 //   event LogMake(
 //     uint256 indexed id,
@@ -166,19 +166,21 @@ export const createOrder = (contractAPI:any, offerData:OfferData, DOMID:string) 
 //     uint8 offerType
 // );
 
-  contractAPI.once('LogMake', async (id:any, pair:string, maker:string) => {
-    console.log('LogMake res', id.toString(), maker)
-    if (await contractAPI.signer.getAddress() === maker) {
+  contractAPI.once('LogMake', async (id:any, res:any) => {
+    // console.log('LogMake res', id.toString(), maker)
+    console.log('LogMake res', res.returnValues.maker)
+    if (res.returnValues.maker === accountAddress) {
       updateButton(DOMID, 'Done!')
-      store.dispatch(addActiveOfferID(id.toNumber()))
-
+      store.dispatch(addActiveOfferID(parseInt(res.returnValues.id)))
     }
   })
-  contractAPI.once('LogTake', async (id:any, pair:string, maker:string, payGem:string, buyGem:string, taker:string) => {
-    console.log('LogTake res', id.toString(), taker, DOMID)
-    if (await contractAPI.signer.getAddress() === taker) {
+  contractAPI.once('LogTake', async (id:any, res:any) => {
+    // console.log('LogTake res', res.returnValues)
+    if (res.returnValues.taker === accountAddress) {
       updateButton(DOMID, 'Done!')
-      store.dispatch(addActiveOfferID(id.toNumber()))
+      store.dispatch(addActiveOfferID(parseInt(res.returnValues.id)))
+    } else {
+      console.log('LogTake mismatched addresses', res.returnValues.taker, accountAddress)
     }
   })
 
@@ -193,9 +195,9 @@ export const createOrder = (contractAPI:any, offerData:OfferData, DOMID:string) 
   const payAmt:BN = isBuy ? price.multipliedBy(amount).multipliedBy(1e+18) : amount.multipliedBy(1e+18)
   const buyAmt:BN = isBuy ? amount.multipliedBy(1e+18) : price.multipliedBy(amount).multipliedBy(1e+18)
 
-  console.log(`--params', payAmt:
-    ${payAmt.toFixed()}, payGem: ${payGem},
-    buyGem: ${buyGem}, buyAmt: ${buyAmt.toFixed()}, offerType: ${offerType}`)
+  // console.log(`--params', payAmt:
+  //   ${payAmt.toFixed()}, payGem: ${payGem},
+  //   buyGem: ${buyGem}, buyAmt: ${buyAmt.toFixed()}, offerType: ${offerType}`)
 
 //   function offer(
 //     uint256 payAmt, //maker (ask) sell how much
@@ -208,10 +210,18 @@ export const createOrder = (contractAPI:any, offerData:OfferData, DOMID:string) 
 // ) public returns (uint256) {
   updateButton(DOMID, 'signing TX...')
 
-  contractAPI.offer(payAmt.toFixed(), payGem, buyAmt.toFixed(), buyGem, 0, true, offerType)
+  contractAPI.methods.offer(payAmt.toFixed(), payGem, buyAmt.toFixed(), buyGem, 0, true, offerType)
+  .send({
+    from: accountAddress
+  })
   .then(async (res:any) => {
     console.log('offer res:', res)
-    updateButton(DOMID, 'waiting for TX...')
+    updateButton(DOMID, 'Done!')
+    if ('LogMake' in res.events) {
+      console.log('Offer', res.events.LogMake)
+      store.dispatch(addActiveOfferID(parseInt(res.events.LogMake.returnValues.id)))
+    }
+
   })
   .catch((e:any) => {
     updateButton(DOMID, 'Error!')
@@ -222,7 +232,7 @@ export const createOrder = (contractAPI:any, offerData:OfferData, DOMID:string) 
 const updateButton = (DOMID:string, text:string) => {
   const buttonElement = document.getElementById(DOMID)
   if (buttonElement) buttonElement.innerHTML = text
-
+  else console.warn('updateButton cannot find', DOMID)
 }
 
 export const cancelOrder = (contractAPI:any, offerID:number, DOMID:string) => {

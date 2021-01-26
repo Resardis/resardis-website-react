@@ -34,6 +34,7 @@ interface StateProps {
   quoteCurrencyBalance: BigNumber,
   network: Network,
   api: any,
+  accountAddress: string,
 }
 
 interface OwnProps {
@@ -45,6 +46,7 @@ const mapStateToProps = (state: RootState, ownProps:OwnProps):StateProps => {
   const commonProps = {
     network: state.contract.network,
     api: state.contract.contractAPI,
+    accountAddress: state.funds.accountAddress,
   }
 
   if (state.markets.selectedOrder && (
@@ -103,6 +105,7 @@ const OrderFormConnected = ({
   isBuy,
   network,
   api,
+  accountAddress,
 }:Props) => {
   useEffect(() => {
     const baseToken = Object.keys(network.tokens).find(address => network.tokens[address] === baseCurrency)
@@ -201,8 +204,9 @@ const OrderFormConnected = ({
             onClick={e => {
               e.preventDefault()
               console.log(`_==_=++', quoteCurrency: ${quoteCurrency}, baseCurrency: ${baseCurrency}, baseToken: ${orderData.baseToken}, quoteToken: ${orderData.quoteToken}`)
-              createOrder(api, orderData, DOMID)
+              createOrder(api, orderData, accountAddress, DOMID)
             }}
+            disabled={new BigNumber(orderData.amount).isZero()}
           >
             {isBuy ? 'Buy' : 'Sell'} {baseCurrency}
           </button>

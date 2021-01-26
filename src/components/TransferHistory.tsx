@@ -126,7 +126,6 @@ const TransferHistoryTable = ({ transfers }:{ transfers: any }) => {
 }
 
 const getTransferTokenDetails = (deposit:any) => {
-  console.log('---',deposit)
   const token = getTokenNameFromAddress(deposit.token)
   const networkName = getNetworkNameFromAddress(deposit.token)
   const tokenName = token in tokenNames ? tokenNames[token] : '???'
