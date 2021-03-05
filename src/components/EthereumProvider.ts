@@ -4,9 +4,10 @@ import { connect, ConnectedProps } from 'react-redux'
 import Portis from '@portis/web3'
 import Fortmatic from 'fortmatic'
 import Torus from '@toruslabs/torus-embed'
-//import WalletConnectProvider from '@maticnetwork/walletconnect-provider'
 
 // @ts-ignore
+import WalletConnectProvider from '@maticnetwork/walletconnect-provider'
+import Matic from '@maticnetwork/maticjs'
 import Web3 from 'web3'
 import { RootState } from '../reducers'
 import { setActiveWallet, setWalletInfo, clearAssetsBalance } from '../actions/walletActions'
@@ -254,11 +255,61 @@ const checkTorus = async (network:Network, setWalletInfo:Function) => {
   console.log('Torus instance', torus)
 }
 
+const setUpMaticJS = (network:Network, setWalletInfo:Function) => {
+  const maticProvider1 = new WalletConnectProvider({
+    host: `https://rpc-mumbai.matic.today`,
+    callbacks: {
+      onConnect: console.log('connected'),
+      onDisconnect: console.log('disconnected!')
+    }
+  })
+  const maticProvider2 = new WalletConnectProvider({
+    host: `https://goerli.infura.io/v3/75aa7935112647bc8cc49d20beafa189`,
+    callbacks: {
+      onConnect: console.log('connected'),
+      onDisconnect: console.log('disconnected!')
+    }
+  })
+
+  const matic = new Matic({
+    maticProvider: new Web3(window.ethereum),
+    parentProvider: new Web3(window.ethereum),
+    // maticProvider: "https://rpc-mumbai.matic.today",
+    // parentProvider: "https://goerli.infura.io/v3/75aa7935112647bc8cc49d20beafa189",
+    rootChain: "0x2890bA17EfE978480615e330ecB65333b880928e",
+    withdrawManager: "0x2923C8dD6Cdf6b2507ef91de74F1d5E0F11Eac53",
+    depositManager: "0x7850ec290A2e2F40B82Ed962eaf30591bb5f5C96",
+    registry: "0xeE11713Fe713b2BfF2942452517483654078154D",
+  })
+  // "MATIC_PROVIDER": "https://rpc-mumbai.matic.today",
+  // "PARENT_PROVIDER": "https://goerli.infura.io/v3/75aa7935112647bc8cc49d20beafa189",
+  // "ROOTCHAIN_ADDRESS": "0x2890bA17EfE978480615e330ecB65333b880928e",
+  // "WITHDRAWMANAGER_ADDRESS": "0x2923C8dD6Cdf6b2507ef91de74F1d5E0F11Eac53",
+  // "DEPOSITMANAGER_ADDRESS": "0x7850ec290A2e2F40B82Ed962eaf30591bb5f5C96",
+  // "PRIVATE_KEY": "your_pvt_key", // Append 0x to your private key
+  // "FROM_ADDRESS": "your address",
+  // "GOERLI_ERC20": "0xb2eda8A855A4176B7f8758E0388b650BcB1828a4",
+  // "MATIC_ERC20": "0xc7bb71b405ea25A9251a1ea060C2891b84BE1929",
+  // "REGISTRY": "0xeE11713Fe713b2BfF2942452517483654078154D",
+  // "MUMBAI_ERC721":"0xa38c6F7FEaB941160f32DA7Bbc8a4897b37876b5",
+  // "GOERLI_ERC721":"0x0217B02596Dfe39385946f82Aab6A92509b7F352",
+  // "MUMBAI_WETH":"0x4DfAe612aaCB5b448C12A591cD0879bFa2e51d62",
+  // "GOERLI_WETH":"0x60D4dB9b534EF9260a88b0BED6c486fe13E604Fc"
+
+  matic.initialize()
+
+  console.warn('---setUpMaticJS', matic)
+  setWalletInfo('matic', 'instance', matic)
+  setWalletInfo('matic', 'web3', new Web3(window.ethereum))
+}
+
+
 const EthereumProvider = ({ network, setWalletInfo, setActiveWallet }: PropsFromRedux) => {
   checkMetaMask(network, setWalletInfo, setActiveWallet)
   checkPortis(network, setWalletInfo)
   checkFortmatic(network, setWalletInfo)
   checkTorus(network, setWalletInfo)
+  setUpMaticJS(network, setWalletInfo)
 
   return null
 }

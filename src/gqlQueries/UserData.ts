@@ -5,7 +5,6 @@ export const getMyOrders = (address:string) => {
   query GetMyOrders {
     makes (where:{maker:"${address}"}) {
       offerID
-      pair
       maker
       payGem
       payAmt
@@ -17,6 +16,24 @@ export const getMyOrders = (address:string) => {
   }`
 
   return gql(GET_MY_ORDERS)
+}
+
+export const getMyActiveOffers = (address:string) => {
+  const GET_MY_ACTIVE_OFFERS = `
+  subscription OnActiveOffer {
+      activeOffers (where:{maker:"${address}"}) {
+        offerID
+        maker
+        payGem
+        buyGem
+        payAmt
+        buyAmt
+        timestamp
+        offerType
+      }
+  }`
+
+  return gql(GET_MY_ACTIVE_OFFERS)
 }
 
 export const getMyOrderTakes = (offerID:number) => {

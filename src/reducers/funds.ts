@@ -93,6 +93,12 @@ const initialState: Funds = {
       instance: null,
       web3: null,
     },
+    matic: {
+      name: 'matic',
+      isLoggedIn: false,
+      instance: null,
+      web3: null,
+    },
   },
 
   textFilter: '',
@@ -100,7 +106,7 @@ const initialState: Funds = {
   totalBalanceBTC: new BigNumber(0),
   totalBalanceUSD: 0,
   balances: createBalances(),
-  assetSelected: 'MATIC',
+  assetSelected: 'ERCX',
 }
 
 const fundsReducer = (state:Funds = initialState, action:TableActions|AccountActions):Funds => {

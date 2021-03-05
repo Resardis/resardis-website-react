@@ -70,6 +70,24 @@ export const WalletContainer = ({borderColor, isPrimary, children}:WalletContain
   </div>
 )
 
+const showBalance = (wallet:any, accountAddress:string, balances:BalancesType, assetSelected:string) => {
+  if (wallet.account !== accountAddress) {
+    return 'activate wallet to see balance'
+  }
+
+  if (!(assetSelected in balances)) {
+    console.error('WalletDetailsConnected: showBalance: no assetSelected in balances', assetSelected, balances)
+    return null
+  }
+
+  if (!('sidechain' in balances[assetSelected])) {
+    console.error('WalletDetailsConnected: showBalance: no sidechain in balances[assetSelected]', assetSelected, balances)
+    return null
+  }
+
+  return `${wei2ether(balances[assetSelected].sidechain, 10)} ${assetSelected}`
+}
+
 export const WalletDetailsConnected = ({ activeWallet, setActiveWallet, wallet, children, balances, assetSelected, network, accountAddress }:Props) => {
   // console.log('===',accountAddress, wallet, assetSelected, balances, balances[assetSelected])
   return (
@@ -79,11 +97,7 @@ export const WalletDetailsConnected = ({ activeWallet, setActiveWallet, wallet, 
       )}
       <div className="wallet-account">{wallet.account}</div>
       <div className="wallet-balance">
-        {wallet.account === accountAddress ?
-        `${wei2ether(balances[assetSelected].sidechain, 10)} ${assetSelected}`
-        :
-        'activate wallet to see balance'
-        }
+        {showBalance(wallet, accountAddress, balances,assetSelected)}
       </div>
 
       <div style={{ textAlign: 'right' }}>

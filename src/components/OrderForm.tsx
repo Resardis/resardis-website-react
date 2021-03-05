@@ -203,7 +203,7 @@ const OrderFormConnected = ({
             id={isBuy ? 'buyButtonOrderID' : 'sellButtonOrderID'}
             onClick={e => {
               e.preventDefault()
-              console.log(`_==_=++', quoteCurrency: ${quoteCurrency}, baseCurrency: ${baseCurrency}, baseToken: ${orderData.baseToken}, quoteToken: ${orderData.quoteToken}`)
+              console.log(`updateOrderData quoteCurrency: ${quoteCurrency}, baseCurrency: ${baseCurrency}, baseToken: ${orderData.baseToken}, quoteToken: ${orderData.quoteToken}`)
               createOrder(api, orderData, accountAddress, DOMID)
             }}
             disabled={new BigNumber(orderData.amount).isZero()}

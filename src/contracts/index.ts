@@ -8,10 +8,8 @@ import { setAssetBalance, setAccountAddress } from '../actions/walletActions'
 import { BigNumber } from 'bignumber.js'
 import store from '../store'
 // @ts-ignore
-import WalletConnectProvider from '@maticnetwork/walletconnect-provider'
-import Web3 from 'web3'
-import abiResardis from '../abi/Resardis.json'
 import { Network } from '../constants/networks'
+import abiResardis from '../abi/Resardis.json'
 
 // TODO - change Function to correct type
 const getTokenBalancesFromDEX = (contractAPI:any, network:any, account:string) => {
@@ -167,7 +165,12 @@ export const createOrder = (contractAPI:any, offerData:OfferData, accountAddress
 // );
 
   contractAPI.once('LogMake', async (id:any, res:any) => {
-    // console.log('LogMake res', id.toString(), maker)
+    console.log('LogMake res', id, res)
+    if (!res) {
+      // fortmatic case
+      console.warn('LogMake res is null')
+      return
+    }
     console.log('LogMake res', res.returnValues.maker)
     if (res.returnValues.maker === accountAddress) {
       updateButton(DOMID, 'Done!')
@@ -175,7 +178,12 @@ export const createOrder = (contractAPI:any, offerData:OfferData, accountAddress
     }
   })
   contractAPI.once('LogTake', async (id:any, res:any) => {
-    // console.log('LogTake res', res.returnValues)
+    console.log('LogMake res', id, res)
+    if (!res) {
+      // fortmatic case
+      console.warn('LogTake res is null')
+      return
+    }
     if (res.returnValues.taker === accountAddress) {
       updateButton(DOMID, 'Done!')
       store.dispatch(addActiveOfferID(parseInt(res.returnValues.id)))
@@ -331,7 +339,6 @@ export const withdraw = (contractAPI:any, amountToWithdraw:string, tokenAddress:
   }
 }
 
-
 // deposit(api, transferData.amount, tokenAddress, DOMID)
 export const deposit = (
   contractAPI:any,
@@ -375,26 +382,10 @@ export const deposit = (
 
   updateButton(DOMID, 'signing TX...')
 
-////////////////////////////////////////////////////
-// const maticProvider = new WalletConnectProvider(
-//   {
-//     host: `https://rpc-mumbai.matic.today`,
-//     callbacks: {
-//       onConnect: console.log('connected'),
-//       onDisconnect: console.log('disconnected!')
-//     }
-//   }
-// )
-// const maticWeb3 = new Web3(maticProvider)
-// const web3 = window.web3
-// let contr = new web3.eth.Contract(abiResardis, '0xdf3786659dc64e343fFED27eD213Ed6138834B19')
-////////////////////////////////////////////////////
-
-
   if (tokenAddress === ethers.constants.AddressZero) {
     // function deposit() external payable {
     return contractAPI.functions.deposit({
-      gasLimit: 1500000
+//      gasLimit: 1500000
     }).send({
       from: accountAddress
     })
@@ -407,10 +398,6 @@ export const deposit = (
       console.log('Depositing failed', err)
     })
   } else {
-      // function depositToken(address token, uint256 amount) external {
-      // remember to call Token(address).approve(this, amount)
-      // or this contract will not be able to do the transfer on your behalf.
-
     return contractAPI.methods.depositToken(tokenAddress, amount.toFixed()
       //, { gasLimit: 1500000 }
       ).send({
@@ -469,12 +456,9 @@ export const depositAfterApprove = (
   // prepare token's own contract for calling allowance/approval
   // const provider = new ethers.providers.Web3Provider(window.ethereum)
   const abi = (tokenAddress in tokenABIs) ? tokenABIs[tokenAddress] : abiERC20Standard
-  // let tokenContract = new ethers.Contract(tokenAddress, abi, provider.getSigner())
   let tokenContractAPI = new window.web3.eth.Contract(abi, tokenAddress)
 
   // const x = tokenContractAPI.approve.sendTransaction(resardisAddress, )
-
-
   tokenContractAPI.methods.approve(resardisAddress, amount.toFixed()).send({from: accountAddress})
   // .once('transactionHash', (hash) => { console.log(hash); })
   // .once('receipt', (receipt) => { console.log(receipt); });

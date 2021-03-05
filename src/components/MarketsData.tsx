@@ -86,6 +86,7 @@ const Search = connector(({ textFilter, updateTextFilter }: PropsFromRedux) => (
 ))
 
 const updateSorting = (sortBy: sortingTypes, props: PropsFromRedux) => {
+  console.log(sortBy)
   if (props.columnSortBy === sortBy) {
     props.changeSortDirection()
   } else {
@@ -93,49 +94,30 @@ const updateSorting = (sortBy: sortingTypes, props: PropsFromRedux) => {
   }
 }
 
-const MarketsData = (props: PropsFromRedux) => {
-  type Pairs = {
+type Pairs = {
+  [key:string]: {
     [key:string]: {
-      [key:string]: {
-        price: BigNumber,
-        volume: BigNumber,
-      }
-    },
-  }
+      price: BigNumber,
+      volume: BigNumber,
+    }
+  },
+}
 
-  type Order = {
-    pair: string,
-    takeAmt: BigNumber,
-    giveAmt: BigNumber,
-    payGem: string,
-    buyGem: string,
-  }
+type Order = {
+  pair: string,
+  takeAmt: BigNumber,
+  giveAmt: BigNumber,
+  payGem: string,
+  buyGem: string,
+}
 
+const processMarketData = (data:any, props:PropsFromRedux) => {
+  const marketData:MarketData = []
+  const dataPoints = ['last24takes', 'previous24takes']
   const pairs:Pairs = {
     last24takes: {},
     previous24takes: {},
   }
-
-  const marketData:MarketData = []
-
-  let last24Start = (Math.floor(Date.now() / 2000)) * 2 - 86400
-  let prev24End = last24Start
-  let prev24Start = last24Start - 86400 * 2
-
-  // last24Start = 1598948029
-  // prev24End = 1498948029
-  // prev24Start = 109898165
-
-  last24Start = 1498948029
-  prev24End = 498948029
-  prev24Start = 9898165
-
-    const { loading, error, data } = useQuery(getPairs(last24Start, prev24Start, prev24End), { pollInterval: 1000 })
-
-  if (loading) return <span>Loading...</span>
-  if (error) return <span>Error! {error}</span>
-
-  const dataPoints = ['last24takes', 'previous24takes']
 
   dataPoints.forEach((set:string) => {
     if (!(set in data)) return
@@ -193,27 +175,50 @@ const MarketsData = (props: PropsFromRedux) => {
     props.updateCurrencyPairData(pairData)
   })
 
+  return marketData
+}
+
+const TableHeaderConnected = (props: PropsFromRedux) => (
+  <thead>
+    <tr>
+      <th scope="col">
+        <Search />
+      </th>
+      <th scope="col" onClick={() => updateSorting(sortingTypes.SORT_BY_CHANGE24, props)}>
+        24h Change
+      </th>
+      <th scope="col" onClick={() => updateSorting(sortingTypes.SORT_BY_VOLUME, props)}>
+        24h Volume
+      </th>
+      <th scope="col" onClick={() => updateSorting(sortingTypes.SORT_BY_PRICE, props)}>
+        Price (ETH)
+      </th>
+    </tr>
+  </thead>
+)
+
+const TableHeader = connector(TableHeaderConnected)
+
+const MarketsData = (props: PropsFromRedux) => {
+  let last24Start = (Math.floor(Date.now() / 2000)) * 2 - 86400
+  let prev24End = last24Start
+  let prev24Start = last24Start - 86400 * 2
+
+  last24Start = 1498948029
+  prev24End = 498948029
+  prev24Start = 9898165
+
+  const { loading, error, data, subscribeToMore } = useQuery(getPairs(last24Start, prev24Start, prev24End))
+
+  if (loading) return <span>Loading...</span>
+  if (error) return <span>Error! {error}</span>
+
+  const marketData = processMarketData(data, props)
+
   return (
-    <>
     <div className="markets-table">
       <table className="table table-borderless table-dark table-striped table-hover table-sm">
-        <thead>
-          <tr>
-            <th scope="col">
-              <Search />
-            </th>
-            <th scope="col" onClick={() => updateSorting(sortingTypes.SORT_BY_CHANGE24, props)}>
-              24h Change
-            </th>
-            <th scope="col" onClick={() => updateSorting(sortingTypes.SORT_BY_VOLUME, props)}>
-              24h Volume
-            </th>
-            <th scope="col" onClick={() => updateSorting(sortingTypes.SORT_BY_PRICE, props)}>
-              Price (ETH)
-            </th>
-          </tr>
-        </thead>
-
+        <TableHeader />
         <tbody>
           {sortAndFilter(marketData, props).map(row => (
             <tr key={shortid()}
@@ -232,7 +237,6 @@ const MarketsData = (props: PropsFromRedux) => {
         </tbody>
       </table>
     </div>
-    </>
   )
 }
 

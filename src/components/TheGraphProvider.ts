@@ -3,10 +3,11 @@ import { RootState } from '../reducers'
 import { ethers } from 'ethers'
 import { isActive } from '../contracts'
 import BigNumber from 'bignumber.js'
-import { getMyOrders, getMyOrderTakes } from '../gqlQueries/UserData'
+import { getMyActiveOffers, getMyOrders, getMyOrderTakes } from '../gqlQueries/UserData'
 import { getTokenNameFromAddress } from '../constants/networks'
 import { MyOrderType, AddMyOrderAction } from '../constants/actionTypes'
 import { addMyOrder } from '../actions/userDataActions'
+import { useSubscription } from "@apollo/client"
 
 interface StateProps {
   accountAddress: string,
@@ -99,16 +100,28 @@ const TheGraphProvider = ({
   client,
   api,
 }: FullProps) => {
+  // if (!accountAddress) return null
 
-  console.log('------------TheGraphProvider', accountAddress)
 
+  const { data, loading } = useSubscription(
+    getMyActiveOffers(accountAddress)
+  )
   if (!accountAddress) return null
 
-  const observableQuery = client.watchQuery({ query: getMyOrders(accountAddress), pollInterval: 1000 })
-  observableQuery.startPolling(1000)
-  observableQuery.subscribe({ next: ({ data }: {data:any}) => {
+  if (loading) {
+    // console.log('TheGraphProvider loading')
+    return null
+  }
+  if (!data) {
+    // console.log('TheGraphProvider no data')
+    return null
+  }
+  // const observableQuery = client.watchQuery({ query: getMyActiveOffers(accountAddress), pollInterval: 100000 })
+  // observableQuery.startPolling(1000)
+  // observableQuery.subscribe({ next: ({ data }: {data:any}) => {
+    console.log('---+++',data)
     // TODO: batched updates, data.makes.map at a time, isActive&addMyOrder
-    data.makes.map(async (order:MakeOrder) => {
+    data.activeOffers.map(async (order:MakeOrder) => {
       let side:string, pair:string, amount:BigNumber, price:BigNumber
 
       const tokenBuy = getTokenNameFromAddress(order.buyGem)
@@ -151,9 +164,10 @@ const TheGraphProvider = ({
         fee: new BigNumber(0),
       })
     })
-  }})
+    return null
+  }
+//})
 
-  return null
-}
+
 
 export default connector(TheGraphProvider)
