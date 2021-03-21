@@ -61,7 +61,7 @@ const getTokenBalanceFromSidechain = (accountAddress: string, tokenAddress:strin
   .balanceOf(accountAddress)
   .call()
   .then((balance:any) => {
-    //console.log('Got balance of token:', tokenAddress, balance)
+    console.log('Got sidechain balance of token:', tokenAddress, balance)
     store.dispatch(setAssetBalance({
       symbol: getTokenNameFromAddress(tokenAddress),
       source: 'sidechain',
@@ -69,13 +69,13 @@ const getTokenBalanceFromSidechain = (accountAddress: string, tokenAddress:strin
     }))
   })
   .catch((err:any) => {
-    console.error('Cannot get balance of token', accountAddress, err)
+    console.error('Cannot get balance of token', tokenAddress, accountAddress, err)
   })
 }
 
 const getTokenBalancesFromSidechain = (network:any, account:string) => {
   Object.keys(network.tokens).forEach(tokenAddress => {
-    if (tokenAddress === ethers.constants.AddressZero) return
+    // if (tokenAddress === ethers.constants.AddressZero) return
     getTokenBalanceFromSidechain(account, tokenAddress)
   })
 }
