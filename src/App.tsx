@@ -1,7 +1,7 @@
-import React from 'react'
-import { connect, ConnectedProps } from 'react-redux'
-import { RootState } from './reducers'
-import './App.css'
+import React from "react";
+import { connect, ConnectedProps } from "react-redux";
+import { RootState } from "./reducers";
+import "./App.css";
 import {
   FundsWindow,
   Funds,
@@ -11,51 +11,53 @@ import {
   OrderForm,
   SelectedMarket,
   UserData,
-} from './components'
-import { openFundsWindow } from './actions'
-import { OpenFundsWindowAction } from './constants/actionTypes'
+} from "./components";
+import { openFundsWindow } from "./actions";
+import { OpenFundsWindowAction } from "./constants/actionTypes";
 
 interface StateProps {
-  selectedScreen: string,
-  isWalletEnabled: boolean,
+  selectedScreen: string;
+  isWalletEnabled: boolean;
 }
 
 const mapStateToProps = (state: RootState): StateProps => ({
   selectedScreen: state.selectedScreen,
   isWalletEnabled: state.funds.isWalletEnabled,
-})
+});
 
-const mapDispatchToProps = (dispatch:any) => ({
-  openFundsWindow: ():OpenFundsWindowAction => dispatch(openFundsWindow()),
-})
+const mapDispatchToProps = (dispatch: any) => ({
+  openFundsWindow: (): OpenFundsWindowAction => dispatch(openFundsWindow()),
+});
 
-const connector = connect(mapStateToProps, mapDispatchToProps)
+const connector = connect(mapStateToProps, mapDispatchToProps);
 
-type PropsFromRedux = ConnectedProps<typeof connector>
+type PropsFromRedux = ConnectedProps<typeof connector>;
 
-const App = ({ selectedScreen, isWalletEnabled, openFundsWindow }: PropsFromRedux) => {
-
-  //if (!isWalletEnabled) openFundsWindow()
+const App = ({
+  selectedScreen,
+  isWalletEnabled,
+  openFundsWindow,
+}: PropsFromRedux) => {
+  // if (!isWalletEnabled) openFundsWindow()
 
   return (
     <div className="main-grid">
       <FundsWindow />
       <Header />
 
-      {selectedScreen === 'Funds' ? (
+      {selectedScreen === "Funds" ? (
         <Funds />
-        ) : (
+      ) : (
         <>
-          <SelectedMarket />
-          <Graph />
+          {/* <SelectedMarket /> */}
+          {/* <Graph /> */}
           <OrderForm />
           <UserData />
-          <Markets/>
+          {/* <Markets/> */}
         </>
       )}
-
     </div>
-  )
-}
+  );
+};
 
-export default connector(App)
+export default connector(App);

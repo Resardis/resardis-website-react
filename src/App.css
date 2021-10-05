@@ -2,7 +2,7 @@
   display: grid;
   /* grid-template-columns: 1fr [start] minmax(450px, 460px) [middle] minmax(400px, 800px) minmax(450px, 460px) [end] 1fr; */
   grid-template-columns: 1fr [start] minmax(350px, 360px) [middle] minmax(800px, 1200px) minmax(350px, 360px) [end] 1fr;
-  grid-template-rows: 90px [top] 300px 236px 300px [bottom] 1fr;
+  grid-template-rows: 90px [top] 120px 236px 300px [bottom] 1fr;
 }
 
 .selected-market {

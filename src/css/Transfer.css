@@ -1,10 +1,10 @@
 .container-transfer {
-  background-color: #B3B3B3;
+  background-color: #b3b3b3;
 }
 
 .container-transfer-inner {
-  background-color: #4D4D4D;
-  color: #C2C3C3;
+  background-color: #4d4d4d;
+  color: #c2c3c3;
   border-radius: 12px 12px 0 0;
   margin: 12px;
   display: flex;
@@ -13,13 +13,13 @@
 }
 
 .container-balances {
-  border-right: 1px solid #C2C3C3;
+  border-right: 1px solid #c2c3c3;
   flex: 1.5;
 }
 
 .container-transfer-form {
-  color: #4D4D4D;
-  background-color: #B3B3B3;
+  color: #4d4d4d;
+  background-color: #b3b3b3;
   border-radius: 0 12px 12px 0;
   margin: 8px 8px 8px 14px;
   flex: 1;
@@ -35,8 +35,8 @@
   margin-left: 4px;
   margin-top: -2px;
   border-radius: 12px;
-  background-color: #B3B3B3;
-  color: #4D4D4D;
+  background-color: #b3b3b3;
+  color: #4d4d4d;
   font-size: 10px;
   width: 12px;
   text-align: center;
@@ -73,7 +73,7 @@
 }
 
 .transfer-selects .transfer-asset-select {
-  background-color: #B3B3B3;
+  background-color: #b3b3b3;
   width: 40%;
 }
 
@@ -116,8 +116,8 @@
 }
 
 .transfer-details input {
-  background-color: #B3B3B3;
-  border: 1px solid #4D4D4D;
+  background-color: #b3b3b3;
+  border: 1px solid #4d4d4d;
   outline: none;
   padding: 4px;
 }
@@ -137,7 +137,7 @@
 .transfer-button button {
   border: none;
   border-radius: 18px;
-  background-color: #FBB03B;
+  background-color: #fbb03b;
   color: #333;
   padding: 6px 28px;
   font-size: 16px;
@@ -158,7 +158,7 @@
 }
 
 .wallet-address span:first-child {
-  color: #FBB03B;
+  color: #fbb03b;
   font-size: 20px;
 }
 .wallet-address span:last-child {
@@ -172,4 +172,47 @@
   font-size: 10px;
   margin-left: auto;
   margin-right: 8px;
+}
+
+.deposit-withdraw-form {
+  font-size: 18px;
+  display: flex;
+  padding: 20px;
+  align-items: center;
+  justify-content: center;
+}
+
+.deposit-withdraw-form .balance {
+  margin-left: 40px;
+  margin-right: 10px;
+  font-size: 12px;
+  font-style: italic;
+}
+
+.deposit-withdraw-form input {
+  display: flex;
+  background: #a8acac;
+  border: 1px solid #76797b;
+  outline: none;
+  padding: 6px;
+  color: #2a2e31;
+  width: 150px;
+  text-align: right;
+}
+
+.deposit-withdraw-buttons {
+  padding: 20px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.transferbutton {
+  border: none;
+  border-radius: 18px;
+  background-color: #fbb03b;
+  color: #333;
+  padding: 6px 28px;
+  font-size: 16px;
+  outline: none;
+  margin-right: 30px;
 }

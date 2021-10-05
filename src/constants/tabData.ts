@@ -12,6 +12,8 @@ const TAB_USERDATA_TRADE_HISTORY = 't9'
 const TAB_FUNDS_ASSETS = 't10'
 const TAB_FUNDS_TRANSFER = 't11'
 const TAB_FUNDS_MARKET_HISTORY = 't12'
+const TAB_USERDATA_WITHDRAW = 't13'
+const TAB_USERDATA_DEPOSIT = 't14'
 
 const TAB_MENU_MARKETS = [
   { key: TAB_MARKETS_ETH, title: "ETH" },
@@ -25,10 +27,12 @@ const TAB_MENU_SELECTEDMARKET = [
 ]
 
 const TAB_MENU_USERDATA = [
-  { key: TAB_USERDATA_OPEN_ORDERS, title: "Open Orders" },
-  { key: TAB_USERDATA_ORDER_HISTORY, title: "Order History" },
   { key: TAB_USERDATA_FUNDS, title: "Funds" },
-  { key: TAB_USERDATA_TRADE_HISTORY, title: "Trade History" },
+  { key: TAB_USERDATA_DEPOSIT, title: "Deposit" },
+  { key: TAB_USERDATA_WITHDRAW, title: "Withdraw" },
+  // { key: TAB_USERDATA_TRADE_HISTORY, title: "Trade History" },
+  // { key: TAB_USERDATA_OPEN_ORDERS, title: "Open Orders" },
+  // { key: TAB_USERDATA_ORDER_HISTORY, title: "Order History" },
 ]
 
 const TAB_MENU_FUNDS = [
@@ -54,6 +58,8 @@ export {
   TAB_USERDATA_ORDER_HISTORY,
   TAB_USERDATA_FUNDS,
   TAB_USERDATA_TRADE_HISTORY,
+  TAB_USERDATA_WITHDRAW,
+  TAB_USERDATA_DEPOSIT,
   TAB_MENU_MARKETS,
   TAB_MENU_SELECTEDMARKET,
   TAB_MENU_USERDATA,

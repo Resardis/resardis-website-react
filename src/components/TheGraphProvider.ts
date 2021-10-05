@@ -106,7 +106,6 @@ const TheGraphProvider = ({
   observableQuery.startPolling(1000)
   observableQuery.subscribe({ next: ({ data }: {data:any}) => {
     // TODO: batched updates, data.makes.map at a time, isActive&addMyOrder
-
     data.makes.map(async (order:MakeOrder) => {
       let side:string, pair:string, amount:BigNumber, price:BigNumber
 
