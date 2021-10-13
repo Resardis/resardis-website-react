@@ -543,11 +543,15 @@ export const depositAfterApprove = (
     });
 };
 
-export const getBestOffer = (contractAPI: any, sellGem: any, buyGem: any) => {
+export const getBestOffer = async (
+  contractAPI: any,
+  sellGem: any,
+  buyGem: any
+) => {
   if (contractAPI && sellGem && buyGem) {
     console.log(sellGem, buyGem);
-    contractAPI.functions.getOfferCount(sellGem, buyGem).then((res: any) => {
-      console.log(res);
-    });
+    const offerId = await contractAPI.functions.getBestOffer(sellGem, buyGem);
+    const { payAmt, buyAmt } = await contractAPI.functions.offers(offerId);
+    console.log(payAmt , buyAmt);
   }
 };

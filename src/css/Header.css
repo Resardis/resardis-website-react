@@ -1,11 +1,12 @@
 .header {
-  grid-row: 1;
-  grid-column: span start / end;
+  /* grid-row: 1; */
+  /* grid-column: span start / end; */
   background-color: #0B1013;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: 6px;
+  width: 100%;
+  overflow: hidden;
 }
 
 .header ul {

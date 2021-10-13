@@ -117,7 +117,7 @@ const OrderFormConnected = ({
       (address) => network.tokens[address] === quoteCurrency
     );
 
-    // getBestOffer(api, baseToken, quoteToken);
+    getBestOffer(api, baseToken, quoteToken);
 
     setOrderData((orderData) => ({
       ...orderData,

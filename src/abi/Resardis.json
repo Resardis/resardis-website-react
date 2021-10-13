@@ -208,6 +208,19 @@
     "inputs": [
       {
         "indexed": true,
+        "internalType": "uint256",
+        "name": "id",
+        "type": "uint256"
+      }
+    ],
+    "name": "LogOrderFilled",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
         "internalType": "address",
         "name": "authority",
         "type": "address"
@@ -378,6 +391,300 @@
     "type": "event"
   },
   {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "buyGem",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "buyAmt",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "payGem",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "maxFillAmount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint8",
+        "name": "offerType",
+        "type": "uint8"
+      }
+    ],
+    "name": "buyAllAmount",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "fillAmt",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "id",
+        "type": "uint256"
+      }
+    ],
+    "name": "cancel",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "success",
+        "type": "bool"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [],
+    "name": "deposit",
+    "outputs": [],
+    "payable": true,
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "depositToken",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "payAmt",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "payGem",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "buyAmt",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "buyGem",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "pos",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bool",
+        "name": "rounding",
+        "type": "bool"
+      },
+      {
+        "internalType": "uint8",
+        "name": "offerType",
+        "type": "uint8"
+      }
+    ],
+    "name": "offer",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "payGem",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "payAmt",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "buyGem",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "minFillAmount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint8",
+        "name": "offerType",
+        "type": "uint8"
+      }
+    ],
+    "name": "sellAllAmount",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "fillAmt",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "contract DSAuthority",
+        "name": "authority_",
+        "type": "address"
+      }
+    ],
+    "name": "setAuthority",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "payGem",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "dustAmt",
+        "type": "uint256"
+      }
+    ],
+    "name": "setMinSell",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "uint8",
+        "name": "offerType",
+        "type": "uint8"
+      },
+      {
+        "internalType": "bool",
+        "name": "state",
+        "type": "bool"
+      }
+    ],
+    "name": "setOfferType",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "owner_",
+        "type": "address"
+      }
+    ],
+    "name": "setOwner",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "withdraw",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "withdrawToken",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
     "constant": true,
     "inputs": [],
     "name": "authority",
@@ -468,97 +775,6 @@
     ],
     "payable": false,
     "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "buyGem",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "buyAmt",
-        "type": "uint256"
-      },
-      {
-        "internalType": "address",
-        "name": "payGem",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "maxFillAmount",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint8",
-        "name": "offerType",
-        "type": "uint8"
-      }
-    ],
-    "name": "buyAllAmount",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "fillAmt",
-        "type": "uint256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "id",
-        "type": "uint256"
-      }
-    ],
-    "name": "cancel",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "success",
-        "type": "bool"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [],
-    "name": "deposit",
-    "outputs": [],
-    "payable": true,
-    "stateMutability": "payable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "token",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      }
-    ],
-    "name": "depositToken",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -971,78 +1187,6 @@
     "type": "function"
   },
   {
-    "constant": false,
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "payAmt",
-        "type": "uint256"
-      },
-      {
-        "internalType": "address",
-        "name": "payGem",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "buyAmt",
-        "type": "uint256"
-      },
-      {
-        "internalType": "address",
-        "name": "buyGem",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "pos",
-        "type": "uint256"
-      },
-      {
-        "internalType": "bool",
-        "name": "rounding",
-        "type": "bool"
-      },
-      {
-        "internalType": "uint8",
-        "name": "offerType",
-        "type": "uint8"
-      }
-    ],
-    "name": "offer",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [
-      {
-        "internalType": "uint8",
-        "name": "",
-        "type": "uint8"
-      }
-    ],
-    "name": "offerTypes",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "constant": true,
     "inputs": [
       {
@@ -1197,6 +1341,27 @@
   },
   {
     "constant": true,
+    "inputs": [
+      {
+        "internalType": "uint8",
+        "name": "",
+        "type": "uint8"
+      }
+    ],
+    "name": "offerTypes",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
     "inputs": [],
     "name": "owner",
     "outputs": [
@@ -1239,123 +1404,6 @@
     ],
     "payable": false,
     "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "payGem",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "payAmt",
-        "type": "uint256"
-      },
-      {
-        "internalType": "address",
-        "name": "buyGem",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "minFillAmount",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint8",
-        "name": "offerType",
-        "type": "uint8"
-      }
-    ],
-    "name": "sellAllAmount",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "fillAmt",
-        "type": "uint256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "internalType": "contract DSAuthority",
-        "name": "authority_",
-        "type": "address"
-      }
-    ],
-    "name": "setAuthority",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "payGem",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "dustAmt",
-        "type": "uint256"
-      }
-    ],
-    "name": "setMinSell",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "internalType": "uint8",
-        "name": "offerType",
-        "type": "uint8"
-      },
-      {
-        "internalType": "bool",
-        "name": "state",
-        "type": "bool"
-      }
-    ],
-    "name": "setOfferType",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "owner_",
-        "type": "address"
-      }
-    ],
-    "name": "setOwner",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -1434,41 +1482,6 @@
     ],
     "payable": false,
     "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      }
-    ],
-    "name": "withdraw",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "token",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      }
-    ],
-    "name": "withdrawToken",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
     "type": "function"
   }
 ]

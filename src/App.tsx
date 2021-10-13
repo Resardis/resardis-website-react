@@ -41,22 +41,29 @@ const App = ({
   // if (!isWalletEnabled) openFundsWindow()
 
   return (
-    <div className="main-grid">
-      <FundsWindow />
-      <Header />
+    // <div className="main-grid">
+    //   <FundsWindow />
+    //   <Header />
 
-      {selectedScreen === "Funds" ? (
-        <Funds />
-      ) : (
-        <>
-          {/* <SelectedMarket /> */}
-          {/* <Graph /> */}
-          <OrderForm />
-          <UserData />
-          {/* <Markets/> */}
-        </>
-      )}
-    </div>
+    //   {selectedScreen === "Funds" ? (
+    //     <Funds />
+    //   ) : (
+    //     <>
+    //       {/* <SelectedMarket /> */}
+    //       {/* <Graph /> */}
+    //       <OrderForm />
+    //       <UserData />
+    //       {/* <Markets/> */}
+    //     </>
+    //   )}
+    // </div>
+    <>
+      <Header />
+      <div className="main-wrapper">
+        <OrderForm />
+        <UserData />
+      </div>
+    </>
   );
 };
 

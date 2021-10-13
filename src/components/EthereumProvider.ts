@@ -1,101 +1,105 @@
-import { connect, ConnectedProps } from 'react-redux'
-import { setIsWalletEnabled, clearAssetsBalance } from '../actions/walletActions'
-import { setContractAPI } from '../actions/contractActions'
-import { AccountActions } from '../actions/walletActions'
-import { ethers } from 'ethers'
-import { getBalances } from '../contracts'
-import { networks } from '../constants/networks'
-import abiResardis from '../abi/Resardis.json'
-import BigNumber from 'bignumber.js'
-import { Network } from '../constants/networks'
-import store from '../store'
+import { connect, ConnectedProps } from "react-redux";
+import {
+  setIsWalletEnabled,
+  clearAssetsBalance,
+} from "../actions/walletActions";
+import { setContractAPI } from "../actions/contractActions";
+import { AccountActions } from "../actions/walletActions";
+import { ethers } from "ethers";
+import { getBalances } from "../contracts";
+import { networks } from "../constants/networks";
+import abiResardis from "../abi/Resardis.json";
+import BigNumber from "bignumber.js";
+import { Network } from "../constants/networks";
+import store from "../store";
 
 declare global {
   interface Window {
-    web3:any;
-    ethereum:any;
+    web3: any;
+    ethereum: any;
   }
 }
 
-const mapDispatchToProps = (dispatch:any) => ({
-  setIsWalletEnabled: (to:boolean):AccountActions => dispatch(setIsWalletEnabled(to)),
-})
+const mapDispatchToProps = (dispatch: any) => ({
+  setIsWalletEnabled: (to: boolean): AccountActions =>
+    dispatch(setIsWalletEnabled(to)),
+});
 
-const connector = connect(null, mapDispatchToProps)
+const connector = connect(null, mapDispatchToProps);
 
-type PropsFromRedux = ConnectedProps<typeof connector>
+type PropsFromRedux = ConnectedProps<typeof connector>;
 
 const connectMetaMask = () => {
   window.ethereum
-    .request({ method: 'eth_requestAccounts' })
-    .catch((err:any) => {
+    .request({ method: "eth_requestAccounts" })
+    .catch((err: any) => {
       if (err.code === 4001) {
         // EIP-1193 userRejectedRequest error
-        console.log('Please connect to MetaMask.')
+        console.log("Please connect to MetaMask.");
       } else {
-        console.error(err)
+        console.error(err);
       }
-    })
-}
+    });
+};
 
 const initEthConnection = async () => {
-  const provider = new ethers.providers.Web3Provider(window.ethereum)
-  let account
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  let account;
   try {
-    account = await provider.getSigner().getAddress()
-  }
-  catch(err) {
-    console.log('No account[0]', err)
-    return
+    account = await provider.getSigner().getAddress();
+  } catch (err) {
+    console.log("No account[0]", err);
+    return;
   }
 
-  const networkData = await provider.getNetwork()
-  const networkID = networkData.chainId.toString()
+  const networkData = await provider.getNetwork();
+  const networkID = networkData.chainId.toString();
 
   if (!(networkID in networks)) {
-    console.error('Unknown network', networkID)
-    store.dispatch(setContractAPI(null, ))
-    store.dispatch(clearAssetsBalance())
-    return
+    // console.error('Unknown network', networkID)
+    alert(
+      "Wrong network please switch to Polygon Testnet (Mumbai). Please see https://docs.polygon.technology/docs/develop/metamask/config-polygon-on-metamask/"
+    );
+    store.dispatch(setContractAPI(null));
+    store.dispatch(clearAssetsBalance());
+    return;
   }
 
-  const network:Network = networks[networkID]
+  const network: Network = networks[networkID];
 
-  let contractAPI = new ethers.Contract(network.contract, abiResardis, provider.getSigner())
+  let contractAPI = new ethers.Contract(
+    network.contract,
+    abiResardis,
+    provider.getSigner()
+  );
 
-  store.dispatch(setContractAPI(contractAPI, network))
+  store.dispatch(setContractAPI(contractAPI, network));
 
-  getBalances(
-    provider,
-    contractAPI,
-    account,
-    network,
-  )
-}
+  getBalances(provider, contractAPI, account, network);
+};
 
 const EthereumProvider = ({ setIsWalletEnabled }: PropsFromRedux) => {
-
-  if (typeof window.ethereum === 'undefined') {
-    setIsWalletEnabled(false)
-    return null
+  if (typeof window.ethereum === "undefined") {
+    setIsWalletEnabled(false);
+    return null;
   }
 
-  connectMetaMask()
+  connectMetaMask();
 
-  window.ethereum.on('accountsChanged', (accounts:Array<string>) => {
-    initEthConnection()
-  })
+  window.ethereum.on("accountsChanged", (accounts: Array<string>) => {
+    initEthConnection();
+  });
 
-  window.ethereum.on('chainChanged', (chainId:number) => {
-    const i = new BigNumber(chainId).toString()
-    console.log('chain changed', chainId.toString(), i)
+  window.ethereum.on("chainChanged", (chainId: number) => {
+    const i = new BigNumber(chainId).toString();
+    console.log("chain changed", chainId.toString(), i);
 
-    initEthConnection()
-  })
+    initEthConnection();
+  });
 
-  initEthConnection()
+  initEthConnection();
 
-  return null
-}
+  return null;
+};
 
-export default connector(EthereumProvider)
+export default connector(EthereumProvider);

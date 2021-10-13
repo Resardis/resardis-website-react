@@ -18,7 +18,7 @@ export type Networks = {
 export const networks: Networks = {
   "80001": {
     name: "sidechain",
-    contract: "0xdf3786659dc64e343fFED27eD213Ed6138834B19",
+    contract: "0x8B89359a48C153994d2A6BF878b148f151d2A0c4",
     tokens: {
       "0x08F53Ca52B5e369932BD417a24902E70aF2c87a1": "ETH",
       "0xe8b8fe9ed674974c53877239990156633fa8c440": "LEND",

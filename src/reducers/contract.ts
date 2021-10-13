@@ -34,7 +34,6 @@ const contractReducer = (state:Contract = initialState, action:ContractActions):
       return newState
 
     case REMOVE_ACTIVE_OFFER:
-      console.log()
       newState.activeOffers = { ...newState.activeOffers, [action.payload.toString()]: false }
       //console.log('activeOffers -', newState)
       return newState

@@ -153,8 +153,6 @@ const MarketsData = (props: PropsFromRedux) => {
     { pollInterval: 1000 }
   );
 
-  console.log(data);
-
   if (loading) return <span>Loading...</span>;
   if (error) return <span>Error! {error}</span>;
 

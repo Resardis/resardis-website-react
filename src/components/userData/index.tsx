@@ -256,7 +256,7 @@ const NoWallet = () => {
   return (
     <div className="no-wallet-info">
       <p>Wallet found, but it seems to be locked?</p>
-      <p>
+      {/* <p>
         <button
           className="enable-wallet-button"
           id={buttonId}
@@ -279,7 +279,7 @@ const NoWallet = () => {
         >
           Enable wallet
         </button>
-      </p>
+      </p> */}
     </div>
   );
 };

@@ -1,8 +1,16 @@
 .main-grid {
   display: grid;
-  /* grid-template-columns: 1fr [start] minmax(450px, 460px) [middle] minmax(400px, 800px) minmax(450px, 460px) [end] 1fr; */
+  grid-template-columns: 1fr [start] minmax(450px, 460px) [middle] minmax(400px, 800px) minmax(450px, 460px) [end] 1fr;
   grid-template-columns: 1fr [start] minmax(350px, 360px) [middle] minmax(800px, 1200px) minmax(350px, 360px) [end] 1fr;
   grid-template-rows: 90px [top] 120px 236px 300px [bottom] 1fr;
+}
+
+.main-wrapper {
+  padding-top: 100px;
+  padding-left: 12px;
+  padding-right: 12px;
+  max-width: 992px;
+  margin: 0 auto;
 }
 
 .selected-market {
@@ -24,8 +32,9 @@
   height: fit-content;
 }
 .user-data {
-  grid-row: 4;
-  grid-column: middle;
+  /* grid-row: 4; */
+  /* grid-column: middle; */
+  min-height: 300px;
 }
 .markets {
   grid-row: span top / bottom;
@@ -138,3 +147,10 @@
 
 .redBG { background-color: #C22D38; }
 .greenBG { background-color: #169A51; }
+
+@media screen and (max-width: 600px) {
+  .logo {
+    width: 60%;
+    height: auto;
+  }
+}

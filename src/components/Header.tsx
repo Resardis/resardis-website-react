@@ -3,6 +3,7 @@ import logo from "../assets/resardis-logo.png";
 import { ReactComponent as Menu } from "../svg/menu.svg";
 import { RootState } from "../reducers";
 import { connect, ConnectedProps } from "react-redux";
+import shortid from "shortid";
 import { openFundsWindow, selectScreen } from "../actions";
 import {
   OpenFundsWindowAction,
@@ -104,18 +105,53 @@ const HeaderItemConnected = ({
 
 const HeaderItem = connector(HeaderItemConnected);
 
-const Header = () => {
+const NoWallet = () => {
+  const buttonId = shortid();
+
+  if (typeof window.ethereum === "undefined") return null;
+
+  return (
+    <div className="no-wallet-info">
+      <button
+        className="enable-wallet-button"
+        id={buttonId}
+        onClick={() => {
+          const buttonElement = document.getElementById(buttonId);
+
+          window.ethereum
+            .request({ method: "eth_requestAccounts" })
+            .then(() => window.location.reload())
+            .catch((err: any) => {
+              if (err.code === 4001) {
+                if (buttonElement) buttonElement.innerHTML = "Request denied?";
+              } else {
+                if (buttonElement)
+                  buttonElement.innerHTML = "Error occurred:" + err.message;
+              }
+            });
+        }}
+      >
+        Enable wallet
+      </button>
+    </div>
+  );
+};
+
+const HeaderConnected = ({ isWalletEnabled }: PropsFromRedux) => {
   return (
     <div className="header">
       <img className="logo" src={logo} alt="Resardis" />
-      <ul className="top-nav">
+      {!isWalletEnabled && <NoWallet />}
+      {/* <ul className="top-nav">
         {headerItems.map((item) => (
           <HeaderItem key={item.name} item={item} />
         ))}
-      </ul>
+      </ul> */}
       {/* <Menu fill="#C2C3C3" width="64px" height="64px" /> */}
     </div>
   );
 };
+
+const Header = connector(HeaderConnected);
 
 export default Header;

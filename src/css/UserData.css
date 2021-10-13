@@ -48,6 +48,7 @@
   font-size: 18px;
   height: 80%;
   flex-direction: column;
+  margin-right: 12px;
 }
 
 .enable-wallet-button {
