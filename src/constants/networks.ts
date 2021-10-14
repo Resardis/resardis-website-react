@@ -59,19 +59,15 @@ export const tokenABIs: TokensABIs = {
   ERC20T: abiTestToken,
 };
 
-export const getTokenNameFromAddress = (tokenAddress: string) => {
-  console.log(tokenAddress);
-  return tokenAddress.toUpperCase() in allTokensAddresses
+export const getTokenNameFromAddress = (tokenAddress: string) =>
+  tokenAddress.toUpperCase() in allTokensAddresses
     ? allTokensAddresses[tokenAddress.toUpperCase()].token
     : "???";
-};
 
-export const getNetworkNameFromAddress = (tokenAddress: string) => {
-  console.log(tokenAddress);
-  return tokenAddress.toUpperCase() in allTokensAddresses
+export const getNetworkNameFromAddress = (tokenAddress: string) =>
+  tokenAddress.toUpperCase() in allTokensAddresses
     ? allTokensAddresses[tokenAddress.toUpperCase()].networkName
     : "???";
-};
 
 export const getTokenAddressFromName = (tokenName: string, network: Network) =>
   Object.keys(network.tokens).find(

@@ -318,10 +318,8 @@ const Table = ({ headers, activeTab, isWalletEnabled }: PropsFromRedux) => {
                 key={shortid()}
                 onClick={() => {
                   if (sortBy === header.sortable) {
-                    console.log("flip");
                     flipSortDirection();
-                  } else {
-                    console.log(header.sortable);
+                  } else if (header.sortable !== sortingTypes.NO_SORT) {
                     setSortby(header.sortable);
                   }
                 }}

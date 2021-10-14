@@ -1,9 +1,10 @@
 import React from "react";
+import { connect, ConnectedProps } from "react-redux";
+import shortid from "shortid";
+
 import logo from "../assets/resardis-logo.png";
 import { ReactComponent as Menu } from "../svg/menu.svg";
 import { RootState } from "../reducers";
-import { connect, ConnectedProps } from "react-redux";
-import shortid from "shortid";
 import { openFundsWindow, selectScreen } from "../actions";
 import {
   OpenFundsWindowAction,
@@ -15,6 +16,7 @@ interface StateProps {
   isFundsWindowOpen: boolean;
   selectedScreen: string;
   isWalletEnabled: boolean;
+  accountAddress: string;
 }
 
 interface OwnProps {
@@ -28,6 +30,7 @@ const mapStateToProps = (state: RootState): StateProps => ({
   isFundsWindowOpen: state.fundsWindow.isOpen,
   selectedScreen: state.selectedScreen,
   isWalletEnabled: state.funds.isWalletEnabled,
+  accountAddress: state.funds.accountAddress,
 });
 
 const mapDispatchToProps = (dispatch: any) => ({
@@ -47,22 +50,22 @@ const headerItems = [
     name: "Market",
     action: "screen",
   },
-  // {
-  //   name: "Funds",
-  //   action: "screen",
-  // },
-  // {
-  //   name: "Account",
-  //   action: "wallets",
-  // },
-  // {
-  //   name: "News",
-  //   action: "null",
-  // },
-  // {
-  //   name: "Help",
-  //   action: "null",
-  // },
+  {
+    name: "Funds",
+    action: "screen",
+  },
+  {
+    name: "Account",
+    action: "wallets",
+  },
+  {
+    name: "News",
+    action: "null",
+  },
+  {
+    name: "Help",
+    action: "null",
+  },
 ];
 
 const HeaderItemConnected = ({
@@ -137,11 +140,34 @@ const NoWallet = () => {
   );
 };
 
-const HeaderConnected = ({ isWalletEnabled }: PropsFromRedux) => {
+const WalletAddress = ({ address }: any) => (
+  <div className="wallet-address">
+    {`${address.slice(0, 6)}...${address.slice(
+      address.length - 4,
+      address.length
+    )}`}
+  </div>
+);
+
+const HeaderConnected = ({
+  isWalletEnabled,
+  accountAddress,
+}: PropsFromRedux) => {
   return (
     <div className="header">
       <img className="logo" src={logo} alt="Resardis" />
-      {!isWalletEnabled && <NoWallet />}
+      {!isWalletEnabled ? (
+        <NoWallet />
+      ) : (
+        <WalletAddress address={accountAddress} />
+      )}
+      <a
+        href="https://docs.google.com/presentation/d/1JCrxSjiOEeyFTuNfQpWY5F09oqnME8harWPkeEY1V2k/edit?usp=sharing"
+        target="blank"
+        className="demo-guideline"
+      >
+        Demo guideline
+      </a>
       {/* <ul className="top-nav">
         {headerItems.map((item) => (
           <HeaderItem key={item.name} item={item} />

@@ -4,9 +4,118 @@ import { RootState } from "../reducers";
 import "../css/OrderForm.css";
 import { BigNumber } from "bignumber.js";
 import { wei2ether } from "../helpers";
-import { createOrder, getBestOffer } from "../contracts";
-import { Network } from "../constants/networks";
+import { createOrder, getPairPrice } from "../contracts";
+import { Network, tokenNames, quoteCurrencies } from "../constants/networks";
 import { MyOrderType } from "../constants/actionTypes";
+import { SearchBox } from "./shared";
+
+import { selectCurrencyPair, updateCurrencyPairData } from "../actions";
+import { PairData } from "../reducers/markets";
+
+interface Pair {
+  quoteCurrency: string;
+  baseCurrency: string;
+}
+
+interface PairsStateProp {
+  network: Network;
+  api: any;
+}
+
+const mapStateToPairsProps = (state: RootState): PairsStateProp => ({
+  api: state.contract.contractAPI,
+  network: state.contract.network,
+});
+
+const mapDispatchToPairsProps = (dispatch: any) => ({
+  selectCurrencyPair: (pair: string) => dispatch(selectCurrencyPair(pair)),
+  updateCurrencyPairData: (pairData: PairData) =>
+    dispatch(updateCurrencyPairData(pairData)),
+});
+
+const pairsConnector = connect(mapStateToPairsProps, mapDispatchToPairsProps);
+
+type PairsProps = ConnectedProps<typeof pairsConnector>;
+
+const PairsConnected = ({
+  api,
+  network,
+  selectCurrencyPair,
+  updateCurrencyPairData,
+}: PairsProps) => {
+  const [searchText, setSearchText] = useState("");
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  const getPairs = () => {
+    let items: Pair[] = [];
+    quoteCurrencies.forEach((q) => {
+      const subItems: Pair[] = Object.keys(tokenNames)
+        .filter((b) => b !== q && b.includes(searchText.toUpperCase()))
+        .map((b) => ({ baseCurrency: b, quoteCurrency: q }));
+
+      items = items.concat(subItems);
+    });
+
+    return items;
+  };
+
+  const handlePairClick = (p: Pair) => async () => {
+    const { baseCurrency, quoteCurrency } = p;
+    const pair = `${baseCurrency}/${quoteCurrency}`;
+
+    const baseToken = Object.keys(network.tokens).find(
+      (address) => network.tokens[address] === baseCurrency
+    );
+    const quoteToken = Object.keys(network.tokens).find(
+      (address) => network.tokens[address] === quoteCurrency
+    );
+
+    const price = await getPairPrice(api, baseToken, quoteToken);
+
+    const pairData: [string, number, number, BigNumber] = [pair, 0, 0, price];
+
+    updateCurrencyPairData(pairData);
+    selectCurrencyPair(pair);
+  };
+
+  useEffect(() => {
+    const onWindowClick = (e: any) => {
+      const closest = e.target.closest(".pairs-dropdown-wrapper");
+      setDropdownOpen(closest !== null);
+    };
+
+    window.addEventListener("click", onWindowClick);
+
+    return () => window.removeEventListener("click", onWindowClick);
+  }, []);
+
+  return (
+    <div style={{ position: "relative" }}>
+      <div className="pairs-dropdown-wrapper">
+        <SearchBox
+          value={searchText}
+          updateTextFilter={(target: string, value: string) =>
+            setSearchText(value)
+          }
+          target={""}
+        />
+      </div>
+      {dropdownOpen && (
+        <div className="pairs-dropdown">
+          <ul>
+            {getPairs().map((p, i) => (
+              <li key={i} onClick={handlePairClick(p)}>
+                {p.baseCurrency}/{p.quoteCurrency}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
+  );
+};
+
+const Pairs = pairsConnector(PairsConnected);
 
 interface OrderForm {
   coinName: string;
@@ -116,8 +225,6 @@ const OrderFormConnected = ({
     const quoteToken = Object.keys(network.tokens).find(
       (address) => network.tokens[address] === quoteCurrency
     );
-
-    getBestOffer(api, baseToken, quoteToken);
 
     setOrderData((orderData) => ({
       ...orderData,
@@ -252,26 +359,28 @@ const NewOrder = ({ selectedOrder }: NewOrderProps) => {
   return (
     <div className="order-form main-tab">
       <div className="order-form-header">
-        <button
-          className={
-            "order-type-button" +
-            (orderType === "Limit" ? " order-type-button-selected" : "")
-          }
-          onClick={() => setOrderType("Limit")}
-        >
-          Limit
-        </button>
-        <button
-          className={
-            "order-type-button" +
-            (orderType === "Market" ? " order-type-button-selected" : "")
-          }
-          onClick={() => setOrderType("Market")}
-        >
-          Market
-        </button>
+        <div>
+          <button
+            className={
+              "order-type-button" +
+              (orderType === "Limit" ? " order-type-button-selected" : "")
+            }
+            onClick={() => setOrderType("Limit")}
+          >
+            Limit
+          </button>
+          <button
+            className={
+              "order-type-button" +
+              (orderType === "Market" ? " order-type-button-selected" : "")
+            }
+            onClick={() => setOrderType("Market")}
+          >
+            Market
+          </button>
+        </div>
+        <Pairs />
       </div>
-
       <div className="order-form-boxes">
         <OrderForm isBuy={true} orderType={orderType} />
         <OrderForm isBuy={false} orderType={orderType} />

@@ -97,7 +97,7 @@ const Funds = ({
       const balance = balances[symbol];
 
       return (
-        <tr key={symbol} onClick={() => selectCurrencyPair(`${symbol}/ETH`)}>
+        <tr key={symbol}>
           <td style={{ textAlign: "left" }}>
             {symbol} - {tokenNames[symbol]}
           </td>

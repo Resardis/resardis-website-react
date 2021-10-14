@@ -38,3 +38,18 @@
   color: #C2C3C3;
   pointer-events: none;
 }
+
+.demo-guideline {
+  color: #DFE0DF;
+  text-decoration: none;
+  cursor: pointer;
+  margin-right: 12px;
+}
+
+.wallet-address {
+  padding: 4px;
+  background-color: #FFB33C;
+  border-radius: 20px;
+  color: #0B1013;
+  margin-right: 12px;
+}

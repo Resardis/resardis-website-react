@@ -543,15 +543,20 @@ export const depositAfterApprove = (
     });
 };
 
-export const getBestOffer = async (
+export const getPairPrice = async (
   contractAPI: any,
-  sellGem: any,
-  buyGem: any
+  buyGem: any,
+  sellGem: any
 ) => {
   if (contractAPI && sellGem && buyGem) {
-    console.log(sellGem, buyGem);
     const offerId = await contractAPI.functions.getBestOffer(sellGem, buyGem);
-    const { payAmt, buyAmt } = await contractAPI.functions.offers(offerId);
-    console.log(payAmt , buyAmt);
+    const offer = await contractAPI.functions.offers(offerId);
+    const buyAmt = new BN(offer.buyAmt.toString());
+    const payAmt = new BN(offer.payAmt.toString());
+    const price = buyAmt.div(payAmt);
+
+    return price;
   }
+
+  return new BN(0);
 };
