@@ -543,20 +543,34 @@ export const depositAfterApprove = (
     });
 };
 
-export const getPairPrice = async (
+export const getBuyBestOrder = async (
   contractAPI: any,
-  buyGem: any,
-  sellGem: any
+  sellGem: any,
+  buyGem: any
 ) => {
   if (contractAPI && sellGem && buyGem) {
     const offerId = await contractAPI.functions.getBestOffer(sellGem, buyGem);
     const offer = await contractAPI.functions.offers(offerId);
-    const buyAmt = new BN(offer.buyAmt.toString());
-    const payAmt = new BN(offer.payAmt.toString());
-    const price = buyAmt.div(payAmt);
+    console.log(sellGem, buyGem, offerId);
 
-    return price;
+    return offer;
   }
 
-  return new BN(0);
+  return null;
+};
+
+export const getSellBestOrder = async (
+  contractAPI: any,
+  buyGem: any,
+  sellGem: any
+) => {
+  if (contractAPI && buyGem && sellGem) {
+    const offerId = await contractAPI.functions.getBestOffer(sellGem, buyGem);
+    const offer = await contractAPI.functions.offers(offerId);
+    console.log(sellGem, buyGem, offerId);
+
+    return offer;
+  }
+
+  return null;
 };

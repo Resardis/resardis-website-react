@@ -1,3 +1,4 @@
+import BigNumber from "bignumber.js";
 import {
   ACTIVATE_TAB,
   ActivateTabAction,
@@ -20,8 +21,12 @@ import {
   SelectScreenAction,
   UpdateCurrencyPairDataAction,
   SELECT_ORDER,
+  SELECT_BUY_PRICE,
+  SELECT_SELL_PRICE,
   MyOrderType,
   SelectOrderAction,
+  SelectBuyPriceAction,
+  SelectSellPriceAction,
 } from "../constants/actionTypes";
 import { PairData } from "../reducers/markets";
 
@@ -80,6 +85,16 @@ export const selectOrder = (order: MyOrderType): SelectOrderAction => ({
   payload: order,
 });
 
+export const selectBuyPrice = (price: BigNumber): SelectBuyPriceAction => ({
+  type: SELECT_BUY_PRICE,
+  payload: price,
+});
+
+export const selectSellPrice = (price: BigNumber): SelectSellPriceAction => ({
+  type: SELECT_SELL_PRICE,
+  payload: price,
+});
+
 export type ActiveTabActions = ActivateTabAction;
 
 export type TableActions =
@@ -87,6 +102,8 @@ export type TableActions =
   | SortDirectionAction
   | TextFilterAction
   | SelectOrderAction
+  | SelectBuyPriceAction
+  | SelectSellPriceAction
   | SelectCurrencyPairAction
   | UpdateCurrencyPairDataAction;
 

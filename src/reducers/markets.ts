@@ -7,6 +7,8 @@ import {
   UPDATE_CURRENCY_PAIR_DATA,
   SELECT_CURRENCY_PAIR,
   SELECT_ORDER,
+  SELECT_BUY_PRICE,
+  SELECT_SELL_PRICE,
   MyOrderType,
 } from "../constants/actionTypes";
 import { TableActions } from "../actions";
@@ -27,6 +29,8 @@ export interface Markets {
   textFilter: string;
   selectedCurrencyPair: string;
   selectedOrder: MyOrderType | null;
+  selectedBuyPrice: BigNumber | null;
+  selectedSellPrice: BigNumber | null;
   data: AllPairsData;
   ordersData: OrdersData;
 }
@@ -37,6 +41,8 @@ const initialState: Markets = {
   textFilter: "",
   selectedCurrencyPair: "",
   selectedOrder: null,
+  selectedBuyPrice: null,
+  selectedSellPrice: null,
   data: {},
   ordersData: [],
 };
@@ -73,6 +79,12 @@ const marketsReducer = (
     case SELECT_ORDER:
       console.log(action);
       return { ...state, selectedOrder: action.payload };
+
+    case SELECT_BUY_PRICE:
+      return { ...state, selectedBuyPrice: action.payload };
+
+    case SELECT_SELL_PRICE:
+      return { ...state, selectedSellPrice: action.payload };
 
     case UPDATE_CURRENCY_PAIR_DATA:
       //console.log('UPDATE_CURRENCY_PAIR_DATA', action.payload)

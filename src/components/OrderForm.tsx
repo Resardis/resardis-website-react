@@ -4,13 +4,16 @@ import { RootState } from "../reducers";
 import "../css/OrderForm.css";
 import { BigNumber } from "bignumber.js";
 import { wei2ether } from "../helpers";
-import { createOrder, getPairPrice } from "../contracts";
+import { createOrder, getBuyBestOrder, getSellBestOrder } from "../contracts";
 import { Network, tokenNames, quoteCurrencies } from "../constants/networks";
 import { MyOrderType } from "../constants/actionTypes";
 import { SearchBox } from "./shared";
 
-import { selectCurrencyPair, updateCurrencyPairData } from "../actions";
-import { PairData } from "../reducers/markets";
+import {
+  selectCurrencyPair,
+  selectBuyPrice,
+  selectSellPrice,
+} from "../actions";
 
 interface Pair {
   quoteCurrency: string;
@@ -29,8 +32,8 @@ const mapStateToPairsProps = (state: RootState): PairsStateProp => ({
 
 const mapDispatchToPairsProps = (dispatch: any) => ({
   selectCurrencyPair: (pair: string) => dispatch(selectCurrencyPair(pair)),
-  updateCurrencyPairData: (pairData: PairData) =>
-    dispatch(updateCurrencyPairData(pairData)),
+  selectBuyPrice: (price: BigNumber) => dispatch(selectBuyPrice(price)),
+  selectSellPrice: (price: BigNumber) => dispatch(selectSellPrice(price)),
 });
 
 const pairsConnector = connect(mapStateToPairsProps, mapDispatchToPairsProps);
@@ -41,7 +44,8 @@ const PairsConnected = ({
   api,
   network,
   selectCurrencyPair,
-  updateCurrencyPairData,
+  selectBuyPrice,
+  selectSellPrice,
 }: PairsProps) => {
   const [searchText, setSearchText] = useState("");
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -70,11 +74,19 @@ const PairsConnected = ({
       (address) => network.tokens[address] === quoteCurrency
     );
 
-    const price = await getPairPrice(api, baseToken, quoteToken);
+    const buyOrder = await getBuyBestOrder(api, baseToken, quoteToken);
+    const sellOrder = await getSellBestOrder(api, baseToken, quoteToken);
 
-    const pairData: [string, number, number, BigNumber] = [pair, 0, 0, price];
+    let buyAmt = new BigNumber(buyOrder.buyAmt.toString());
+    let payAmt = new BigNumber(buyOrder.payAmt.toString());
+    const buyPrice = buyAmt.div(payAmt);
 
-    updateCurrencyPairData(pairData);
+    buyAmt = new BigNumber(sellOrder.buyAmt.toString());
+    payAmt = new BigNumber(sellOrder.payAmt.toString());
+    const sellPrice = payAmt.div(buyAmt);
+
+    selectBuyPrice(buyPrice);
+    selectSellPrice(sellPrice);
     selectCurrencyPair(pair);
   };
 
@@ -156,16 +168,46 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps): StateProps => {
     api: state.contract.contractAPI,
   };
 
-  if (
-    state.markets.selectedOrder &&
-    ownProps.isBuy === (state.markets.selectedOrder.side === "Buy")
-  ) {
+  // if (
+  //   state.markets.selectedOrder &&
+  //   ownProps.isBuy === (state.markets.selectedOrder.side === "Buy")
+  // ) {
+  //   const [baseCurrency, quoteCurrency] =
+  //     state.markets.selectedOrder.pair.split("/");
+
+  //   return {
+  //     price: new BigNumber(state.markets.selectedOrder.price),
+  //     amount: new BigNumber(state.markets.selectedOrder.amount).div(1e18),
+  //     baseCurrency,
+  //     quoteCurrency,
+  //     baseCurrencyBalance: state.funds.balances[baseCurrency].resardis,
+  //     quoteCurrencyBalance: state.funds.balances[quoteCurrency].resardis,
+  //     ...commonProps,
+  //   };
+  // }
+
+  if (state.markets.selectedCurrencyPair && state.markets.selectedBuyPrice && ownProps.isBuy) {
     const [baseCurrency, quoteCurrency] =
-      state.markets.selectedOrder.pair.split("/");
+      state.markets.selectedCurrencyPair.split("/");
 
     return {
-      price: new BigNumber(state.markets.selectedOrder.price),
-      amount: new BigNumber(state.markets.selectedOrder.amount).div(1e18),
+      price: state.markets.selectedBuyPrice,
+      amount: new BigNumber(0),
+      baseCurrency,
+      quoteCurrency,
+      baseCurrencyBalance: state.funds.balances[baseCurrency].resardis,
+      quoteCurrencyBalance: state.funds.balances[quoteCurrency].resardis,
+      ...commonProps,
+    };
+  }
+
+  if (state.markets.selectedCurrencyPair && state.markets.selectedSellPrice && !ownProps.isBuy) {
+    const [baseCurrency, quoteCurrency] =
+      state.markets.selectedCurrencyPair.split("/");
+
+    return {
+      price: state.markets.selectedSellPrice,
+      amount: new BigNumber(0),
       baseCurrency,
       quoteCurrency,
       baseCurrencyBalance: state.funds.balances[baseCurrency].resardis,
